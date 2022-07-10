@@ -1,3 +1,2 @@
 # Setting
-
-## Next.js + Typescript + Tailwindcss
+- Next.js + Typescript + Tailwindcss
