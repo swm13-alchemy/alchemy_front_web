@@ -13,12 +13,13 @@ function BottomNavBar() {
   const router = useRouter();
 
   return (
-    <nav className="flex items-center justify-around absolute bottom-0 left-0 right-0 py-5 bg-white">
+    <nav className="flex items-center justify-around absolute bottom-0 left-0 max-h-15 right-0 py-3 bg-green-100">
       {menuList.map((menu) => {
         return (
           <Link
             key={menu.id}
             href={menu.path}
+            className="cursor-pointer"
           >
             <div className={"flex flex-col items-center justify-between cursor-pointer" + (menu.path === router.pathname ? " text-indigo-500" : " text-black")}>
               <FontAwesomeIcon

@@ -1,9 +1,9 @@
-import SearchBar from "../components/layout/SearchBar";
+import SearchBar from '../components/layout/SearchBar';
 
 const Search = () => {
   return (
     <div>
-      <SearchBar/>
+      <SearchBar />
     </div>
   );
 };

@@ -22,6 +22,10 @@
   .navLink {
     @apply
   }
+
+  .weekCalendar {
+    @apply w-[12%] h-14 border rounded-xl bg-[#D5E3B1] flex flex-col items-center space-y-1.5;
+  }
 }
 
 /*html,*/
