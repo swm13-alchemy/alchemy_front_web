@@ -1,13 +1,12 @@
-import React from 'react';
-import {NextPage} from "next";
-import BottomNavBar from "../components/layout/BottomNavBar";
+import { NextPage } from 'next'
+import BottomNavBar from '../components/layout/BottomNavBar'
 
 const IntakeManagement: NextPage = () => {
   return (
     <div>
-      <BottomNavBar/>
+      <BottomNavBar />
     </div>
-  );
-};
+  )
+}
 
-export default IntakeManagement;
+export default IntakeManagement

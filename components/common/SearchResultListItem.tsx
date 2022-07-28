@@ -1,0 +1,32 @@
+import Image from 'next/image'
+import EfficiencyTag from '../tag/EfficiencyTag'
+import Link from 'next/link'
+import { SearchResultsItemType } from '../../utils/types'
+
+function SearchResultListItem({ maker, name, imageUrl }: SearchResultsItemType) {
+  return (
+    <Link href='/'>
+      <div className='flex items-center w-full h-40 border-[#BABABA] border rounded-3xl px-2 cursor-pointer'>
+        <div className='relative w-24 h-24'>
+          <Image
+            src={imageUrl ? imageUrl : 'https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'}
+            className='rounded object-cover'
+            layout='fill'
+          />
+        </div>
+        <div className='flex flex-col space-y-0.5'>
+          <p className='text-lg text-[#7A7A7A]'>{maker}</p>
+          <p className='text-lg'>{name}</p>
+          <div className='w-full grid grid-cols-2 gap-1'>
+            <EfficiencyTag tagName='노화&항산화' />
+            <EfficiencyTag tagName='눈 건강' />
+            <EfficiencyTag tagName='간 건강' />
+          </div>
+        </div>
+      </div>
+
+    </Link>
+  )
+}
+
+export default SearchResultListItem

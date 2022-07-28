@@ -1,7 +1,7 @@
-import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faUser, faChartBar, faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
-import {useRouter} from "next/router";
+import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser, faChartBar, faCalendarCheck } from '@fortawesome/free-regular-svg-icons'
+import { useRouter } from 'next/router'
 
 const menuList = [
   { id: '1', name: '밸런스', icon: faChartBar, path: '/balance' },
@@ -10,29 +10,27 @@ const menuList = [
 ]
 
 function BottomNavBar() {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
-    <nav className="flex items-center justify-around absolute bottom-0 left-0 max-h-15 right-0 py-3 bg-green-100">
+    <nav className='flex items-center justify-around absolute bottom-0 left-0 max-h-15 right-0 py-3 bg-green-100'>
       {menuList.map((menu) => {
         return (
-          <Link
-            key={menu.id}
-            href={menu.path}
-            className="cursor-pointer"
-          >
-            <div className={"flex flex-col items-center justify-between cursor-pointer" + (menu.path === router.pathname ? " text-indigo-500" : " text-black")}>
-              <FontAwesomeIcon
-                icon={menu.icon}
-                className="fa-2x"
-              />
-              <p className="text-sm">{menu.name}</p>
+          <Link key={menu.id} href={menu.path}>
+            <div
+              className={
+                'flex flex-col items-center justify-between' +
+                (menu.path === router.pathname ? ' text-indigo-500' : ' text-black')
+              }
+            >
+              <FontAwesomeIcon icon={menu.icon} className='fa-2x' />
+              <p className='text-sm'>{menu.name}</p>
             </div>
           </Link>
         )
       })}
     </nav>
-  );
+  )
 }
 
-export default BottomNavBar;
+export default BottomNavBar

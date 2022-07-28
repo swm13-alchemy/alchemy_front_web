@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "prettier pages components --write && eslint pages components --fix",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -47,7 +47,9 @@
     }
   },
   "lint-staged": {
-    "*.ts": "eslint --fix",
-    "*.tsx": "eslint --fix"
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   }
 }
