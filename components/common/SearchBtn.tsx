@@ -9,15 +9,17 @@ interface Props {
 function SearchBtn({ btnWidth }: Props) {
   return (
     <Link href='/search'>
-      <div
-        className={
-          `${btnWidth}` +
-          ' h-10 flex items-center justify-between px-5 mx-auto border border-black rounded-2xl cursor-pointer bg-white'
-        }
-      >
-        <p className='text-gray-500'>어떤 영양제를 찾으시나요?</p>
-        <FontAwesomeIcon icon={faSearch} className='fa-x' />
-      </div>
+      <a>
+        <div
+          className={
+            `${btnWidth}` +
+            ' h-10 flex items-center justify-between px-5 mx-auto border border-black rounded-2xl cursor-pointer bg-white'
+          }
+        >
+          <p className='text-gray-500'>어떤 영양제를 찾으시나요?</p>
+          <FontAwesomeIcon icon={faSearch} className='fa-x' />
+        </div>
+      </a>
     </Link>
   )
 }

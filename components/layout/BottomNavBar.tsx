@@ -17,15 +17,17 @@ function BottomNavBar() {
       {menuList.map((menu) => {
         return (
           <Link key={menu.id} href={menu.path}>
-            <div
-              className={
-                'flex flex-col items-center justify-between' +
-                (menu.path === router.pathname ? ' text-indigo-500' : ' text-black')
-              }
-            >
-              <FontAwesomeIcon icon={menu.icon} className='fa-2x' />
-              <p className='text-sm'>{menu.name}</p>
-            </div>
+            <a>
+              <div
+                className={
+                  'flex flex-col items-center justify-between' +
+                  (menu.path === router.pathname ? ' text-indigo-500' : ' text-black')
+                }
+              >
+                <FontAwesomeIcon icon={menu.icon} className='fa-2x' />
+                <p className='text-sm'>{menu.name}</p>
+              </div>
+            </a>
           </Link>
         )
       })}
