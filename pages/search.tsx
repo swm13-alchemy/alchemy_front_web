@@ -2,7 +2,7 @@ import SearchBar from '../components/layout/SearchBar'
 import SearchResultListItem from '../components/common/SearchResultListItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faSearch } from '@fortawesome/free-solid-svg-icons'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import requests from '../utils/requests'
 import { SearchResultsItemType } from '../utils/types'
@@ -25,7 +25,20 @@ const Search = () => {
     supplements = await supplements.json()
     const result: SearchResultsItemType[] = supplements.pill
     setSearchResults(result)
+    router.replace({query:{name: formInputs.searchTerm}})
   }
+
+  useEffect(() => {
+    if (router.query.name && !searchResults.length) {
+      const reloadingSearch = async () => {
+        let supplements = await fetch(requests.fetchSearchResults + `?name=%${router.query.name}%`)
+        supplements = await supplements.json()
+        const result: SearchResultsItemType[] = supplements.pill
+        setSearchResults(result)
+      }
+      reloadingSearch()
+    }
+  })
 
   return (
     <div>
