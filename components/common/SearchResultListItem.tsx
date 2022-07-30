@@ -3,9 +3,9 @@ import EfficiencyTag from '../tag/EfficiencyTag'
 import Link from 'next/link'
 import { SearchResultsItemType } from '../../utils/types'
 
-function SearchResultListItem({ maker, name, imageUrl }: SearchResultsItemType) {
+function SearchResultListItem({ maker, name, imageUrl, id }: SearchResultsItemType) {
   return (
-    <Link href='/'>
+    <Link href={`/pill-details/${id}`}>
       <a>
         <div className='flex items-center w-full h-40 border-[#BABABA] border rounded-3xl px-2 space-x-2'>
           <div className='relative w-24 h-24 rounded-3xl border-[#BABABA] border overflow-hidden'>
