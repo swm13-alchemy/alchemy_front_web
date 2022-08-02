@@ -1,7 +1,7 @@
-import Head from "next/head";
+import Head from 'next/head'
 
 interface Props {
-  title: string;
+  title: string
 }
 
 function Seo({ title }: Props) {
@@ -9,7 +9,7 @@ function Seo({ title }: Props) {
     <Head>
       <title>{title}</title>
     </Head>
-  );
+  )
 }
 
-export default Seo;
+export default Seo
