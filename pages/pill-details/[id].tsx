@@ -1,4 +1,4 @@
-import { GetServerSideProps, NextPage } from 'next'
+import { GetServerSideProps } from 'next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faAngleLeft,
