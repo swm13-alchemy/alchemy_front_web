@@ -34,6 +34,8 @@ const Details = ({ details }: Props) => {
   console.log(details)
   console.log(id, dailyDose, intakeTiming, name)
 
+  // 최초 페이지 진입 시 실행 후 종료
+  // localStorage에 해당 페이지 영양제가 등록되어 있는지 확인하고 있으면 섭취중인 영양제로 표시
   useEffect(() => {
     // localStorage에서 'userTakingPillList'라는 key이름으로 데이터를 꺼내봄.
     const jsonLocalTakingPillList = localStorage.getItem('userTakingPillList')
@@ -53,6 +55,7 @@ const Details = ({ details }: Props) => {
     }
   }, [])
 
+  // 섭취중인 영양제 버튼 클릭 시
   const takingSubmit = (curIsTaking: boolean) => {
     // 현재 섭취중이 아니라면
     if (!curIsTaking) {

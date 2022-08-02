@@ -2,8 +2,9 @@ import Image from 'next/image'
 import EfficiencyTag from '../tag/EfficiencyTag'
 import Link from 'next/link'
 import { SearchResultsItemType } from '../../utils/types'
+import requests from '../../utils/requests'
 
-function SearchResultListItem({ maker, name, imageUrl, id }: SearchResultsItemType) {
+function SearchResultListItem({ maker, name, id }: SearchResultsItemType) {
   return (
     <Link href={`/pill-details/${id}`}>
       <a>
@@ -11,8 +12,8 @@ function SearchResultListItem({ maker, name, imageUrl, id }: SearchResultsItemTy
           <div className='relative w-24 h-24 rounded-3xl border-[#BABABA] border overflow-hidden'>
             <Image
               src={
-                imageUrl
-                  ? imageUrl
+                requests.fetchSupplementThumbnail(id.toString())
+                  ? requests.fetchSupplementThumbnail(id.toString())
                   : 'https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
               }
               className='object-cover'
