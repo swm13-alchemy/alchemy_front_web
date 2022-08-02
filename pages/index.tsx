@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear, faCheck } from '@fortawesome/free-solid-svg-icons'
 import DateBox from '../components/common/DateBox'
+import MyPillList from '../components/common/MyPillList'
 
 const MY: NextPage = () => {
   return (
@@ -27,7 +28,7 @@ const MY: NextPage = () => {
         <SearchBtn btnWidth='w-11/12' />
       </main>
 
-      <div className='flex flex-col items-center space-y-12 mt-6'>
+      <div className='flex flex-col items-center space-y-12 my-6'>
         <section className='flex flex-col space-y-5 w-full'>
           <h2 className='text-xl font-bold px-3'>123일째 잘 먹고 있어요!😉</h2>
           <div className='flex w-full items-center justify-evenly'>
@@ -37,6 +38,8 @@ const MY: NextPage = () => {
           </div>
         </section>
       </div>
+
+      <MyPillList />
 
       <BottomNavBar />
     </div>
