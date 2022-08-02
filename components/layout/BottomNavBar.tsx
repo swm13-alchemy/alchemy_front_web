@@ -24,7 +24,11 @@ function BottomNavBar() {
                   (menu.path === router.pathname ? ' text-indigo-500' : ' text-black')
                 }
               >
-                <FontAwesomeIcon icon={menu.icon} className='fa-2x' />
+                <FontAwesomeIcon
+                  // @ts-ignore
+                  icon={menu.icon}
+                  className='fa-2x'
+                />
                 <p className='text-sm'>{menu.name}</p>
               </div>
             </a>
