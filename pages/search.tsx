@@ -1,4 +1,3 @@
-import SearchBar from '../components/layout/SearchBar'
 import SearchResultListItem from '../components/common/SearchResultListItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faSearch } from '@fortawesome/free-solid-svg-icons'
@@ -21,10 +20,13 @@ const Search = () => {
 
   const search = async (e: any) => {
     e.preventDefault()
+    // @ts-ignore
     let supplements = await fetch(requests.fetchSearchResults + `?name=%${formInputs.searchTerm}%`)
     supplements = await supplements.json()
+    // @ts-ignore
     const result: SearchResultsItemType[] = supplements.pill
     setSearchResults(result)
+    // @ts-ignore
     router.replace({query:{name: formInputs.searchTerm}})
   }
 
@@ -33,6 +35,7 @@ const Search = () => {
       const reloadingSearch = async () => {
         let supplements = await fetch(requests.fetchSearchResults + `?name=%${router.query.name}%`)
         supplements = await supplements.json()
+        // @ts-ignore
         const result: SearchResultsItemType[] = supplements.pill
         setSearchResults(result)
       }

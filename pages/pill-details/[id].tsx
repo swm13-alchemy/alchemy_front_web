@@ -28,7 +28,7 @@ const Details = ({ details }: Props) => {
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const [isTaking, setIsTaking] = useState<boolean>(false)
   const [isOpenEfficiency, setIsOpenEfficiency] = useState<boolean>(false)
-  const { id, name, dailyDose, imageUrl, intakeCount, intakeTiming, maker, ingredients } = details
+  const { id, name, dailyDose, intakeTiming, maker, ingredients } = details
 
   console.log(details)
   console.log(id, dailyDose, intakeTiming, name)
@@ -64,6 +64,7 @@ const Details = ({ details }: Props) => {
           </div>
           <div className='flex items-center space-x-3'>
             <FontAwesomeIcon
+              // @ts-ignore
               icon={isLiked ? faStar : faStarRegular}
               className='text-xl cursor-pointer'
               onClick={() => setIsLiked(!isLiked)}
