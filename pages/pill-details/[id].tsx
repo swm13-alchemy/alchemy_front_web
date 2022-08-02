@@ -56,10 +56,7 @@ const Details = ({ details }: Props) => {
         <p className='text-xl w-full'>{name}</p>
         <div className='flex justify-between items-center w-full'>
           <div className='flex items-center space-x-1'>
-            <FontAwesomeIcon
-              icon={faStar}
-              className='text-base text-yellow-400'
-            />
+            <FontAwesomeIcon icon={faStar} className='text-base text-yellow-400' />
             <p className='text-base'>0.00(0)</p>
           </div>
           <div className='flex items-center space-x-3'>
@@ -69,32 +66,28 @@ const Details = ({ details }: Props) => {
               className='text-xl cursor-pointer'
               onClick={() => setIsLiked(!isLiked)}
             />
-            <FontAwesomeIcon
-              icon={faShareNodes}
-              className='text-xl cursor-pointer'
-            />
+            <FontAwesomeIcon icon={faShareNodes} className='text-xl cursor-pointer' />
           </div>
         </div>
         <button
-          className={'w-full h-11 rounded-xl mt-5 text-white text-lg' + (isTaking ? ' bg-[#00C23C]' : ' bg-[#BABABA]')}
+          className={
+            'w-full h-11 rounded-xl mt-5 text-white text-lg' +
+            (isTaking ? ' bg-[#00C23C]' : ' bg-[#BABABA]')
+          }
           onClick={() => setIsTaking(!isTaking)}
         >
-          <FontAwesomeIcon
-            icon={isTaking ? faCheck : faPlus}
-            className='relative right-12'
-          />
+          <FontAwesomeIcon icon={isTaking ? faCheck : faPlus} className='relative right-12' />
           {isTaking ? '등록된 영양제' : '내 영양제 등록'}
         </button>
       </main>
 
       <section className='mt-3 flex flex-col items-center w-full bg-white px-8 py-8'>
-        <div className='flex w-full items-center justify-between cursor-pointer'
-             onClick={() => setIsOpenEfficiency(!isOpenEfficiency)}>
+        <div
+          className='flex w-full items-center justify-between cursor-pointer'
+          onClick={() => setIsOpenEfficiency(!isOpenEfficiency)}
+        >
           <p className='font-bold text-xl'>주요 효능</p>
-          <FontAwesomeIcon
-            icon={isOpenEfficiency ? faAngleUp : faAngleDown}
-            className='text-xl'
-          />
+          <FontAwesomeIcon icon={isOpenEfficiency ? faAngleUp : faAngleDown} className='text-xl' />
         </div>
         <div className='flex flex-wrap mt-4 w-full gap-3'>
           <EfficiencyTag tagName='면역 기능' />
@@ -125,15 +118,14 @@ const Details = ({ details }: Props) => {
 
 export default Details
 
-
 // SSR
-export const getServerSideProps: GetServerSideProps = async ( context ) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const res = await axios.get(requests.fetchSupplementDetails + `?id=${context.query.id}`)
   const details = res.data.pill[0]
 
   return {
     props: {
-      details
+      details,
     },
   }
 }

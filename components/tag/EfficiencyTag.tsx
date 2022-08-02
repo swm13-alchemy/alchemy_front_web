@@ -1,5 +1,5 @@
 interface Props {
-  tagName: string;
+  tagName: string
 }
 
 function EfficiencyTag({ tagName }: Props) {

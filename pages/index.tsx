@@ -4,7 +4,7 @@ import SearchBtn from '../components/common/SearchBtn'
 import Seo from '../components/layout/Seo'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faGear } from '@fortawesome/free-solid-svg-icons'
 import DateBox from '../components/common/DateBox'
 import MyPillList from '../components/common/MyPillList'
 

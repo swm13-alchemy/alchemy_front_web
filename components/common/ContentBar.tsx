@@ -14,7 +14,11 @@ function ContentBar({ content, unit, nutrient }: IngredientType) {
       </div>
       <p className={'text-base' + ' text-[#8F8F8F]'}>{content + unit}</p>
 
-      <div className={'w-[18%] bg-[#D5E3B1] h-full flex items-center justify-center' + ' text-[#8F8F8F]'}>
+      <div
+        className={
+          'w-[18%] bg-[#D5E3B1] h-full flex items-center justify-center' + ' text-[#8F8F8F]'
+        }
+      >
         -150
       </div>
     </div>

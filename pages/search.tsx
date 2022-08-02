@@ -13,8 +13,8 @@ const Search = () => {
   const [searchResults, setSearchResults] = useState<SearchResultsItemType[]>([])
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target
-    setFormInputs({...formInputs, [name]: value})
+    const { name, value } = e.target
+    setFormInputs({ ...formInputs, [name]: value })
     setSearchTerm(e.target.value)
   }
 
@@ -27,7 +27,7 @@ const Search = () => {
     const result: SearchResultsItemType[] = supplements.pill
     setSearchResults(result)
     // @ts-ignore
-    router.replace({query:{name: formInputs.searchTerm}})
+    router.replace({ query: { name: formInputs.searchTerm } })
   }
 
   useEffect(() => {
@@ -46,11 +46,12 @@ const Search = () => {
   return (
     <div>
       <div className='relative left-0 top-0 w-full h-14 px-3 flex items-center justify-between border-b-[#BABABA] border-b'>
-        <FontAwesomeIcon icon={faAngleLeft} className='text-2xl cursor-pointer pr-5' onClick={() => router.back()} />
-        <form
-          className='w-full h-full text-xl flex items-center justify-between'
-          onSubmit={search}
-        >
+        <FontAwesomeIcon
+          icon={faAngleLeft}
+          className='text-2xl cursor-pointer pr-5'
+          onClick={() => router.back()}
+        />
+        <form className='w-full h-full text-xl flex items-center justify-between' onSubmit={search}>
           <input
             className='appearance-none w-full bg-transparent h-full'
             name='searchTerm'

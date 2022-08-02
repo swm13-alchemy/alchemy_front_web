@@ -10,7 +10,11 @@ function SearchResultListItem({ maker, name, imageUrl, id }: SearchResultsItemTy
         <div className='flex items-center w-full h-40 border-[#BABABA] border rounded-3xl px-2 space-x-2'>
           <div className='relative w-24 h-24 rounded-3xl border-[#BABABA] border overflow-hidden'>
             <Image
-              src={imageUrl ? imageUrl : 'https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'}
+              src={
+                imageUrl
+                  ? imageUrl
+                  : 'https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
+              }
               className='object-cover'
               layout='fill'
             />
