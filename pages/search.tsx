@@ -5,12 +5,23 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import requests from '../utils/requests'
 import { SearchResultsItemType } from '../utils/types'
+import axios from 'axios'
 
 const Search = () => {
   const router = useRouter()
   const [formInputs, setFormInputs] = useState({})
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState<SearchResultsItemType[]>([])
+
+  useEffect(() => {
+    if (router.query.name && !searchResults.length) {
+      (async function reloadingSearch() {
+        const res = await axios.get(requests.fetchSearchResults + `?name=%${router.query.name}%`)
+        const result: SearchResultsItemType[] = res.data.pill
+        setSearchResults(result)
+      })()
+    }
+  })
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -21,27 +32,12 @@ const Search = () => {
   const search = async (e: any) => {
     e.preventDefault()
     // @ts-ignore
-    let supplements = await fetch(requests.fetchSearchResults + `?name=%${formInputs.searchTerm}%`)
-    supplements = await supplements.json()
-    // @ts-ignore
-    const result: SearchResultsItemType[] = supplements.pill
+    const res = await axios.get(requests.fetchSearchResults + `?name=%${formInputs.searchTerm}%`)
+    const result: SearchResultsItemType[] = res.data.pill
     setSearchResults(result)
     // @ts-ignore
-    router.replace({ query: { name: formInputs.searchTerm } })
+    await router.replace({ query: { name: formInputs.searchTerm } })
   }
-
-  useEffect(() => {
-    if (router.query.name && !searchResults.length) {
-      const reloadingSearch = async () => {
-        let supplements = await fetch(requests.fetchSearchResults + `?name=%${router.query.name}%`)
-        supplements = await supplements.json()
-        // @ts-ignore
-        const result: SearchResultsItemType[] = supplements.pill
-        setSearchResults(result)
-      }
-      reloadingSearch()
-    }
-  })
 
   return (
     <div>

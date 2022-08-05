@@ -32,8 +32,6 @@ const Details = ({ details }: Props) => {
   const { id, name, dailyDose, intakeTiming, maker, ingredients } = details
   const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()
 
-  console.log(userTakingPillList)
-
   // 최초 페이지 진입 시 한 번 실행 후 종료
   // 해당 페이지 영양제가 등록되어 있는지 확인하고 있으면 섭취중인 영양제로 표시
   useEffect(() => {
