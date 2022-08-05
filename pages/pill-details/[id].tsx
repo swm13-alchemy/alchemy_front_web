@@ -18,6 +18,7 @@ import EfficiencyTag from '../../components/tag/EfficiencyTag'
 import requests from '../../utils/requests'
 import { SupplementDetailsType } from '../../utils/types'
 import axios from 'axios'
+import { useUserPillListStore } from '../../stores/store'
 
 interface Props {
   details: SupplementDetailsType
@@ -29,29 +30,23 @@ const Details = ({ details }: Props) => {
   const [isTaking, setIsTaking] = useState<boolean>(false)
   const [isOpenEfficiency, setIsOpenEfficiency] = useState<boolean>(false)
   const { id, name, dailyDose, intakeTiming, maker, ingredients } = details
-  const [userTakingPillList, setUserTakingPillList] = useState<SupplementDetailsType[]>([])
+  const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()
 
-  console.log(details)
-  console.log(id, dailyDose, intakeTiming, name)
+  console.log(userTakingPillList)
 
-  // 최초 페이지 진입 시 실행 후 종료
-  // localStorage에 해당 페이지 영양제가 등록되어 있는지 확인하고 있으면 섭취중인 영양제로 표시
+  // 최초 페이지 진입 시 한 번 실행 후 종료
+  // 해당 페이지 영양제가 등록되어 있는지 확인하고 있으면 섭취중인 영양제로 표시
   useEffect(() => {
-    // localStorage에서 'userTakingPillList'라는 key이름으로 데이터를 꺼내봄.
-    const jsonLocalTakingPillList = localStorage.getItem('userTakingPillList')
-    // 만약 있다면 (null이 아니라면) if문 안의 내용 실행
-    if (jsonLocalTakingPillList !== null) {
-      // localStorage에 넣을 때 Json으로 바꿔주므로 다시 되돌리기 위해 파싱
-      const localTakingPillList: SupplementDetailsType[] = JSON.parse(jsonLocalTakingPillList)
+    // 만약 등록한 영양제가 있다면 if문 안의 내용 실행
+    if (userTakingPillList.length !== 0) {
       // 객체 배열인 localTakingPillList에서 현재 페이지의 영양제의 id와 같은 객체 값이 있는지 find함수로 확인
       // 있다면 객체가 반환되고 없으면 undefined가 반환
-      const matchOne: SupplementDetailsType | undefined = localTakingPillList.find(x => x.id === id)
+      const matchOne: SupplementDetailsType | undefined = userTakingPillList.find(x => x.id === id)
       if (matchOne !== undefined) {
         setIsTaking(true)
       } else {  // 사실 굳이 필요없는 else이긴 함. 안정성을 위해 일단 추가
         setIsTaking(false)
       }
-      setUserTakingPillList(localTakingPillList)
     }
   }, [])
 
@@ -59,21 +54,15 @@ const Details = ({ details }: Props) => {
   const takingSubmit = (curIsTaking: boolean) => {
     // 현재 섭취중이 아니라면
     if (!curIsTaking) {
-      console.log(userTakingPillList)
-      console.log(userTakingPillList.concat(details))
-      // 기존 유저 섭취 영양제 리스트 배열에 현재 영양제 페이지의 영양제 객체 값 추가 (이게 필요한지는 조금 더 생각해봐야 할 듯)
+      // 기존 유저 섭취 영양제 리스트 배열에 현재 영양제 페이지의 영양제 객체 값 추가 (localStorage 에도 반영됨)
       setUserTakingPillList(userTakingPillList.concat(details))
-      // localStorage에도 추가해서 저장
-      localStorage.setItem('userTakingPillList', JSON.stringify(userTakingPillList.concat(details)))
       // 다 끝나면 섭취 체크
       setIsTaking(true)
     } else {  // 만약 섭취중이라면
       // userTakingPillList 배열에서 해당 값을 삭제하기
       const removedList: SupplementDetailsType[] = userTakingPillList.filter(x => x.id !== id)
-      // state 값 수정
+      // 기존 유저 섭취 영양제 리스트 배열 업데이트하기 (localStorage 에도 반영됨)
       setUserTakingPillList(removedList)
-      // localStorage 값도 수정
-      localStorage.setItem('userTakingPillList', JSON.stringify(removedList))
       // 다 끝나면 섭취 해제 체크
       setIsTaking(false)
     }
