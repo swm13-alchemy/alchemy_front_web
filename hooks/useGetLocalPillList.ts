@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { SupplementDetailsType } from '../utils/types'
 
+
+/**
+ * ************* 폐기 예정인 훅 *************
+ * **/
+
+
 const useGetLocalPillList = (): SupplementDetailsType[] => {
   const [userTakingPillList, setUserTakingPillList] = useState<SupplementDetailsType[]>([])
 
