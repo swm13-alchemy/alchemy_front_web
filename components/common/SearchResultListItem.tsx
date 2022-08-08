@@ -1,10 +1,15 @@
 import Image from 'next/image'
 import EfficiencyTag from '../tag/EfficiencyTag'
 import Link from 'next/link'
-import { SearchResultsItemType } from '../../utils/types'
 import requests from '../../utils/requests'
 
-function SearchResultListItem({ maker, name, id }: SearchResultsItemType) {
+interface Props {
+  id: number
+  name: string
+  maker: string
+}
+
+function SearchResultListItem({ maker, name, id }: Props) {
   return (
     <Link href={`/pill-details/${id}`}>
       <a>

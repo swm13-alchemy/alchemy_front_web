@@ -72,9 +72,7 @@ const Search = () => {
                   key={supplement.name}
                   id={supplement.id}
                   name={supplement.name}
-                  imageUrl={supplement.imageUrl}
                   maker={supplement.maker}
-                  information={supplement.information}
                 />
               )
             })}

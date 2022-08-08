@@ -1,7 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faAngleLeft,
   faStar,
   faShareNodes,
   faPlus,
@@ -19,13 +18,13 @@ import requests from '../../utils/requests'
 import { SupplementDetailsType } from '../../utils/types'
 import axios from 'axios'
 import { useUserPillListStore } from '../../stores/store'
+import HeadNav from '../../components/layout/HeadNav'
 
 interface Props {
   details: SupplementDetailsType
 }
 
 const Details = ({ details }: Props) => {
-  const router = useRouter()
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const [isTaking, setIsTaking] = useState<boolean>(false)
   const [isOpenEfficiency, setIsOpenEfficiency] = useState<boolean>(false)
@@ -68,14 +67,7 @@ const Details = ({ details }: Props) => {
 
   return (
     <div>
-      <header className='relative left-0 top-0 w-full h-14 px-3 flex items-center border-b-[#BABABA] border-b'>
-        <FontAwesomeIcon
-          icon={faAngleLeft}
-          className='text-2xl cursor-pointer'
-          onClick={() => router.back()}
-        />
-        <p className='text-2xl w-full font-bold text-center pr-5'>{name}</p>
-      </header>
+      <HeadNav name={name} />
 
       <main className='flex flex-col items-center w-full bg-white px-8 py-8'>
         <div className='relative w-52 h-52 rounded-3xl border-[#BABABA] border overflow-hidden'>
