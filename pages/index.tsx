@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 import DateBox from '../components/common/DateBox'
 import MyPillList from '../components/common/MyPillList'
+import PillLenseFNB from '../components/layout/PillLenseFNB'
 
 const MY: NextPage = () => {
   return (
@@ -40,6 +41,8 @@ const MY: NextPage = () => {
       </div>
 
       <MyPillList />
+
+      <PillLenseFNB />
 
       <BottomNavBar />
     </div>
