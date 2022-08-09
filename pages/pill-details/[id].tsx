@@ -13,8 +13,14 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import ContentGraph from '../../components/common/ContentGraph'
 import EfficiencyTag from '../../components/tag/EfficiencyTag'
-import { SupplementDetailsType } from '../../utils/types'
-import { useUserPillListStore } from '../../stores/store'
+import {
+  IngredientType,
+  MergedNutrientDataType,
+  NutrientType,
+  SupplementDetailsType,
+  UserIntakeNutrientType,
+} from '../../utils/types'
+import { useUserHealthDataStore, useUserPillListStore } from '../../stores/store'
 import HeadNav from '../../components/layout/HeadNav'
 import { pillApi, requestURLs } from '../../utils/api'
 
@@ -23,11 +29,13 @@ interface Props {
 }
 
 const Details = ({ details }: Props) => {
+  const { id, name, dailyDose, intakeTiming, maker, ingredients } = details
+  const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()
+  const { age, isMale } = useUserHealthDataStore()
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const [isTaking, setIsTaking] = useState<boolean>(false)
   const [isOpenEfficiency, setIsOpenEfficiency] = useState<boolean>(false)
-  const { id, name, dailyDose, intakeTiming, maker, ingredients } = details
-  const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()
+  const [nutrientData, setNutrientData] = useState<MergedNutrientDataType[]>()
 
   // 최초 페이지 진입 시 한 번 실행 후 종료
   // 해당 페이지 영양제가 등록되어 있는지 확인하고 있으면 섭취중인 영양제로 표시
@@ -45,14 +53,24 @@ const Details = ({ details }: Props) => {
     }
   }, [])
 
+  // 기존 섭취 영양분 대비 변화량 그래프 그리기 위한 데이터 처리 부분
   useEffect(() => {
-    // 섭취중인 영양제인 경우
-    if (isTaking) {
-      (async () => {
-
-      })()
-    } else {
-
+    // 나이와 성별을 등록한 경우만 데이터를 받아옴
+    if (age !== null && isMale !== null) {
+      // 섭취중인 영양제가 아닌 경우
+      if (!isTaking) {
+        (async () => {
+          // 섭취중인 영양제들의 id 값들로 get 호출함.
+          const { data: { data: result} } = await pillApi.getTotalBalance(age, isMale, userTakingPillList.map(x => x.id))
+          setNutrientData(mergeNutrientsData(result, ingredients))
+        })()
+      } else {  // 섭취중인 영양제인 경우
+        (async () => {
+          // 현재 페이지의 영양제 id를 제거하고 나머지 섭취중인 영양제들의 id 값들로 get 호출함.
+          const { data: { data: result } } = await pillApi.getTotalBalance(age, isMale, userTakingPillList.filter(x => x.id !== id).map(x => x.id))
+          setNutrientData(mergeNutrientsData(result, ingredients))
+        })()
+      }
     }
   }, [userTakingPillList])
 
@@ -72,6 +90,46 @@ const Details = ({ details }: Props) => {
       // 다 끝나면 섭취 해제 체크
       setIsTaking(false)
     }
+  }
+
+  // 기존 섭취 영양분 대비 현재 페이지 영양제 영양분 확인을 위한 데이터 가공 함수
+  const mergeNutrientsData = (intakeNutrients: UserIntakeNutrientType[], newNutrients: IngredientType[]): MergedNutrientDataType[] => {
+    const mergedData: MergedNutrientDataType[] = []
+    for (const ingredient of newNutrients) {
+      let isIntake: boolean = false
+      for (const intakeNutrient of intakeNutrients) {
+        if (ingredient.nutrient.name === intakeNutrient.name) {
+          mergedData.push({
+            name: intakeNutrient.name,
+            intakeContent: intakeNutrient.content,
+            newContent: ingredient.content,
+            reqMin: intakeNutrient.reqMin,
+            reqAvg: intakeNutrient.reqAvg,
+            reqLimit: intakeNutrient.reqLimit,
+            unit: intakeNutrient.unit
+          })
+          isIntake = true
+          break
+        }
+      }
+      // 해당 영양분을 기존에 섭취하지 않고 있는 경우
+      if (!isIntake) {
+        /**
+         * TODO: 이 부분 명세 나오는 거 봐서 처리해야 함.
+         */
+        // mergedData.push({
+        //   name: ingredient.nutrient.name,
+        //   intakeContent: null,
+        //   newContent: ingredient.content,
+        //   reqMin: null,
+        //   reqAvg: null,
+        //   reqLimit: null,
+        //   unit: ingredient.unit
+        // })
+      }
+    }
+
+    return mergedData
   }
 
   return (

@@ -16,5 +16,11 @@ export const requestURLs = {
 export const pillApi = {
   getSearchResults: (name: any) => ec2.get(`${BASE_URL}/pill/search?name=%${name}%`),
   getSupplementDetails: (id: any) => ec2.get(`${BASE_URL}/pill?id=${id}`),
-  getTotalBalance: () => ec2.get(`${BASE_URL}/balance/total`)
+  getTotalBalance: (age: number, isMale: boolean, pillsId: number[]) => ec2.get(`${BASE_URL}/balance/total`, {
+    params: {
+      age: age,
+      is_Male: isMale,
+      pills_Id: pillsId
+    }
+  })
 }
