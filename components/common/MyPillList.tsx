@@ -1,7 +1,7 @@
 import PillView from './PillView'
 import Link from 'next/link'
-import requests from '../../utils/requests'
 import useUserPillList from '../../hooks/useUserPillList'
+import { requestURLs } from '../../utils/api'
 
 function MyPillList() {
   // // 랜더링 문제로 Zustand 훅 안쓰고 커스텀 훅 사용 (노션 참고)
@@ -16,7 +16,7 @@ function MyPillList() {
             {userTakingPillList.length !== 0 ?
               userTakingPillList.map((pill) => {
                 return(
-                  <PillView key={pill.id} imageUrl={requests.fetchSupplementThumbnail(pill.id.toString())} name={pill.name} />
+                  <PillView key={pill.id} imageUrl={requestURLs.getSupplementThumbnailURL(pill.id.toString())} name={pill.name} />
                 )
               }) : (
                 <p className='text-sm'>등록된 영양제가 없어요! 영양제를 등록해보세요.</p>

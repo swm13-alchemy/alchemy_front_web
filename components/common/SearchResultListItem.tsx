@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import EfficiencyTag from '../tag/EfficiencyTag'
 import Link from 'next/link'
-import requests from '../../utils/requests'
+import { requestURLs } from '../../utils/api'
 
 interface Props {
   id: number
@@ -17,9 +17,8 @@ function SearchResultListItem({ maker, name, id }: Props) {
           <div className='relative w-24 h-24 rounded-3xl border-[#BABABA] border overflow-hidden'>
             <Image
               src={
-                requests.fetchSupplementThumbnail(id.toString())
-                  ? requests.fetchSupplementThumbnail(id.toString())
-                  : 'https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
+                requestURLs.getSupplementThumbnailURL(id.toString())
+                  ?? 'https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
               }
               className='object-cover'
               layout='fill'

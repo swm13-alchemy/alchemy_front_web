@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faSearch } from '@fortawesome/free-solid-svg-icons'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import requests from '../utils/requests'
 import { SearchResultsItemType } from '../utils/types'
 import axios from 'axios'
+import { pillApi, requestURLs } from '../utils/api'
 
 const Search = () => {
   const router = useRouter()
@@ -16,8 +16,7 @@ const Search = () => {
   useEffect(() => {
     if (router.query.name && !searchResults.length) {
       (async function reloadingSearch() {
-        const res = await axios.get(requests.fetchSearchResults + `?name=%${router.query.name}%`)
-        const result: SearchResultsItemType[] = res.data.pill
+        const { data: { pill: result } } = await pillApi.getSearchResults(router.query.name)
         setSearchResults(result)
       })()
     }
@@ -32,8 +31,7 @@ const Search = () => {
   const search = async (e: any) => {
     e.preventDefault()
     // @ts-ignore
-    const res = await axios.get(requests.fetchSearchResults + `?name=%${formInputs.searchTerm}%`)
-    const result: SearchResultsItemType[] = res.data.pill
+    const { data: { pill: result } } = await pillApi.getSearchResults(formInputs.searchTerm)
     setSearchResults(result)
     // @ts-ignore
     await router.replace({ query: { name: formInputs.searchTerm } })

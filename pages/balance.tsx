@@ -11,3 +11,15 @@ const Balance: NextPage = () => {
 }
 
 export default Balance
+
+// SSR
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const res = await axios.get(requestURLs.fetchTotalBalance + `?age=`)
+//   const details = res.data.pill[0]
+//
+//   return {
+//     props: {
+//       details,
+//     },
+//   }
+// }

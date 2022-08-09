@@ -9,16 +9,14 @@ import {
   faAngleUp,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons'
-import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import ContentGraph from '../../components/common/ContentGraph'
 import EfficiencyTag from '../../components/tag/EfficiencyTag'
-import requests from '../../utils/requests'
 import { SupplementDetailsType } from '../../utils/types'
-import axios from 'axios'
 import { useUserPillListStore } from '../../stores/store'
 import HeadNav from '../../components/layout/HeadNav'
+import { pillApi, requestURLs } from '../../utils/api'
 
 interface Props {
   details: SupplementDetailsType
@@ -47,6 +45,17 @@ const Details = ({ details }: Props) => {
     }
   }, [])
 
+  useEffect(() => {
+    // 섭취중인 영양제인 경우
+    if (isTaking) {
+      (async () => {
+
+      })()
+    } else {
+
+    }
+  }, [userTakingPillList])
+
   // 섭취중인 영양제 버튼 클릭 시
   const takingSubmit = (curIsTaking: boolean) => {
     // 현재 섭취중이 아니라면
@@ -72,7 +81,7 @@ const Details = ({ details }: Props) => {
       <main className='flex flex-col items-center w-full bg-white px-8 py-8'>
         <div className='relative w-52 h-52 rounded-3xl border-[#BABABA] border overflow-hidden'>
           <Image
-            src={requests.fetchSupplementThumbnail(id.toString())}
+            src={requestURLs.getSupplementThumbnailURL(id.toString())}
             className='object-cover'
             layout='fill'
           />
@@ -145,8 +154,8 @@ export default Details
 
 // SSR
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await axios.get(requests.fetchSupplementDetails + `?id=${context.query.id}`)
-  const details = res.data.pill[0]
+  const { data: { pill: res } } = await pillApi.getSupplementDetails(context.query.id)
+  const details = res[0]
 
   return {
     props: {
