@@ -1,9 +1,11 @@
-import BottomNavBar from '../components/layout/BottomNavBar'
 import Webcam from 'react-webcam'
 import { useCallback, useState, useRef } from 'react'
+import axios from 'axios'
 
 const FACING_MODE_USER = 'user'
 const FACING_MODE_ENVIRONMENT = 'environment'
+const PILLLENSE_CLASSIFY_URL =
+  'https://6eztxfgj8h.execute-api.ap-northeast-2.amazonaws.com/dev/classify'
 
 const videoConstraints = {
   facingMode: FACING_MODE_USER,
@@ -12,6 +14,7 @@ const videoConstraints = {
 const PillLense = () => {
   const [facingMode, setFacingMode] = useState(FACING_MODE_ENVIRONMENT)
   const [image, setImage] = useState('')
+  const [result, setResult] = useState([])
   const webcamRef = useRef(null)
 
   // @ts-ignore
@@ -28,7 +31,7 @@ const PillLense = () => {
     (e) => {
       e.preventDefault()
 
-      setImage(webcamRef.current.getScreenshot())
+      setImage(webcamRef.current?.getScreenshot())
     },
     [webcamRef],
   )
@@ -41,14 +44,17 @@ const PillLense = () => {
   }, [])
 
   return (
-    <div className=' min-h-screen'>
-      <div className='h-[90vh]'>
+    <div className='min-h-screen'>
+      <div className='h-[80vh] flex items-center'>
         {/* Camera Here */}
         {image === '' ? (
           <Webcam
             audio={false}
             screenshotFormat='image/jpeg'
+            className={'h-[80vh] bg-black'}
+            mirrored={facingMode === FACING_MODE_USER}
             ref={webcamRef}
+            forceScreenshotSourceSize
             videoConstraints={{
               ...videoConstraints,
               facingMode,
@@ -62,13 +68,37 @@ const PillLense = () => {
       </div>
 
       {/* Other Buttons Here (Switch-Mode, Capture, Gallery) */}
+      {image === '' && <button onClick={handleSwitch}>Switch</button>}
+
       {image === '' ? (
-        <button onClick={handleSwitch}>Switch</button>
+        <button onClick={handleCapture}>Capture</button>
       ) : (
-        <button onClick={handleReset}>Reset</button>
+        <>
+          <button onClick={handleReset}>Reset</button>
+          <button
+            onClick={async () => {
+              const img64 = image
+
+              console.time('pilllense')
+
+              const temp = await axios(PILLLENSE_CLASSIFY_URL, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                data: {
+                  image: img64,
+                },
+              })
+              console.timeEnd('pilllense')
+            }}
+          >
+            apply
+          </button>
+        </>
       )}
 
-      <button onClick={handleCapture}>Capture</button>
+      <div>{JSON.stringify(result)}</div>
     </div>
   )
 }
