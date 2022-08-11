@@ -1,22 +1,22 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/router'
+import { NextRouter } from 'next/router'
+import { ChevronLeft } from '@mui/icons-material'
+import React from 'react'
 
 interface Props {
+  router: NextRouter
   name: string
 }
 
-function HeadNav({ name }: Props) {
-  const router = useRouter()
-
+function HeadNav({ router, name }: Props) {
   return (
-    <header className='relative left-0 top-0 w-full h-14 px-3 flex items-center border-b-[#BABABA] border-b'>
-      <FontAwesomeIcon
-        icon={faAngleLeft}
-        className='text-2xl cursor-pointer'
+    <header className='relative w-full h-10 flex items-center justify-center mb-4 text-gray-900'>
+      <button
+        className='absolute left-4 flex items-center justify-center'
         onClick={() => router.back()}
-      />
-      <p className='text-2xl w-full font-bold text-center pr-5'>{name}</p>
+      >
+        <ChevronLeft className='text-2xl' />
+      </button>
+      <h1 className='text-base'>{name}</h1>
     </header>
   )
 }

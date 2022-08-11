@@ -19,14 +19,7 @@ const MY: NextPage = () => {
         <FontAwesomeIcon icon={faGear} className='text-2xl' />
       </header>
 
-      <main className='mx-auto mt-5 flex flex-col space-y-8'>
-        <h1 className='text-5xl text-center'>
-          How is your
-          <br />
-          health today?
-        </h1>
-        <SearchBtn btnWidth='w-11/12' />
-      </main>
+      <SearchBtn />
 
       <div className='flex flex-col items-center space-y-12 my-6'>
         <section className='flex flex-col space-y-5 w-full'>

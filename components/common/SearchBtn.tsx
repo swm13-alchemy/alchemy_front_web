@@ -2,22 +2,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 
-interface Props {
-  btnWidth: string
-}
-
-function SearchBtn({ btnWidth }: Props) {
+function SearchBtn() {
   return (
     <Link href='/search'>
       <a>
-        <div
-          className={
-            `${btnWidth}` +
-            ' h-10 flex items-center justify-between px-5 mx-auto border border-black rounded-2xl cursor-pointer bg-white'
-          }
-        >
-          <p className='text-gray-500'>어떤 영양제를 찾으시나요?</p>
-          <FontAwesomeIcon icon={faSearch} className='fa-x' />
+        <div className='w-11/12 h-12 bg-gray-50 drop-shadow rounded-2xl mx-auto flex items-center px-[1em]'>
+          <p className='text-gray-500 text-sm'>제품명이나 브랜드 명으로 검색</p>
         </div>
       </a>
     </Link>

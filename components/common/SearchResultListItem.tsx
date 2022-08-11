@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import EfficiencyTag from '../tag/EfficiencyTag'
 import Link from 'next/link'
 import { requestURLs } from '../../utils/api'
 
@@ -13,25 +12,17 @@ function SearchResultListItem({ maker, name, id }: Props) {
   return (
     <Link href={`/pill-details/${id}`}>
       <a>
-        <div className='flex items-center w-full h-40 border-[#BABABA] border rounded-3xl px-2 space-x-2'>
-          <div className='relative w-24 h-24 rounded-3xl border-[#BABABA] border overflow-hidden'>
+        <div className='flex items-center w-full h-[5.75rem] shadow-04dp border rounded-lg space-x-4'>
+          <div className='relative w-5/12 h-full overflow-hidden'>
             <Image
-              src={
-                requestURLs.getSupplementThumbnailURL(id.toString())
-                  ?? 'https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
-              }
-              className='object-cover'
+              src={requestURLs.getSupplementThumbnailURL(id.toString())}
+              className='object-contain'
               layout='fill'
             />
           </div>
-          <div className='flex flex-col space-y-0.5'>
-            <p className='text-lg text-[#7A7A7A]'>{maker}</p>
-            <p className='text-lg'>{name}</p>
-            <div className='w-full grid grid-cols-2 gap-1'>
-              <EfficiencyTag tagName='노화&항산화' />
-              <EfficiencyTag tagName='눈 건강' />
-              <EfficiencyTag tagName='간 건강' />
-            </div>
+          <div className='flex flex-col space-y-1'>
+            <p className='text-xs text-gray-500'>{maker}</p>
+            <p className='text-base text-gray-900'>{name}</p>
           </div>
         </div>
       </a>

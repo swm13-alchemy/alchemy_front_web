@@ -16,13 +16,14 @@ import EfficiencyTag from '../../components/tag/EfficiencyTag'
 import {
   IngredientType,
   MergedNutrientDataType,
-  NutrientType,
   SupplementDetailsType,
   UserIntakeNutrientType,
 } from '../../utils/types'
 import { useUserHealthDataStore, useUserPillListStore } from '../../stores/store'
 import HeadNav from '../../components/layout/HeadNav'
 import { pillApi, requestURLs } from '../../utils/api'
+import { PlaylistAdd, DeleteForever } from '@mui/icons-material'
+import { useRouter } from 'next/router'
 
 interface Props {
   details: SupplementDetailsType
@@ -30,6 +31,7 @@ interface Props {
 
 const Details = ({ details }: Props) => {
   const { id, name, dailyDose, intakeTiming, maker, ingredients } = details
+  const router = useRouter()
   const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()
   const { age, isMale } = useUserHealthDataStore()
   const [isLiked, setIsLiked] = useState<boolean>(false)
@@ -134,8 +136,7 @@ const Details = ({ details }: Props) => {
 
   return (
     <div>
-      <HeadNav name={name} />
-
+      <HeadNav router={router} name={name} />
       <main className='flex flex-col items-center w-full bg-white px-8 py-8'>
         <div className='relative w-52 h-52 rounded-3xl border-[#BABABA] border overflow-hidden'>
           <Image
@@ -163,13 +164,17 @@ const Details = ({ details }: Props) => {
         </div>
         <button
           className={
-            'w-full h-11 rounded-xl mt-5 text-white text-lg' +
-            (isTaking ? ' bg-[#00C23C]' : ' bg-[#BABABA]')
+            'w-full h-10 rounded-xl mt-5 text-white duration-500' +
+            (isTaking ? ' bg-primary' : ' bg-gray-300')
           }
           onClick={() => takingSubmit(isTaking)}
         >
-          <FontAwesomeIcon icon={isTaking ? faCheck : faPlus} className='relative right-12' />
-          {isTaking ? '등록된 영양제' : '내 영양제 등록'}
+          {isTaking ? (
+            <PlaylistAdd className='text-lg' />
+          ) : (
+            <DeleteForever className='text-lg' />
+          )}
+          <p className='text-center text-xs inline ml-2'>{isTaking ? '영양제 리스트 추가' : '영양제 리스트 제거'}</p>
         </button>
       </main>
 
