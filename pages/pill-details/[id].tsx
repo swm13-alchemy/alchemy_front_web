@@ -3,8 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faStar,
   faShareNodes,
-  faPlus,
-  faCheck,
   faAngleDown,
   faAngleUp,
 } from '@fortawesome/free-solid-svg-icons'
@@ -37,7 +35,7 @@ const Details = ({ details }: Props) => {
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const [isTaking, setIsTaking] = useState<boolean>(false)
   const [isOpenEfficiency, setIsOpenEfficiency] = useState<boolean>(false)
-  const [nutrientData, setNutrientData] = useState<MergedNutrientDataType[]>()
+  const [mergedNutrientData, setMergedNutrientData] = useState<MergedNutrientDataType[]>([])
 
   // 최초 페이지 진입 시 한 번 실행 후 종료
   // 해당 페이지 영양제가 등록되어 있는지 확인하고 있으면 섭취중인 영양제로 표시
@@ -57,20 +55,24 @@ const Details = ({ details }: Props) => {
 
   // 기존 섭취 영양분 대비 변화량 그래프 그리기 위한 데이터 처리 부분
   useEffect(() => {
-    // 나이와 성별을 등록한 경우만 데이터를 받아옴
-    if (age !== null && isMale !== null) {
+    // 나이와 성별을 등록하고 섭취중인 영양제로 등록한 것이 있는 경우만 데이터를 받아옴
+    if (age !== null && isMale !== null && userTakingPillList.length !== 0) {
       // 섭취중인 영양제가 아닌 경우
       if (!isTaking) {
         (async () => {
           // 섭취중인 영양제들의 id 값들로 get 호출함.
           const { data: { data: result} } = await pillApi.getTotalBalance(age, isMale, userTakingPillList.map(x => x.id))
-          setNutrientData(mergeNutrientsData(result, ingredients))
+          /**
+           * TODO: 현재 백엔드 구현에서는 어쩔 수 없이 필요한 호출에 대한 코드
+           * 추후 수정
+           */
+          setMergedNutrientData(mergeNutrientsData(result, ingredients))
         })()
       } else {  // 섭취중인 영양제인 경우
         (async () => {
           // 현재 페이지의 영양제 id를 제거하고 나머지 섭취중인 영양제들의 id 값들로 get 호출함.
           const { data: { data: result } } = await pillApi.getTotalBalance(age, isMale, userTakingPillList.filter(x => x.id !== id).map(x => x.id))
-          setNutrientData(mergeNutrientsData(result, ingredients))
+          setMergedNutrientData(mergeNutrientsData(result, ingredients))
         })()
       }
     }
@@ -165,16 +167,16 @@ const Details = ({ details }: Props) => {
         <button
           className={
             'w-full h-10 rounded-xl mt-5 text-white duration-500' +
-            (isTaking ? ' bg-primary' : ' bg-gray-300')
+            (isTaking ? ' bg-gray-300' : ' bg-primary')
           }
           onClick={() => takingSubmit(isTaking)}
         >
           {isTaking ? (
-            <PlaylistAdd className='text-lg' />
-          ) : (
             <DeleteForever className='text-lg' />
+          ) : (
+            <PlaylistAdd className='text-lg' />
           )}
-          <p className='text-center text-xs inline ml-2'>{isTaking ? '영양제 리스트 추가' : '영양제 리스트 제거'}</p>
+          <p className='text-center text-xs inline ml-2'>{isTaking ? '영양제 리스트 제거' : '영양제 리스트 추가'}</p>
         </button>
       </main>
 

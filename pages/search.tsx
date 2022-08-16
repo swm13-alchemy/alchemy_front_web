@@ -15,11 +15,11 @@ const Search = () => {
   useEffect(() => {
     if (router.query.name && !searchResults.length) {
       (async function reloadingSearch() {
-        const { data: { pill: result } } = await pillApi.getSearchResults(router.query.name)
+        const { data: { pills: result } } = await pillApi.getSearchResults(router.query.name)
         setSearchResults(result)
       })()
     }
-  })
+  }, [router.query.name])
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
     // const { name, value } = e.target
@@ -29,7 +29,7 @@ const Search = () => {
 
   const submitSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const { data: { pill: result } } = await pillApi.getSearchResults(searchTerm)
+    const { data: { pills: result } } = await pillApi.getSearchResults(searchTerm)
     setSearchResults(result)
     // 주소 쿼리스트링 추가해서 상세페이지 들어갔다 나올 때 그대로 검색되게 유지
     await router.replace({ query: { name: searchTerm } })

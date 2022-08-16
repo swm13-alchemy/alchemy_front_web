@@ -1,12 +1,17 @@
 import axios from 'axios'
 
 // const API_KEY = process.env.API_KEY
-const BASE_URL = 'http://ec2-3-38-255-41.ap-northeast-2.compute.amazonaws.com:8080/api/rest'
+const HASURA_BASE_URL = 'http://ec2-3-38-255-41.ap-northeast-2.compute.amazonaws.com:8080/api/rest'
+const NEST_BASE_URL = 'http://ec2-3-38-255-41.ap-northeast-2.compute.amazonaws.com:3000'
 const S3_BASE_URL = 'https://healerbee-dev.s3.ap-northeast-2.amazonaws.com'
 
 
-const ec2 = axios.create({
-  baseURL: BASE_URL
+const hasura = axios.create({
+  baseURL: HASURA_BASE_URL
+})
+
+const nest = axios.create({
+  baseURL: NEST_BASE_URL
 })
 
 export const requestURLs = {
@@ -14,13 +19,14 @@ export const requestURLs = {
 }
 
 export const pillApi = {
-  getSearchResults: (name: any) => ec2.get(`${BASE_URL}/pill/search?name=%${name}%`),
-  getSupplementDetails: (id: any) => ec2.get(`${BASE_URL}/pill?id=${id}`),
-  getTotalBalance: (age: number, isMale: boolean, pillsId: number[]) => ec2.get(`${BASE_URL}/balance/total`, {
+  getSearchResults: (name: any) => hasura.get(`/pill/search?name=%${name}%`),
+  getSupplementDetails: (id: any) => hasura.get(`/pill?id=${id}`),
+  getSupplementDetailsWithBalance: (age: number, isMale: boolean, pillId: number) => hasura.get(`/pill/balance`, {
     params: {
       age: age,
-      is_Male: isMale,
-      pills_Id: pillsId
+      isMale: isMale,
+      id: pillId
     }
-  })
+  }),
+  getTotalBalance: (age: number, isMale: boolean, pillsId: number[]) => nest.get(`/balance?age=${age}&is_male=${isMale}&${pillsId.map((id) => `pills_id=${id}`).join('&')}`)
 }
