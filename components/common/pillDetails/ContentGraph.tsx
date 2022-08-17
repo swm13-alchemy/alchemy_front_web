@@ -1,5 +1,5 @@
 import ContentBar from './ContentBar'
-import { IngredientType, NutrientType } from '../../utils/types'
+import { IngredientType, NutrientType } from '../../../utils/types'
 
 // remove
 const 예시: NutrientType = { name: '비타민C', tips: '피부에 좋음', efficacy: '혈액 순환' }

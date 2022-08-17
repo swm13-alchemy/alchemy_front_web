@@ -1,12 +1,13 @@
-import SearchResultListItem from '../components/common/SearchResultListItem'
+import SearchResultListItem from '../components/common/search/SearchResultListItem'
 import React, { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { SearchResultsItemType } from '../utils/types'
 import { pillApi } from '../utils/api'
 import SearchBar from '../components/layout/SearchBar'
 import HeadNav from '../components/layout/HeadNav'
+import { NextPage } from 'next'
 
-const Search = () => {
+const Search: NextPage = () => {
   const router = useRouter()
   // const [formInputs, setFormInputs] = useState({})
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -36,7 +37,7 @@ const Search = () => {
   }
 
   return (
-    <div>
+    <div className='space-y-4'>
       <HeadNav router={router} name='Search' />
 
       <SearchBar

@@ -9,7 +9,7 @@ import {
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import ContentGraph from '../../components/common/ContentGraph'
+import ContentGraph from '../../components/common/pillDetails/ContentGraph'
 import EfficiencyTag from '../../components/tag/EfficiencyTag'
 import {
   IngredientType,

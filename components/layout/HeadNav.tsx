@@ -9,7 +9,7 @@ interface Props {
 
 function HeadNav({ router, name }: Props) {
   return (
-    <header className='relative w-full h-10 flex items-center justify-center text-gray-900 bg-white shadow'>
+    <header className='relative w-full py-2 flex items-center justify-center text-gray-900 bg-white shadow'>
       <button
         className='absolute left-4 flex items-center justify-center'
         onClick={() => router.back()}

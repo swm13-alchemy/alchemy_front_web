@@ -1,4 +1,4 @@
-import { IngredientType } from '../../utils/types'
+import { IngredientType } from '../../../utils/types'
 
 function ContentBar({ content, unit, nutrient }: IngredientType) {
   const { name, tips, efficacy } = nutrient

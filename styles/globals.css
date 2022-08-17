@@ -5,7 +5,7 @@
 /* html, body, heading */
 @layer base {
   html, body {
-    @apply p-0 m-0 font-sans
+    @apply p-0 m-0
   }
 
   a {
