@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { SearchResultsItemType } from '../utils/types'
 import { pillApi } from '../utils/api'
 import SearchBar from '../components/layout/SearchBar'
-import HeadNav from '../components/layout/HeadNav'
+import BackHeader from '../components/layout/BackHeader'
 import { NextPage } from 'next'
 
 const Search: NextPage = () => {
@@ -38,7 +38,7 @@ const Search: NextPage = () => {
 
   return (
     <div className='space-y-4'>
-      <HeadNav router={router} name='Search' />
+      <BackHeader router={router} name='Search' />
 
       <SearchBar
         submitSearch={submitSearch}

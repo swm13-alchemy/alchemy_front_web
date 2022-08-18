@@ -18,7 +18,7 @@ import {
   UserIntakeNutrientType,
 } from '../../utils/types'
 import { useUserHealthDataStore, useUserPillListStore } from '../../stores/store'
-import HeadNav from '../../components/layout/HeadNav'
+import BackHeader from '../../components/layout/BackHeader'
 import { pillApi, requestURLs } from '../../utils/api'
 import { PlaylistAdd, DeleteForever } from '@mui/icons-material'
 import { useRouter } from 'next/router'
@@ -138,7 +138,7 @@ const Details = ({ details }: Props) => {
 
   return (
     <div>
-      <HeadNav router={router} name={name} />
+      <BackHeader router={router} name={name} />
       <main className='flex flex-col items-center w-full bg-white px-8 py-8'>
         <div className='relative w-52 h-52 rounded-3xl border-[#BABABA] border overflow-hidden'>
           <Image

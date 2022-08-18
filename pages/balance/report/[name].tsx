@@ -1,9 +1,7 @@
 import ContainerWithBottomNav from '../../../components/layout/ContainerWithBottomNav'
-import HeadNav from '../../../components/layout/HeadNav'
+import BackHeader from '../../../components/layout/BackHeader'
 import { useRouter } from 'next/router'
 import IntakeAdequateTag from '../../../components/tag/IntakeAdequateTag'
-import { UserIntakeNutrientType } from '../../../utils/types'
-import { CircularProgress } from '@mui/material'
 
 // interface QueryProps extends UserIntakeNutrientType {
 //   // query로 왔기 때문에 string으로 온다.
@@ -54,7 +52,7 @@ const Report = () => {
 
   return (
     <ContainerWithBottomNav>
-      <HeadNav router={router} name='영양제 분석 리포트' />
+      <BackHeader router={router} name='영양제 분석 리포트' />
 
       <div className='p-6 bg-white text-gray-900'>
         <IntakeAdequateTag state={state} excessOrLackContent={null} unit={null} />

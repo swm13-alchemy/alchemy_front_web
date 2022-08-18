@@ -7,7 +7,7 @@ interface Props {
   name: string
 }
 
-function HeadNav({ router, name }: Props) {
+function BackHeader({ router, name }: Props) {
   return (
     <header className='relative w-full py-2 flex items-center justify-center text-gray-900 bg-white shadow'>
       <button
@@ -21,4 +21,4 @@ function HeadNav({ router, name }: Props) {
   )
 }
 
-export default HeadNav
+export default BackHeader

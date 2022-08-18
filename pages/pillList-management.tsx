@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import HeadNav from '../components/layout/HeadNav'
+import BackHeader from '../components/layout/BackHeader'
 import { useUserPillListStore } from '../stores/store'
 import Link from 'next/link'
 import PillManagementListItem from '../components/common/PillManagementListItem'
@@ -15,7 +15,7 @@ const PillListManagement: NextPage = () => {
 
   return (
     <div>
-      <HeadNav router={router} name='내 영양제 관리' />
+      <BackHeader router={router} name='내 영양제 관리' />
       <Link href='search'>
         <a className='absolute right-2 top-3 border border-[#BABABA] rounded-3xl px-4 py-1'>추가</a>
       </Link>

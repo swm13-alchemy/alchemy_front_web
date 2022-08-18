@@ -4,7 +4,7 @@ import { useUserHealthDataStore, useUserPillListStore } from '../../stores/store
 import { pillApi } from '../../utils/api'
 import { UserIntakeNutrientType } from '../../utils/types'
 import { ESSENTIAL_NUTRIENTS_LIST } from '../../utils/constants'
-import HeadNav from '../../components/layout/HeadNav'
+import BackHeader from '../../components/layout/BackHeader'
 import { useRouter } from 'next/router'
 import BalanceSummary from '../../components/common/balance/BalanceSummary'
 import IntakeReport from '../../components/common/balance/IntakeReport'
@@ -12,6 +12,7 @@ import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomN
 import Image from 'next/image'
 import balanceIcon from '../../public/asset/image/balanceIcon.png'
 import MuiCarousel from '../../components/common/MuiCarousel'
+import MainHeader from '../../components/layout/MainHeader'
 
 const Index: NextPage = () => {
   const router = useRouter()
@@ -65,7 +66,8 @@ const Index: NextPage = () => {
 
   return (
     <ContainerWithBottomNav>
-      <HeadNav router={router} name='영양제 분석 리포트' />
+      {/*<BackHeader router={router} name='영양제 분석 리포트' />*/}
+      <MainHeader />
 
       <div className='flex flex-col space-y-4'>
         {/* 머리 부분 */}

@@ -4,7 +4,7 @@ import SEO from '../components/layout/SEO'
 import DateBox from '../components/common/DateBox'
 import MyPillList from '../components/common/MyPillList'
 import ContainerWithBottomNav from '../components/layout/ContainerWithBottomNav'
-import Header from '../components/layout/Header'
+import MainHeader from '../components/layout/MainHeader'
 
 const MY: NextPage = () => {
   return (
@@ -13,7 +13,7 @@ const MY: NextPage = () => {
 
       <div className='flex flex-col space-y-4'>
         <header className='flex flex-col space-y-4 bg-white pb-4'>
-          <Header />
+          <MainHeader />
           <SearchBtn />
         </header>
 
