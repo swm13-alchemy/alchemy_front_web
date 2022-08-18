@@ -29,7 +29,7 @@ function BalanceSummary() {
           <PillIcon isFill={false} />
         </div>
       </div>
-      <p className='text-sm text-gray-900'>홍길동님이 섭취중이신 <span className='font-bold'>4개</span>의 영양제 덕분에<br/>14가지의 건강 알약 중 <span className='font-bold text-primary'>6개의 알약</span>을 가지고 있어요!</p>
+      <p className='text-sm text-gray-900'>홍길동님이 섭취중이신 <span className='font-bold'>4개</span>의 영양제 덕분에<br/>14가지 건강 알약 중 <span className='font-bold text-primary'>6개의 알약</span>을 가지고 있어요!</p>
     </section>
   )
 }

@@ -13,7 +13,7 @@ function MyPillList() {
         <div className='w-full px-5'>
           <h1 className='text-xl font-bold'>내 영양제 {'>'}</h1>
           <div className='flex space-x-1.5 mt-5 overflow-x-scroll scrollbar-hide'>
-            {userTakingPillList.length !== 0 ?
+            {userTakingPillList?.length !== 0 ?
               userTakingPillList.map((pill) => {
                 return(
                   <PillView key={pill.id} imageUrl={requestURLs.getSupplementThumbnailURL(pill.id.toString())} name={pill.name} />

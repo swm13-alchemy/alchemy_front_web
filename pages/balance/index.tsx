@@ -89,7 +89,13 @@ const Index: NextPage = () => {
         <BalanceSummary />
 
         {/* 필수 영양분 리포트 부분 */}
-        <IntakeReport />
+        <IntakeReport
+          intakeNutrientData={intakeNutrientData}
+          excessNutrients={excessNutrients}
+          properNutrients={properNutrients}
+          minimumNutrients={minimumNutrients}
+          lackNutrients={lackNutrients}
+        />
       </div>
     </ContainerWithBottomNav>
   )
