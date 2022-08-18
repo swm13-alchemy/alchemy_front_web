@@ -1,8 +1,8 @@
 import Image from 'next/image'
-import requests from '../../utils/requests'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { requestURLs } from '../../utils/api'
 
 interface Props {
   id: number
@@ -19,7 +19,7 @@ function PillManagementListItem({ maker, name, id, deleteFunc }: Props) {
           <div className='relative w-24 h-24 rounded-3xl border-[#BABABA] border overflow-hidden'>
             <Image
               src={
-                requests.fetchSupplementThumbnail(id.toString())
+                requestURLs.getSupplementThumbnailURL(id.toString())
                   ?? 'https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
               }
               className='object-cover'

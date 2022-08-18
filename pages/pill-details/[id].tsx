@@ -3,33 +3,39 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faStar,
   faShareNodes,
-  faPlus,
-  faCheck,
   faAngleDown,
   faAngleUp,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons'
-import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import ContentGraph from '../../components/common/ContentGraph'
 import EfficiencyTag from '../../components/tag/EfficiencyTag'
-import requests from '../../utils/requests'
-import { SupplementDetailsType } from '../../utils/types'
-import axios from 'axios'
-import { useUserPillListStore } from '../../stores/store'
+import {
+  IngredientType,
+  MergedNutrientDataType,
+  SupplementDetailsType,
+  UserIntakeNutrientType,
+} from '../../utils/types'
+import { useUserHealthDataStore, useUserPillListStore } from '../../stores/store'
 import HeadNav from '../../components/layout/HeadNav'
+import { pillApi, requestURLs } from '../../utils/api'
+import { PlaylistAdd, DeleteForever } from '@mui/icons-material'
+import { useRouter } from 'next/router'
 
 interface Props {
   details: SupplementDetailsType
 }
 
 const Details = ({ details }: Props) => {
+  const { id, name, dailyDose, intakeTiming, maker, ingredients } = details
+  const router = useRouter()
+  const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()
+  const { age, isMale } = useUserHealthDataStore()
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const [isTaking, setIsTaking] = useState<boolean>(false)
   const [isOpenEfficiency, setIsOpenEfficiency] = useState<boolean>(false)
-  const { id, name, dailyDose, intakeTiming, maker, ingredients } = details
-  const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()
+  const [mergedNutrientData, setMergedNutrientData] = useState<MergedNutrientDataType[]>([])
 
   // 최초 페이지 진입 시 한 번 실행 후 종료
   // 해당 페이지 영양제가 등록되어 있는지 확인하고 있으면 섭취중인 영양제로 표시
@@ -46,6 +52,31 @@ const Details = ({ details }: Props) => {
       }
     }
   }, [])
+
+  // 기존 섭취 영양분 대비 변화량 그래프 그리기 위한 데이터 처리 부분
+  useEffect(() => {
+    // 나이와 성별을 등록하고 섭취중인 영양제로 등록한 것이 있는 경우만 데이터를 받아옴
+    if (age !== null && isMale !== null && userTakingPillList.length !== 0) {
+      // 섭취중인 영양제가 아닌 경우
+      if (!isTaking) {
+        (async () => {
+          // 섭취중인 영양제들의 id 값들로 get 호출함.
+          const { data: { data: result} } = await pillApi.getTotalBalance(age, isMale, userTakingPillList.map(x => x.id))
+          /**
+           * TODO: 현재 백엔드 구현에서는 어쩔 수 없이 필요한 호출에 대한 코드
+           * 추후 수정
+           */
+          setMergedNutrientData(mergeNutrientsData(result, ingredients))
+        })()
+      } else {  // 섭취중인 영양제인 경우
+        (async () => {
+          // 현재 페이지의 영양제 id를 제거하고 나머지 섭취중인 영양제들의 id 값들로 get 호출함.
+          const { data: { data: result } } = await pillApi.getTotalBalance(age, isMale, userTakingPillList.filter(x => x.id !== id).map(x => x.id))
+          setMergedNutrientData(mergeNutrientsData(result, ingredients))
+        })()
+      }
+    }
+  }, [userTakingPillList])
 
   // 섭취중인 영양제 버튼 클릭 시
   const takingSubmit = (curIsTaking: boolean) => {
@@ -65,14 +96,53 @@ const Details = ({ details }: Props) => {
     }
   }
 
+  // 기존 섭취 영양분 대비 현재 페이지 영양제 영양분 확인을 위한 데이터 가공 함수
+  const mergeNutrientsData = (intakeNutrients: UserIntakeNutrientType[], newNutrients: IngredientType[]): MergedNutrientDataType[] => {
+    const mergedData: MergedNutrientDataType[] = []
+    for (const ingredient of newNutrients) {
+      let isIntake: boolean = false
+      for (const intakeNutrient of intakeNutrients) {
+        if (ingredient.nutrient.name === intakeNutrient.name) {
+          mergedData.push({
+            name: intakeNutrient.name,
+            intakeContent: intakeNutrient.content,
+            newContent: ingredient.content,
+            reqMin: intakeNutrient.reqMin,
+            reqAvg: intakeNutrient.reqAvg,
+            reqLimit: intakeNutrient.reqLimit,
+            unit: intakeNutrient.unit
+          })
+          isIntake = true
+          break
+        }
+      }
+      // 해당 영양분을 기존에 섭취하지 않고 있는 경우
+      if (!isIntake) {
+        /**
+         * TODO: 이 부분 명세 나오는 거 봐서 처리해야 함.
+         */
+        // mergedData.push({
+        //   name: ingredient.nutrient.name,
+        //   intakeContent: null,
+        //   newContent: ingredient.content,
+        //   reqMin: null,
+        //   reqAvg: null,
+        //   reqLimit: null,
+        //   unit: ingredient.unit
+        // })
+      }
+    }
+
+    return mergedData
+  }
+
   return (
     <div>
-      <HeadNav name={name} />
-
+      <HeadNav router={router} name={name} />
       <main className='flex flex-col items-center w-full bg-white px-8 py-8'>
         <div className='relative w-52 h-52 rounded-3xl border-[#BABABA] border overflow-hidden'>
           <Image
-            src={requests.fetchSupplementThumbnail(id.toString())}
+            src={requestURLs.getSupplementThumbnailURL(id.toString())}
             className='object-cover'
             layout='fill'
           />
@@ -96,13 +166,17 @@ const Details = ({ details }: Props) => {
         </div>
         <button
           className={
-            'w-full h-11 rounded-xl mt-5 text-white text-lg' +
-            (isTaking ? ' bg-[#00C23C]' : ' bg-[#BABABA]')
+            'w-full h-10 rounded-xl mt-5 text-white duration-500' +
+            (isTaking ? ' bg-gray-300' : ' bg-primary')
           }
           onClick={() => takingSubmit(isTaking)}
         >
-          <FontAwesomeIcon icon={isTaking ? faCheck : faPlus} className='relative right-12' />
-          {isTaking ? '등록된 영양제' : '내 영양제 등록'}
+          {isTaking ? (
+            <DeleteForever className='text-lg' />
+          ) : (
+            <PlaylistAdd className='text-lg' />
+          )}
+          <p className='text-center text-xs inline ml-2'>{isTaking ? '영양제 리스트 제거' : '영양제 리스트 추가'}</p>
         </button>
       </main>
 
@@ -145,8 +219,8 @@ export default Details
 
 // SSR
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await axios.get(requests.fetchSupplementDetails + `?id=${context.query.id}`)
-  const details = res.data.pill[0]
+  const { data: { pill: res } } = await pillApi.getSupplementDetails(context.query.id)
+  const details = res[0]
 
   return {
     props: {

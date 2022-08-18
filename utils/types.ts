@@ -28,3 +28,24 @@ export interface SupplementDetailsType {
   maker: string
   ingredients: IngredientType[]
 }
+
+export interface UserIntakeNutrientType {
+  name: string
+  content: number
+  reqMin: number
+  reqAvg: number
+  reqLimit: number
+  unit: string
+  tips: string[]
+  efficacy: string[]
+}
+
+export interface MergedNutrientDataType {
+  name: string
+  intakeContent: number | null
+  newContent: number
+  reqMin: number | null
+  reqAvg: number | null
+  reqLimit: number | null
+  unit: string
+}

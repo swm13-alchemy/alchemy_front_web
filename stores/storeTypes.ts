@@ -15,3 +15,14 @@ export type pillListPersist = (
   config: StateCreator<pillListState>,
   options: PersistOptions<pillListState>
 ) => StateCreator<pillListState>
+
+export type userHealthState = {
+  age: number | null
+  setAge: (age: number) => void
+  isMale: boolean | null
+  setIsMale: (isMale: boolean) => void
+}
+export type userHealthPersist = (
+  config: StateCreator<userHealthState>,
+  options: PersistOptions<userHealthState>
+) => StateCreator<userHealthState>
