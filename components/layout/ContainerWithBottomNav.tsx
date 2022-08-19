@@ -3,9 +3,10 @@ import BottomNavBar from './BottomNavBar'
 
 interface Props {
   children: any
-  headerHeight: string  // header가 들어간다면 header 공간만큼 padding 넣기 위한 값 (테일윈드 속성으로 쓰면 됨. ex. pt-10)
+  headerHeight?: string  // header가 들어간다면 header 공간만큼 padding 넣기 위한 값 (테일윈드 속성으로 쓰면 됨. ex. pt-10)
 }
 
+// headerHeight Props 기본값 공백
 function ContainerWithBottomNav({ children, headerHeight = '' }: Props) {
   return (
     <>
