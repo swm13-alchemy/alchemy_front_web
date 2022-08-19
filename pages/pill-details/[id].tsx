@@ -12,16 +12,17 @@ import { useEffect, useState } from 'react'
 import ContentGraph from '../../components/common/pillDetails/ContentGraph'
 import EfficiencyTag from '../../components/tag/EfficiencyTag'
 import {
-  IngredientType, IngredientWithIntakesType,
+  IngredientWithIntakesType,
   MergedNutrientDataType,
-  SupplementDetailsType,
-  UserIntakeNutrientType,
+  SupplementDetailsType
 } from '../../utils/types'
 import { useUserHealthDataStore, useUserPillListStore } from '../../stores/store'
-import BackHeader from '../../components/layout/BackHeader'
 import { pillApi, requestURLs } from '../../utils/api'
-import { PlaylistAdd, DeleteForever } from '@mui/icons-material'
+import { PlaylistAdd, DeleteForever, Star, StarBorder } from '@mui/icons-material'
 import { useRouter } from 'next/router'
+import PillDetailsHeader from '../../components/layout/PillDetailsHeader'
+import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
+import { mergeNutrientsData } from '../../utils/functions/mergeNutrientsData'
 
 interface Props {
   details: SupplementDetailsType
@@ -32,7 +33,7 @@ const Details = ({ details }: Props) => {
   const router = useRouter()
   const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()
   const { age, isMale } = useUserHealthDataStore()
-  const [isLiked, setIsLiked] = useState<boolean>(false)
+  const [isWish, setIsWish] = useState<boolean>(false)
   const [isTaking, setIsTaking] = useState<boolean>(false)
   const [isOpenEfficiency, setIsOpenEfficiency] = useState<boolean>(false)
   const [mergedNutrientData, setMergedNutrientData] = useState<MergedNutrientDataType[]>([])
@@ -106,93 +107,57 @@ const Details = ({ details }: Props) => {
     }
   }
 
-  // 기존 섭취 영양분 대비 현재 페이지 영양제 영양분 확인을 위한 데이터 가공 함수
-  const mergeNutrientsData = (intakeNutrients: UserIntakeNutrientType[], newIngredients: IngredientWithIntakesType[]): MergedNutrientDataType[] => {
-    const mergedData: MergedNutrientDataType[] = []
-    for (const newNutrient of newIngredients) {
-      console.log("intakeNutrients : ", intakeNutrients, typeof intakeNutrients)
-      let isIntake: boolean = false
-      for (const intakeNutrient of intakeNutrients) {
-        console.log("newNutrient : ", newNutrient.nutrient.name, typeof newNutrient.nutrient.name)
-        console.log("intakeNutrient : ", intakeNutrient.name, typeof intakeNutrient.name)
-        if (newNutrient.nutrient.name === intakeNutrient.name) {
-          mergedData.push({
-            name: intakeNutrient.name,
-            intakeContent: intakeNutrient.content,
-            newContent: newNutrient.content,
-            reqMin: intakeNutrient.reqMin,
-            reqAvg: intakeNutrient.reqAvg,
-            reqLimit: intakeNutrient.reqLimit,
-            unit: intakeNutrient.unit
-          })
-          isIntake = true
-          break
-        }
-      }
-      // 해당 영양분을 기존에 섭취하지 않고 있는 경우
-      if (!isIntake) {
-        mergedData.push({
-          name: newNutrient.nutrient.name,
-          intakeContent: 0,
-          newContent: newNutrient.content,
-          // TODO: 민준형한테 말해서 이거 intakes 배열형태로 안받아와지게 하기 (현재는 임시로 [0]사용)
-          // @ts-ignore
-          reqMin: newNutrient.nutrient.intakes[0].reqMin,
-          // @ts-ignore
-          reqAvg: newNutrient.nutrient.intakes[0].reqAvg,
-          // @ts-ignore
-          reqLimit: newNutrient.nutrient.intakes[0].reqLimit,
-          unit: newNutrient.unit
-        })
-      }
-    }
-
-    console.log("mergedData : ", mergedData)
-    return mergedData
-  }
-
   return (
-    <div>
-      <BackHeader router={router} name={name} />
-      <main className='flex flex-col items-center w-full bg-white px-8 py-8'>
-        <div className='relative w-52 h-52 rounded-3xl border-[#BABABA] border overflow-hidden'>
-          <Image
-            src={requestURLs.getSupplementThumbnailURL(id.toString())}
-            className='object-cover'
-            layout='fill'
-          />
+    <ContainerWithBottomNav headerHeight='pt-10'>
+      <PillDetailsHeader router={router} pillName={name} />
+
+      {/* 영양제 이미지 */}
+      <div className='relative h-[13.25rem] bg-white'>
+        <Image
+          src={requestURLs.getSupplementThumbnailURL(id.toString())}
+          className='object-contain'
+          layout='fill'
+        />
+      </div>
+
+      {/* 메인 부분 */}
+      <main className='p-6 bg-white space-y-4'>
+        <div className='flex flex-col space-y-2'>
+          <p className='text-xs text-gray-500'>{maker}</p>
+          <p className='text-base text-gray-900'>{name}</p>
+          {/* 리뷰 부분 (아직 개발 X) */}
+          {/*<div className='flex items-center space-x-1'>*/}
+          {/*  <Star className='text-base text-amber-400' />*/}
+          {/*  <p className='text-xs font-bold text-gray-900'>4.7</p>*/}
+          {/*  <p className='text-xs text-gray-900'>· 리뷰 152</p>*/}
+          {/*</div>*/}
         </div>
-        <p className='text-lg w-full mt-7 text-[#7A7A7A]'>{maker}</p>
-        <p className='text-xl w-full'>{name}</p>
-        <div className='flex justify-between items-center w-full'>
-          <div className='flex items-center space-x-1'>
-            <FontAwesomeIcon icon={faStar} className='text-base text-yellow-400' />
-            <p className='text-base'>0.00(0)</p>
-          </div>
-          <div className='flex items-center space-x-3'>
-            <FontAwesomeIcon
-              // @ts-ignore
-              icon={isLiked ? faStar : faStarRegular}
-              className='text-xl cursor-pointer'
-              onClick={() => setIsLiked(!isLiked)}
-            />
-            <FontAwesomeIcon icon={faShareNodes} className='text-xl cursor-pointer' />
-          </div>
+        <div className='flex items-center space-x-2'>
+          <button
+            className={
+              'py-2 rounded-[0.625rem] text-white duration-500 grow' +
+              (isTaking ? ' bg-gray-300' : ' bg-primary')
+            }
+            onClick={() => takingSubmit(isTaking)}
+          >
+            {isTaking ? (
+              <DeleteForever className='text-lg' />
+            ) : (
+              <PlaylistAdd className='text-lg' />
+            )}
+            <p className='text-center text-xs inline ml-2'>{isTaking ? '영양제 리스트 제거' : '영양제 리스트 추가'}</p>
+          </button>
+          <button
+            className='p-3 rounded-[0.625rem] bg-surface flex items-center justify-center'
+            onClick={() => setIsWish(!isWish)}
+          >
+            {isWish ? (
+              <Star className='text-base text-primary' />
+            ) : (
+              <StarBorder className='text-base text-primary' />
+            )}
+          </button>
         </div>
-        <button
-          className={
-            'w-full h-10 rounded-xl mt-5 text-white duration-500' +
-            (isTaking ? ' bg-gray-300' : ' bg-primary')
-          }
-          onClick={() => takingSubmit(isTaking)}
-        >
-          {isTaking ? (
-            <DeleteForever className='text-lg' />
-          ) : (
-            <PlaylistAdd className='text-lg' />
-          )}
-          <p className='text-center text-xs inline ml-2'>{isTaking ? '영양제 리스트 제거' : '영양제 리스트 추가'}</p>
-        </button>
       </main>
 
       <section className='mt-3 flex flex-col items-center w-full bg-white px-8 py-8'>
@@ -226,7 +191,7 @@ const Details = ({ details }: Props) => {
         <p className='text-lg w-full'>● 1일 {dailyDose}회</p>
         <p className='text-lg w-full'>● 먹는 시점: {intakeTiming}</p>
       </section>
-    </div>
+    </ContainerWithBottomNav>
   )
 }
 
