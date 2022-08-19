@@ -4,8 +4,6 @@ import { useUserHealthDataStore, useUserPillListStore } from '../../stores/store
 import { pillApi } from '../../utils/api'
 import { UserIntakeNutrientType } from '../../utils/types'
 import { ESSENTIAL_NUTRIENTS_LIST } from '../../utils/constants'
-import BackHeader from '../../components/layout/BackHeader'
-import { useRouter } from 'next/router'
 import BalanceSummary from '../../components/common/balance/BalanceSummary'
 import IntakeReport from '../../components/common/balance/IntakeReport'
 import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
@@ -15,7 +13,6 @@ import MuiCarousel from '../../components/common/MuiCarousel'
 import MainHeader from '../../components/layout/MainHeader'
 
 const Index: NextPage = () => {
-  const router = useRouter()
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   const { age, isMale } = useUserHealthDataStore()
   const [intakeNutrientData, setIntakeNutrientData] = useState<UserIntakeNutrientType[]>([])
