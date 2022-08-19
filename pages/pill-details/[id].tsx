@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react'
 import ContentGraph from '../../components/common/pillDetails/ContentGraph'
 import EfficiencyTag from '../../components/tag/EfficiencyTag'
 import {
-  IngredientType,
+  IngredientType, IngredientWithIntakesType,
   MergedNutrientDataType,
   SupplementDetailsType,
   UserIntakeNutrientType,
@@ -28,7 +28,7 @@ interface Props {
 }
 
 const Details = ({ details }: Props) => {
-  const { id, name, dailyDose, intakeTiming, maker, ingredients } = details
+  const { id, name, dailyDose, information, intakeCount, intakeTiming, maker, ingredients } = details
   const router = useRouter()
   const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()
   const { age, isMale } = useUserHealthDataStore()
@@ -61,18 +61,28 @@ const Details = ({ details }: Props) => {
       if (!isTaking) {
         (async () => {
           // 섭취중인 영양제들의 id 값들로 get 호출함.
-          const { data: { data: result} } = await pillApi.getTotalBalance(age, isMale, userTakingPillList.map(x => x.id))
+          const { data: { data: totalBalanceResult } } = await pillApi.getTotalBalance(age, isMale, userTakingPillList.map(x => x.id))
           /**
            * TODO: 현재 백엔드 구현에서는 어쩔 수 없이 필요한 호출에 대한 코드
            * 추후 수정
            */
-          setMergedNutrientData(mergeNutrientsData(result, ingredients))
+          // 사용자의 나이와 성별을 가지고 권장량등의 기준을 포함한 영양제 상세 정보를 다시 불러옴
+          const { data: { pill: thisPillBalanceResult } } = await pillApi.getSupplementDetailsWithBalance(age, isMale, id)
+          const newIngredients: IngredientWithIntakesType[] = thisPillBalanceResult[0].ingredients
+          setMergedNutrientData(mergeNutrientsData(totalBalanceResult, newIngredients))
         })()
       } else {  // 섭취중인 영양제인 경우
         (async () => {
           // 현재 페이지의 영양제 id를 제거하고 나머지 섭취중인 영양제들의 id 값들로 get 호출함.
           const { data: { data: result } } = await pillApi.getTotalBalance(age, isMale, userTakingPillList.filter(x => x.id !== id).map(x => x.id))
-          setMergedNutrientData(mergeNutrientsData(result, ingredients))
+          /**
+           * TODO: 현재 백엔드 구현에서는 어쩔 수 없이 필요한 호출에 대한 코드
+           * 추후 수정
+           */
+          // 사용자의 나이와 성별을 가지고 권장량등의 기준을 포함한 영양제 상세 정보를 다시 불러옴
+          const { data: { pill: thisPillBalanceResult } } = await pillApi.getSupplementDetailsWithBalance(age, isMale, id)
+          const newIngredients: IngredientWithIntakesType[] = thisPillBalanceResult[0].ingredients
+          setMergedNutrientData(mergeNutrientsData(result, newIngredients))
         })()
       }
     }
@@ -97,16 +107,19 @@ const Details = ({ details }: Props) => {
   }
 
   // 기존 섭취 영양분 대비 현재 페이지 영양제 영양분 확인을 위한 데이터 가공 함수
-  const mergeNutrientsData = (intakeNutrients: UserIntakeNutrientType[], newNutrients: IngredientType[]): MergedNutrientDataType[] => {
+  const mergeNutrientsData = (intakeNutrients: UserIntakeNutrientType[], newIngredients: IngredientWithIntakesType[]): MergedNutrientDataType[] => {
     const mergedData: MergedNutrientDataType[] = []
-    for (const ingredient of newNutrients) {
+    for (const newNutrient of newIngredients) {
+      console.log("intakeNutrients : ", intakeNutrients, typeof intakeNutrients)
       let isIntake: boolean = false
       for (const intakeNutrient of intakeNutrients) {
-        if (ingredient.nutrient.name === intakeNutrient.name) {
+        console.log("newNutrient : ", newNutrient.nutrient.name, typeof newNutrient.nutrient.name)
+        console.log("intakeNutrient : ", intakeNutrient.name, typeof intakeNutrient.name)
+        if (newNutrient.nutrient.name === intakeNutrient.name) {
           mergedData.push({
             name: intakeNutrient.name,
             intakeContent: intakeNutrient.content,
-            newContent: ingredient.content,
+            newContent: newNutrient.content,
             reqMin: intakeNutrient.reqMin,
             reqAvg: intakeNutrient.reqAvg,
             reqLimit: intakeNutrient.reqLimit,
@@ -118,21 +131,23 @@ const Details = ({ details }: Props) => {
       }
       // 해당 영양분을 기존에 섭취하지 않고 있는 경우
       if (!isIntake) {
-        /**
-         * TODO: 이 부분 명세 나오는 거 봐서 처리해야 함.
-         */
-        // mergedData.push({
-        //   name: ingredient.nutrient.name,
-        //   intakeContent: null,
-        //   newContent: ingredient.content,
-        //   reqMin: null,
-        //   reqAvg: null,
-        //   reqLimit: null,
-        //   unit: ingredient.unit
-        // })
+        mergedData.push({
+          name: newNutrient.nutrient.name,
+          intakeContent: 0,
+          newContent: newNutrient.content,
+          // TODO: 민준형한테 말해서 이거 intakes 배열형태로 안받아와지게 하기 (현재는 임시로 [0]사용)
+          // @ts-ignore
+          reqMin: newNutrient.nutrient.intakes[0].reqMin,
+          // @ts-ignore
+          reqAvg: newNutrient.nutrient.intakes[0].reqAvg,
+          // @ts-ignore
+          reqLimit: newNutrient.nutrient.intakes[0].reqLimit,
+          unit: newNutrient.unit
+        })
       }
     }
 
+    console.log("mergedData : ", mergedData)
     return mergedData
   }
 

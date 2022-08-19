@@ -99,11 +99,8 @@ interface StateTabProps {
 }
 
 function StateTab({ tabNum, tabName, active, count, changeTabFunc }: StateTabProps) {
-  if (count === 0) {
-    return (
-      <></>
-    )
-  }
+  if (count === 0) return <></>
+
   if (active) {
     return (
       <button

@@ -6,6 +6,7 @@ import { pillApi } from '../utils/api'
 import SearchBar from '../components/layout/SearchBar'
 import BackHeader from '../components/layout/BackHeader'
 import { NextPage } from 'next'
+import ContainerWithBottomNav from '../components/layout/ContainerWithBottomNav'
 
 const Search: NextPage = () => {
   const router = useRouter()
@@ -37,33 +38,35 @@ const Search: NextPage = () => {
   }
 
   return (
-    <div className='space-y-4'>
-      <BackHeader router={router} name='Search' />
+    <ContainerWithBottomNav>
+      <div className='min-h-screen bg-white space-y-4'>
+        <BackHeader router={router} name='Search' />
 
-      <SearchBar
-        submitSearch={submitSearch}
-        handleInputs={handleInputs}
-        searchTerm={searchTerm}
-      />
+        <SearchBar
+          submitSearch={submitSearch}
+          handleInputs={handleInputs}
+          searchTerm={searchTerm}
+        />
 
-      {searchResults.length !== 0 && (
-        <div className='px-6 my-6'>
-          <p className='text-gray-900 text-base'>검색된 영양제 {searchResults.length}개</p>
-          <div className='flex flex-col w-full mt-4 space-y-4'>
-            {searchResults.map((supplement) => {
-              return (
-                <SearchResultListItem
-                  key={supplement.name}
-                  id={supplement.id}
-                  name={supplement.name}
-                  maker={supplement.maker}
-                />
-              )
-            })}
+        {searchResults.length !== 0 && (
+          <div className='px-6 pt-2'>
+            <p className='text-gray-900 text-base'>검색된 영양제 {searchResults.length}개</p>
+            <div className='flex flex-col w-full mt-4 space-y-4'>
+              {searchResults.map((supplement) => {
+                return (
+                  <SearchResultListItem
+                    key={supplement.name}
+                    id={supplement.id}
+                    name={supplement.name}
+                    maker={supplement.maker}
+                  />
+                )
+              })}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </ContainerWithBottomNav>
   )
 }
 
