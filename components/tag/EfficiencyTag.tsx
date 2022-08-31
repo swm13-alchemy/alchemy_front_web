@@ -4,9 +4,10 @@ interface Props {
 
 function EfficiencyTag({ tagName }: Props) {
   return (
-    <div className='border rounded-3xl border-[#BABABA] px-1 py-0.5 text-base flex items-center justify-center'>
-      {tagName}
-    </div>
+    // 나중에 버튼으로 바뀔 예정
+    <span className='rounded-[0.625rem] px-3 py-1.5 bg-gray-50 shadow-sm text-gray-900 text-sm text-center'>
+      #{tagName}
+    </span>
   )
 }
 

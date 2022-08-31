@@ -20,7 +20,7 @@ export const requestURLs = {
 
 export const pillApi = {
   getSearchResults: (name: any) => hasura.get(`/pill/search?name=%${name}%`),
-  getSupplementDetails: (id: any) => hasura.get(`/pill?id=${id}`),
+  getSupplementDetails: (id: any) => nest.get(`/pill/${id}`),
   getSupplementDetailsWithBalance: (age: number, isMale: boolean, pillId: number) => hasura.get(`/pill/balance`, {
     params: {
       age: age,

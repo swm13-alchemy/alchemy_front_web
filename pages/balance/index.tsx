@@ -11,6 +11,7 @@ import Image from 'next/image'
 import balanceIcon from '../../public/asset/image/balanceIcon.png'
 import MuiCarousel from '../../components/common/MuiCarousel'
 import MainHeader from '../../components/layout/MainHeader'
+import { CompareContent } from '../../utils/functions/CompareContent'
 
 const Index: NextPage = () => {
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
@@ -36,11 +37,14 @@ const Index: NextPage = () => {
         const minimumNutrientsList: UserIntakeNutrientType[] = []
         const lackNutrientsList: UserIntakeNutrientType[] = []
         for (const nutrient of result) {
-          if (nutrient.content > nutrient.reqLimit) {
+          // reqMin, reqAvg, reqLimit 기준과 비교하는 클래스
+          // 해당 클래스에 값을 넣고 클래스의 메서드를 사용해서 비교하면 됨.
+          const compare = new CompareContent(nutrient.content, nutrient.reqMin, nutrient.reqAvg, nutrient.reqLimit)
+          if (compare.compareWithLimit()) {
             excessNutrientsList.push(nutrient)
-          } else if (nutrient.reqAvg <= nutrient.content && nutrient.content <= nutrient.reqLimit) {
+          } else if (compare.compareWithAvgAndLimit()) {
             properNutrientsList.push(nutrient)
-          } else if (nutrient.reqMin <= nutrient.content && nutrient.content < nutrient.reqAvg) {
+          } else if (compare.compareWithMinAndAvg()) {
             minimumNutrientsList.push(nutrient)
           } else {
             lackNutrientsList.push(nutrient)
@@ -82,10 +86,11 @@ const Index: NextPage = () => {
           </div>
         </div>
 
-        <MuiCarousel whereToUse='balanceBanner' />
-
         {/* 요약 리포트 부분 */}
         <BalanceSummary />
+
+        {/* 배너 부분 */}
+        <MuiCarousel whereToUse='balanceBanner' />
 
         {/* 필수 영양분 리포트 부분 */}
         <IntakeReport

@@ -2,6 +2,7 @@ import ContainerWithBottomNav from '../../../components/layout/ContainerWithBott
 import BackHeader from '../../../components/layout/BackHeader'
 import { useRouter } from 'next/router'
 import IntakeAdequateTag from '../../../components/tag/IntakeAdequateTag'
+import { CompareContent } from '../../../utils/functions/CompareContent'
 
 // interface QueryProps extends UserIntakeNutrientType {
 //   // query로 왔기 때문에 string으로 온다.
@@ -45,8 +46,11 @@ const Report = () => {
   //   parseExcessOrLackContent = parseInt(excessOrLackContent)
   // }
 
-  // 최소에 해당할 경우 충분량까지 얼마나 부족한지 보여주기 위한 것
-  if (reqMin <= content && content < reqAvg) {
+  // reqMin, reqAvg, reqLimit 기준과 비교하는 클래스
+  // 해당 클래스에 값을 넣고 클래스의 메서드를 사용해서 비교하면 됨.
+  const compare = new CompareContent(content, reqMin, reqAvg, reqLimit)
+
+  if (compare.compareWithMinAndAvg()) {  // 최소에 해당할 경우 충분량까지 얼마나 부족한지 보여주기 위한 것
     excessOrLackContent = reqAvg - content
   }
 

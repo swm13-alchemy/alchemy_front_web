@@ -1,12 +1,4 @@
 import { GetServerSideProps } from 'next'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faStar,
-  faShareNodes,
-  faAngleDown,
-  faAngleUp,
-} from '@fortawesome/free-solid-svg-icons'
-import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import ContentGraph from '../../components/common/pillDetails/ContentGraph'
@@ -18,15 +10,118 @@ import {
 } from '../../utils/types'
 import { useUserHealthDataStore, useUserPillListStore } from '../../stores/store'
 import { pillApi, requestURLs } from '../../utils/api'
-import { PlaylistAdd, DeleteForever, Star, StarBorder } from '@mui/icons-material'
+import {
+  PlaylistAdd,
+  DeleteForever,
+  Star,
+  StarBorder,
+  ExpandMore,
+  ExpandLess,
+  InfoOutlined,
+  Today, LocalDining, Filter1,
+} from '@mui/icons-material'
 import { useRouter } from 'next/router'
 import PillDetailsHeader from '../../components/layout/PillDetailsHeader'
 import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
 import { mergeNutrientsData } from '../../utils/functions/mergeNutrientsData'
+import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 
 interface Props {
   details: SupplementDetailsType
 }
+
+const 임시: MergedNutrientDataType[] = [
+  {
+    name: 'VitaminC',
+    intakeContent: 0,
+    newContent: 200,
+    unit: 'mg',
+    reqMin: 1500,
+    reqAvg: 3000,
+    reqLimit: 4000
+  },
+  {
+    name: 'VitaminD',
+    intakeContent: 100,
+    newContent: 300,
+    unit: 'mg',
+    reqMin: 200,
+    reqAvg: 500,
+    reqLimit: 700
+  },
+  {
+    name: 'Magnesium',
+    intakeContent: 1200,
+    newContent: 2800,
+    unit: 'mg',
+    reqMin: 200,
+    reqAvg: 600,
+    reqLimit: 1000
+  },
+  {
+    name: 'Probiotics',
+    intakeContent: 500,
+    newContent: 500,
+    unit: 'mg',
+    reqMin: 400,
+    reqAvg: 900,
+    reqLimit: 1200
+  },
+  {
+    name: 'VitaminC',
+    intakeContent: 0,
+    newContent: 200,
+    unit: 'mg',
+    reqMin: 1500,
+    reqAvg: 3000,
+    reqLimit: 4000
+  },
+  {
+    name: 'VitaminC',
+    intakeContent: 0,
+    newContent: 200,
+    unit: 'mg',
+    reqMin: 1500,
+    reqAvg: 3000,
+    reqLimit: 4000
+  },
+  {
+    name: 'VitaminC',
+    intakeContent: 0,
+    newContent: 200,
+    unit: 'mg',
+    reqMin: 1500,
+    reqAvg: 3000,
+    reqLimit: 4000
+  },
+  {
+    name: 'VitaminC',
+    intakeContent: 0,
+    newContent: 200,
+    unit: 'mg',
+    reqMin: 1500,
+    reqAvg: 3000,
+    reqLimit: 4000
+  },
+  {
+    name: 'VitaminC',
+    intakeContent: 0,
+    newContent: 200,
+    unit: 'mg',
+    reqMin: 1500,
+    reqAvg: 3000,
+    reqLimit: 4000
+  },
+  {
+    name: 'VitaminC',
+    intakeContent: 0,
+    newContent: 200,
+    unit: 'mg',
+    reqMin: 1500,
+    reqAvg: 3000,
+    reqLimit: 4000
+  }
+]
 
 const Details = ({ details }: Props) => {
   const { id, name, dailyDose, information, intakeCount, intakeTiming, maker, ingredients } = details
@@ -42,7 +137,7 @@ const Details = ({ details }: Props) => {
   // 해당 페이지 영양제가 등록되어 있는지 확인하고 있으면 섭취중인 영양제로 표시
   useEffect(() => {
     // 만약 등록한 영양제가 있다면 if문 안의 내용 실행
-    if (userTakingPillList.length !== 0) {
+    if (arrayIsNotEmpty(userTakingPillList)) {
       // 객체 배열인 localTakingPillList에서 현재 페이지의 영양제의 id와 같은 객체 값이 있는지 find함수로 확인
       // 있다면 객체가 반환되고 없으면 undefined가 반환
       const matchOne: SupplementDetailsType | undefined = userTakingPillList.find(x => x.id === id)
@@ -57,7 +152,7 @@ const Details = ({ details }: Props) => {
   // 기존 섭취 영양분 대비 변화량 그래프 그리기 위한 데이터 처리 부분
   useEffect(() => {
     // 나이와 성별을 등록하고 섭취중인 영양제로 등록한 것이 있는 경우만 데이터를 받아옴
-    if (age !== null && isMale !== null && userTakingPillList.length !== 0) {
+    if (age !== null && isMale !== null && arrayIsNotEmpty(userTakingPillList)) {
       // 섭취중인 영양제가 아닌 경우
       if (!isTaking) {
         (async () => {
@@ -120,7 +215,7 @@ const Details = ({ details }: Props) => {
         />
       </div>
 
-      {/* 메인 부분 */}
+      {/* 메인 부분(제조사, 영양제 이름, 추가 버튼 등) */}
       <main className='p-6 bg-white space-y-4'>
         <div className='flex flex-col space-y-2'>
           <p className='text-xs text-gray-500'>{maker}</p>
@@ -160,36 +255,91 @@ const Details = ({ details }: Props) => {
         </div>
       </main>
 
-      <section className='mt-3 flex flex-col items-center w-full bg-white px-8 py-8'>
-        <div
-          className='flex w-full items-center justify-between cursor-pointer'
-          onClick={() => setIsOpenEfficiency(!isOpenEfficiency)}
-        >
-          <p className='font-bold text-xl'>주요 효능</p>
-          <FontAwesomeIcon icon={isOpenEfficiency ? faAngleUp : faAngleDown} className='text-xl' />
-        </div>
-        <div className='flex flex-wrap mt-4 w-full gap-3'>
-          <EfficiencyTag tagName='면역 기능' />
-          <EfficiencyTag tagName='혈액 생성' />
-          <EfficiencyTag tagName='눈 건강' />
-        </div>
-        <div className={'w-full mt-7' + (isOpenEfficiency ? ' visible' : ' hidden')}>
-          <p className='font-bold text-xl'>보조 효능</p>
-          <div className='flex flex-wrap mt-4 w-full gap-3'>
-            <EfficiencyTag tagName='노화 & 항산화' />
-            <EfficiencyTag tagName='뼈 건강' />
-            <EfficiencyTag tagName='치아 건강' />
-            <EfficiencyTag tagName='멀티 비타민' />
-            <EfficiencyTag tagName='간 건강' />
+      {/* 상세 정보 부분 */}
+      <section className='mt-2 space-y-4'>
+        {/* 효능 부분 */}
+        <article className='bg-white p-6 text-gray-900'>
+          {/* 주요 효능 부분 */}
+          <p className='text-base font-bold'>주요 효능</p>
+          <div className='mt-2 flex items-center flex-wrap gap-2'>
+            <EfficiencyTag tagName='노화&항산화' />
+            <EfficiencyTag tagName='면역 기능' />
+            <EfficiencyTag tagName='혈액 생성' />
+            <EfficiencyTag tagName='멀티미네랄' />
+            <EfficiencyTag tagName='콜레스테롤 합성 조절' />
           </div>
-        </div>
 
-        <p className='font-bold text-xl mt-8 mb-2 w-full'>성분 함량</p>
-        <ContentGraph ingredients={ingredients} />
+          {/* 보조 효능 부분 */}
+          <button
+            className='mt-6 w-full flex items-center justify-between'
+            onClick={() => setIsOpenEfficiency(!isOpenEfficiency)}
+          >
+            <p className='text-base font-bold'>보조 효능</p>
+            {isOpenEfficiency ? (
+              <ExpandLess className='text-2xl' />
+            ) : (
+              <ExpandMore className='text-2xl' />
+            )}
+          </button>
+          <div className={'mt-2 flex items-center flex-wrap gap-2' + (isOpenEfficiency ? ' visible' : ' hidden')}>
+            <EfficiencyTag tagName='노화&항산화' />
+            <EfficiencyTag tagName='면역 기능' />
+            <EfficiencyTag tagName='혈액 생성' />
+            <EfficiencyTag tagName='멀티미네랄' />
+            <EfficiencyTag tagName='콜레스테롤 합성 조절' />
+          </div>
+        </article>
 
-        <p className='font-bold text-xl mt-8 mb-2 w-full'>추천 섭취 시간</p>
-        <p className='text-lg w-full'>● 1일 {dailyDose}회</p>
-        <p className='text-lg w-full'>● 먹는 시점: {intakeTiming}</p>
+        {/*/!* 변화량 그래프 부분 *!/*/}
+        {/*{arrayIsNotEmpty(mergedNutrientData) &&*/}
+        {/*  <article className='bg-white p-6 text-gray-900'>*/}
+        {/*    <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>*/}
+        {/*    <InfoOutlined className='text-base text-gray-400 ml-1' />*/}
+        {/*    <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>*/}
+
+        {/*    /!* 그래프 부분 *!/*/}
+        {/*    <ContentGraph mergedNutrientData={mergedNutrientData} />*/}
+        {/*  </article>*/}
+        {/*}*/}
+        {/* 변화량 그래프 부분 */}
+        {arrayIsNotEmpty(임시) &&
+          <article className='bg-white p-6 text-gray-900'>
+            <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>
+            <InfoOutlined className='text-base text-gray-400 ml-1' />
+            <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>
+
+            {/* 그래프 부분 */}
+            <ContentGraph mergedNutrientData={임시} />
+          </article>
+        }
+
+        {/* 추천 섭취 방법 부분 */}
+        <article className='bg-white p-6'>
+          <p className='text-base font-bold text-gray-900'>추천 섭취 방법</p>
+          <div className='mt-2 grid grid-cols-2 gap-y-2'>
+            {/* 일일 복용 횟수 */}
+            <div className='flex items-center'>
+              <div className='w-10 h-10 rounded-[1.25rem] bg-surface flex items-center justify-center'>
+                <Today className='text-2xl text-primary' />
+              </div>
+              <p className='ml-2 text-sm font-bold text-primary'>1일 {dailyDose}회</p>
+            </div>
+            {/* 1회 복용량 */}
+            <div className='flex items-center'>
+              <div className='w-10 h-10 rounded-[1.25rem] bg-surface flex items-center justify-center'>
+                <Filter1 className='text-2xl text-primary' />
+              </div>
+              <p className='ml-2 text-sm font-bold text-primary'>1회 {intakeCount}정</p>
+            </div>
+            {/* 먹는 시간 */}
+            <div className='flex items-center'>
+              <div className='w-10 h-10 rounded-[1.25rem] bg-surface flex items-center justify-center'>
+                <LocalDining className='text-2xl text-primary' />
+              </div>
+              <p className='ml-2 text-sm font-bold text-primary'>{intakeTiming}</p>
+            </div>
+          </div>
+        </article>
       </section>
     </ContainerWithBottomNav>
   )
@@ -199,7 +349,7 @@ export default Details
 
 // SSR
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { data: { pill: res } } = await pillApi.getSupplementDetails(context.query.id)
+  const { data: res } = await pillApi.getSupplementDetails(context.query.id)
   const details = res[0]
 
   return {

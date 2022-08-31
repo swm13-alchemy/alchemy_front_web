@@ -7,6 +7,7 @@ import SearchBar from '../components/layout/SearchBar'
 import BackHeader from '../components/layout/BackHeader'
 import { NextPage } from 'next'
 import ContainerWithBottomNav from '../components/layout/ContainerWithBottomNav'
+import { arrayIsNotEmpty } from '../utils/functions/arrayIsNotEmpty'
 
 const Search: NextPage = () => {
   const router = useRouter()
@@ -48,7 +49,7 @@ const Search: NextPage = () => {
           searchTerm={searchTerm}
         />
 
-        {searchResults.length !== 0 && (
+        {arrayIsNotEmpty(searchResults) && (
           <div className='px-6 pt-2'>
             <p className='text-gray-900 text-base'>검색된 영양제 {searchResults.length}개</p>
             <div className='flex flex-col w-full mt-4 space-y-4'>
