@@ -16,9 +16,9 @@ const Search: NextPage = () => {
   const [searchResults, setSearchResults] = useState<SearchResultsItemType[]>([])
 
   useEffect(() => {
-    if (router.query.name && !searchResults.length) {
+    if (router.query.name) {
       (async function reloadingSearch() {
-        const { data: { pills: result } } = await pillApi.getSearchResults(router.query.name)
+        const { data: { data: result } } = await pillApi.getSearchResults(router.query.name)
         setSearchResults(result)
       })()
     }
@@ -32,8 +32,6 @@ const Search: NextPage = () => {
 
   const submitSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const { data: { pills: result } } = await pillApi.getSearchResults(searchTerm)
-    setSearchResults(result)
     // 주소 쿼리스트링 추가해서 상세페이지 들어갔다 나올 때 그대로 검색되게 유지
     await router.replace({ query: { name: searchTerm } })
   }

@@ -12,6 +12,7 @@ import balanceIcon from '../../public/asset/image/balanceIcon.png'
 import MuiCarousel from '../../components/common/MuiCarousel'
 import MainHeader from '../../components/layout/MainHeader'
 import { CompareContent } from '../../utils/functions/CompareContent'
+import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 
 const Index: NextPage = () => {
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
@@ -93,13 +94,16 @@ const Index: NextPage = () => {
         <MuiCarousel whereToUse='balanceBanner' />
 
         {/* 필수 영양분 리포트 부분 */}
-        <IntakeReport
-          intakeNutrientData={intakeNutrientData}
-          excessNutrients={excessNutrients}
-          properNutrients={properNutrients}
-          minimumNutrients={minimumNutrients}
-          lackNutrients={lackNutrients}
-        />
+        {arrayIsNotEmpty(intakeNutrientData) &&
+          <IntakeReport
+            intakeNutrientData={intakeNutrientData}
+            excessNutrients={excessNutrients}
+            properNutrients={properNutrients}
+            minimumNutrients={minimumNutrients}
+            lackNutrients={lackNutrients}
+          />
+        }
+
       </div>
     </ContainerWithBottomNav>
   )

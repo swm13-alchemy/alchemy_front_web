@@ -59,5 +59,5 @@ export interface NutrientWithIntakesType extends NutrientType {
 }
 
 export interface IngredientWithIntakesType extends IngredientType {
-  nutrient: NutrientWithIntakesType
+  nutrients: NutrientWithIntakesType
 }

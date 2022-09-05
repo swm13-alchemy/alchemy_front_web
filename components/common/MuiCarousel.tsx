@@ -43,7 +43,7 @@ function CustomCarousel({ children }: any) {
       autoPlay={true}
       animation='slide'
       duration={1500}
-      interval={5000}
+      interval={10000}
       className='text-center'
       indicatorIconButtonProps={{
         style: {

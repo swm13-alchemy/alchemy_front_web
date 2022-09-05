@@ -12,7 +12,7 @@ function BottomNavBar() {
   const router = useRouter()
 
   return (
-    <nav className='h-12 flex items-center fixed bottom-0 left-0 right-0 bg-surface'>
+    <nav className='h-12 flex items-center fixed bottom-0 left-0 right-0 bg-surface z-50'>
       <Menu router={router} id={1} name='HOME' path='/'>
         <Home className='text-2xl'/>
       </Menu>
@@ -36,11 +36,11 @@ function Menu({ children, router, id, name, path }: MenuProps) {
       key={id}
       href={path}
     >
-      <a className='grow'>
+      <a className='grow w-full'>
         <div
           className={
             'flex flex-col items-center justify-between' +
-            (path === router.pathname ? ' text-primary bg-indigo-50 border-t-2 border-primary' : ' text-gray-300 bg-surface border-none')
+            (path === router.pathname ? ' text-primary bg-indigo-50 border-t-2 border-t-primary' : ' text-gray-300 bg-surface border-none')
           }
         >
           {children}

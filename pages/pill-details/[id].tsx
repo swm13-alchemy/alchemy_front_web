@@ -163,7 +163,7 @@ const Details = ({ details }: Props) => {
            * 추후 수정
            */
           // 사용자의 나이와 성별을 가지고 권장량등의 기준을 포함한 영양제 상세 정보를 다시 불러옴
-          const { data: { pill: thisPillBalanceResult } } = await pillApi.getSupplementDetailsWithBalance(age, isMale, id)
+          const { data: { data: thisPillBalanceResult } } = await pillApi.getSupplementDetailsWithBalance(age, isMale, id)
           const newIngredients: IngredientWithIntakesType[] = thisPillBalanceResult[0].ingredients
           setMergedNutrientData(mergeNutrientsData(totalBalanceResult, newIngredients))
         })()
@@ -176,7 +176,7 @@ const Details = ({ details }: Props) => {
            * 추후 수정
            */
           // 사용자의 나이와 성별을 가지고 권장량등의 기준을 포함한 영양제 상세 정보를 다시 불러옴
-          const { data: { pill: thisPillBalanceResult } } = await pillApi.getSupplementDetailsWithBalance(age, isMale, id)
+          const { data: { data: thisPillBalanceResult } } = await pillApi.getSupplementDetailsWithBalance(age, isMale, id)
           const newIngredients: IngredientWithIntakesType[] = thisPillBalanceResult[0].ingredients
           setMergedNutrientData(mergeNutrientsData(result, newIngredients))
         })()
@@ -212,6 +212,7 @@ const Details = ({ details }: Props) => {
           src={requestURLs.getSupplementThumbnailURL(id.toString())}
           className='object-contain'
           layout='fill'
+          priority={true}
         />
       </div>
 
@@ -349,7 +350,7 @@ export default Details
 
 // SSR
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { data: res } = await pillApi.getSupplementDetails(context.query.id)
+  const { data: { data: res } } = await pillApi.getSupplementDetails(context.query.id)
   const details = res[0]
 
   return {

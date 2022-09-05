@@ -57,13 +57,13 @@ function ContentBar({ name, intakeContent, newContent, unit, reqMin, reqAvg, req
       <div className='relative w-full h-2 rounded-2xl bg-surface flex items-center'>
         {/* 기존 섭취량 부분 */}
         <div
-          className='h-full rounded-l-2xl bg-gray-300 z-20'
+          className='h-full rounded-l-2xl bg-gray-300 z-10'
           style={{width: `${intakeContentPercent}%`, maxWidth: '100%'}}
         ></div>
 
         {/* 추가 섭취량 부분 */}
         <div
-          className='h-full rounded-r-2xl z-20'
+          className='h-full rounded-r-2xl z-10'
           style={{width: `${newContentPercent}%`, maxWidth: `${100-intakeContentPercent}%`, backgroundColor: `${STATE_COLOR[newState]}`}}
         ></div>
 
@@ -88,38 +88,7 @@ function ContentBar({ name, intakeContent, newContent, unit, reqMin, reqAvg, req
         {excessOrLackContent !== null ? `${excessOrLackContent}${unit} ${STATE_TEXT[newState]}` : STATE_TEXT[newState]}
       </p>
     </article>
-    // <div className='w-full flex items-center justify-between'>
-    //   <div className='flex items-center w-[54%]'>
-    //     <p className='text-base font-bold w-[55%]'>{name}</p>
-    //
-    //     <figure className='w-[45%] bg-[#D9D9D9] h-3 relative border-r border-[#AE0303]'>
-    //       <div className='absolute left-0 top-0 bottom-0 bg-[#D9D9D9] w-4/5 border-r border-[#00B137]'></div>
-    //       <div className={'absolute left-0 top-0 bottom-0 bg-[#2FAD56] w-3/5'}></div>
-    //     </figure>
-    //   </div>
-    //   <p className={'text-base' + ' text-[#8F8F8F]'}>{content + unit}</p>
-    //
-    //   <div
-    //     className={
-    //       'w-[18%] bg-[#D5E3B1] h-full flex items-center justify-center' + ' text-[#8F8F8F]'
-    //     }
-    //   >
-    //     -150
-    //   </div>
-    // </div>
   )
-}
-
-interface ValueDescriptionProps {
-  state: number
-}
-function ValueDescription({ state }: ValueDescriptionProps) {
-  switch (state) {
-    case 3:
-      return (
-        <p className={'inline-block w-[23.17%] pl-3.5 text-xs font-bold text-right'}></p>
-      )
-  }
 }
 
 export default ContentBar
