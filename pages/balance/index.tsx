@@ -13,9 +13,12 @@ import MuiCarousel from '../../components/common/MuiCarousel'
 import MainHeader from '../../components/layout/MainHeader'
 import { CompareContent } from '../../utils/functions/CompareContent'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
+import { getTodayDate } from '../../utils/functions/getTodayDate'
 
 const Index: NextPage = () => {
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
+  // const pillListVersion = useUserPillListStore(state => state.pillListVersion)
+  // const addPillListVersion = useUserPillListStore(state => state.addPillListVersion)
   const { age, isMale } = useUserHealthDataStore()
   const [intakeNutrientData, setIntakeNutrientData] = useState<UserIntakeNutrientType[]>([])
   const [excessNutrients, setExcessNutrients] = useState<UserIntakeNutrientType[]>([])
@@ -23,6 +26,7 @@ const Index: NextPage = () => {
   const [minimumNutrients, setMinimumNutrients] = useState<UserIntakeNutrientType[]>([])
   const [lackNutrients, setLackNutrients] = useState<UserIntakeNutrientType[]>([])
   const [essentialNutrients, setEssentialNutrients] = useState()
+  const [todayDateStr, setTodayDateStr] = useState<string>('')
 
   // 섭취중인 영양분 데이터 가져오기
   useEffect(() => {
@@ -57,7 +61,12 @@ const Index: NextPage = () => {
         setLackNutrients(lackNutrientsList)
       })()
     }
-  }, [userTakingPillList])
+  }, [userTakingPillList, age, isMale])
+
+  // 날짜 불러오기
+  useEffect(() => {
+    setTodayDateStr(getTodayDate())
+  }, [userTakingPillList, age, isMale])
 
   //
   useEffect(() => {
@@ -75,7 +84,7 @@ const Index: NextPage = () => {
         {/* 머리 부분 */}
         <div className='w-full bg-white px-6 py-4 flex items-center justify-between'>
           <div className='flex flex-col'>
-            <p className='text-sm text-gray-500'>22.08.10 (수)</p>
+            <p className='text-sm text-gray-500'>{todayDateStr}</p>
             <h1 className='text-lg font-bold text-gray-900'>영양제 분석 리포트 💊</h1>
           </div>
           <div className='relative w-[3.25rem] h-[3.25rem]'>
