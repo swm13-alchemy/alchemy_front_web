@@ -49,7 +49,7 @@ const Search: NextPage = () => {
 
         {arrayIsNotEmpty(searchResults) && (
           <div className='px-6 pt-2'>
-            <p className='text-gray-900 text-base'>검색된 영양제 {searchResults.length}개</p>
+            <p className='text-gray-900 text-base'>검색된 영양제 {searchResults?.length}개</p>
             <div className='flex flex-col w-full mt-4 space-y-4'>
               {searchResults.map((supplement) => {
                 return (

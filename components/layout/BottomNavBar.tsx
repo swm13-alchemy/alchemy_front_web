@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { NextRouter, useRouter } from 'next/router'
 import { GraphicEq, Home } from '@mui/icons-material'
+import { useEffect, useState } from 'react'
 
 // const menuList = [
 //   { id: '1', name: 'HOME', icon: Home, path: '/' },
@@ -13,10 +14,10 @@ function BottomNavBar() {
 
   return (
     <nav className='h-12 flex items-center fixed bottom-0 left-0 right-0 bg-surface z-50'>
-      <Menu router={router} id={1} name='HOME' path='/'>
+      <Menu router={router} id={1} name='HOME' paths={['/', '/search', '/pill-details']}>
         <Home className='text-2xl'/>
       </Menu>
-      <Menu router={router} id={2} name='Balance' path='/balance'>
+      <Menu router={router} id={2} name='Balance' paths={['/balance']}>
         <GraphicEq className='text-2xl'/>
       </Menu>
     </nav>
@@ -28,23 +29,36 @@ interface MenuProps {
   router: NextRouter
   id: number
   name: string
-  path: string
+  paths: string[]
 }
-function Menu({ children, router, id, name, path }: MenuProps) {
+function Menu({ children, router, id, name, paths }: MenuProps) {
+  // TODO: 추후 useMatch 쓰는 걸 고려해볼 예정
+  const [isActive, setIsActive] = useState<boolean>(false)
+
+  useEffect(() => {
+    for (const path of paths) {
+      if (path === '/' && router.pathname !== '/') continue
+      if (router.pathname.includes(path)) {
+        setIsActive(true)
+        break
+      }
+    }
+  }, [])
+
   return (
     <Link
       key={id}
-      href={path}
+      href={paths[0]}
     >
       <a className='grow w-full'>
         <div
           className={
             'flex flex-col items-center justify-between' +
-            (path === router.pathname ? ' text-primary bg-indigo-50 border-t-2 border-t-primary' : ' text-gray-300 bg-surface border-none')
+            (isActive ? ' text-primary bg-indigo-50 border-t-2 border-t-primary' : ' text-gray-300 bg-surface border-none')
           }
         >
           {children}
-          <p className={'text-sm' + (path === router.pathname ? ' text-primary' : ' hidden')}>{name}</p>
+          <p className={'text-sm' + (isActive ? ' text-primary' : ' hidden')}>{name}</p>
         </div>
       </a>
     </Link>

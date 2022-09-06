@@ -1,6 +1,7 @@
 import IntakeReportListItem from './IntakeReportListItem'
 import { useState } from 'react'
 import { UserIntakeNutrientType } from '../../../utils/types'
+import { arrayIsNotEmpty } from '../../../utils/functions/arrayIsNotEmpty'
 
 interface Props {
   intakeNutrientData: UserIntakeNutrientType[]
@@ -23,11 +24,21 @@ function IntakeReport({ intakeNutrientData, excessNutrients, properNutrients, mi
 
       {/* 탭 부분 */}
       <div className='flex items-center space-x-2 px-2'>
-        <StateTab tabNum={-1} active={activeTab === -1} tabName='전체' count={intakeNutrientData.length} changeTabFunc={changeTab} />
-        <StateTab tabNum={0} active={activeTab === 0} tabName='부족' count={lackNutrients.length} changeTabFunc={changeTab} />
-        <StateTab tabNum={1} active={activeTab === 1} tabName='최소' count={minimumNutrients.length} changeTabFunc={changeTab} />
-        <StateTab tabNum={2} active={activeTab === 2} tabName='최적' count={properNutrients.length} changeTabFunc={changeTab} />
-        <StateTab tabNum={3} active={activeTab === 3} tabName='과다' count={excessNutrients.length} changeTabFunc={changeTab} />
+        {arrayIsNotEmpty(intakeNutrientData) &&
+          <StateTab tabNum={-1} active={activeTab === -1} tabName='전체' count={intakeNutrientData.length} changeTabFunc={changeTab} />
+        }
+        {arrayIsNotEmpty(lackNutrients) &&
+          <StateTab tabNum={0} active={activeTab === 0} tabName='부족' count={lackNutrients.length} changeTabFunc={changeTab} />
+        }
+        {arrayIsNotEmpty(minimumNutrients) &&
+          <StateTab tabNum={1} active={activeTab === 1} tabName='최소' count={minimumNutrients.length} changeTabFunc={changeTab} />
+        }
+        {arrayIsNotEmpty(properNutrients) &&
+          <StateTab tabNum={2} active={activeTab === 2} tabName='최적' count={properNutrients.length} changeTabFunc={changeTab} />
+        }
+        {arrayIsNotEmpty(excessNutrients) &&
+          <StateTab tabNum={3} active={activeTab === 3} tabName='과다' count={excessNutrients.length} changeTabFunc={changeTab} />
+        }
       </div>
 
       {/* 영양분 리스트 쭉 */}
@@ -99,8 +110,6 @@ interface StateTabProps {
 }
 
 function StateTab({ tabNum, tabName, active, count, changeTabFunc }: StateTabProps) {
-  if (count === 0) return <></>
-
   if (active) {
     return (
       <button
