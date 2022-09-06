@@ -10,6 +10,8 @@ import { PersistOptions } from 'zustand/middleware'
 export type pillListState = {
   userTakingPillList: SupplementDetailsType[]
   setUserTakingPillList: (data: SupplementDetailsType[]) => void
+  pillListVersion: number | null
+  addPillListVersion: () => void
 }
 export type pillListPersist = (
   config: StateCreator<pillListState>,

@@ -10,6 +10,11 @@ export const useUserPillListStore = create<pillListState>(
       userTakingPillList: [],
       setUserTakingPillList: (data: SupplementDetailsType[]) => {
         set((state) => ({...state, userTakingPillList: data}))
+      },
+      pillListVersion: null,
+      addPillListVersion: () => {
+        // version 값이 null이 아니면 기존 version 값에 +1
+        set((state) => ({...state, pillListVersion: (state.pillListVersion !== null ? state.pillListVersion + 1 : null)}))
       }
     }),
     {

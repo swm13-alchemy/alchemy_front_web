@@ -1,5 +1,5 @@
 import React, { FormEvent } from 'react'
-import { Search } from '@mui/icons-material'
+import Search from '@mui/icons-material/Search'
 
 interface Props {
   submitSearch: (e: FormEvent<HTMLFormElement>) => void

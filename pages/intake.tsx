@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import BottomNavBar from '../components/layout/BottomNavBar'
 
-const IntakeManagement: NextPage = () => {
+const Intake: NextPage = () => {
   return (
     <div>
       <BottomNavBar />
@@ -9,4 +9,4 @@ const IntakeManagement: NextPage = () => {
   )
 }
 
-export default IntakeManagement
+export default Intake

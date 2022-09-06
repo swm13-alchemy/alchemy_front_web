@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { requestURLs } from '../../utils/api'
+import { requestURLs } from '../../../utils/api'
 
 interface Props {
   id: number

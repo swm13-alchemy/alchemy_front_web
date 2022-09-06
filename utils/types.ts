@@ -1,7 +1,7 @@
 export interface SearchResultsItemType {
   id: number
   name: string
-  imageUrl: string | null
+  // imageUrl: string | null
   information: string
   maker: string
 }
@@ -22,7 +22,8 @@ export interface SupplementDetailsType {
   id: number
   name: string
   dailyDose: number
-  imageUrl: string | null
+  // imageUrl: string | null
+  information: string
   intakeCount: number
   intakeTiming: string
   maker: string
@@ -40,12 +41,23 @@ export interface UserIntakeNutrientType {
   efficacy: string[]
 }
 
-export interface MergedNutrientDataType {
+export interface IntakeType {
+  reqMin: number
+  reqAvg: number
+  reqLimit: number
+}
+
+export interface MergedNutrientDataType extends IntakeType {
   name: string
-  intakeContent: number | null
+  intakeContent: number
   newContent: number
-  reqMin: number | null
-  reqAvg: number | null
-  reqLimit: number | null
   unit: string
+}
+
+export interface NutrientWithIntakesType extends NutrientType {
+  intakes: IntakeType
+}
+
+export interface IngredientWithIntakesType extends IngredientType {
+  nutrients: NutrientWithIntakesType
 }

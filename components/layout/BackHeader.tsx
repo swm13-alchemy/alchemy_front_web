@@ -1,5 +1,5 @@
 import { NextRouter } from 'next/router'
-import { ChevronLeft } from '@mui/icons-material'
+import ChevronLeft from '@mui/icons-material/ChevronLeft'
 import React from 'react'
 
 interface Props {
@@ -7,9 +7,9 @@ interface Props {
   name: string
 }
 
-function HeadNav({ router, name }: Props) {
+function BackHeader({ router, name }: Props) {
   return (
-    <header className='relative w-full h-10 flex items-center justify-center text-gray-900 bg-white shadow'>
+    <header className='relative w-full py-2 flex items-center justify-center text-gray-900 bg-white shadow'>
       <button
         className='absolute left-4 flex items-center justify-center'
         onClick={() => router.back()}
@@ -21,4 +21,4 @@ function HeadNav({ router, name }: Props) {
   )
 }
 
-export default HeadNav
+export default BackHeader
