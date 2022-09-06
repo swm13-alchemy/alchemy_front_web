@@ -6,7 +6,7 @@ import MyPillList from '../components/common/MyPillList'
 import ContainerWithBottomNav from '../components/layout/ContainerWithBottomNav'
 import MainHeader from '../components/layout/MainHeader'
 
-const MY: NextPage = () => {
+const Home: NextPage = () => {
   return (
     <ContainerWithBottomNav>
       <SEO title='PillUp: 스마트하게 건강 지키기' />
@@ -38,4 +38,4 @@ const MY: NextPage = () => {
   )
 }
 
-export default MY
+export default Home

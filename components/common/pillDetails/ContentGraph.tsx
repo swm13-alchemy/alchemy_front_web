@@ -1,6 +1,6 @@
 import ContentBar from './ContentBar'
 import { MergedNutrientDataType } from '../../../utils/types'
-import { HorizontalRule } from '@mui/icons-material'
+import HorizontalRule from '@mui/icons-material/HorizontalRule'
 import { useEffect, useState } from 'react'
 import { arrayIsNotEmpty } from '../../../utils/functions/arrayIsNotEmpty'
 

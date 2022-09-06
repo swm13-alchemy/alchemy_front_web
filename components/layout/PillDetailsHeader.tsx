@@ -1,4 +1,5 @@
-import { ChevronLeft, Share } from '@mui/icons-material'
+import Share from '@mui/icons-material/Share'
+import ChevronLeft from '@mui/icons-material/ChevronLeft'
 import React from 'react'
 import { NextRouter } from 'next/router'
 

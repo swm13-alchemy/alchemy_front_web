@@ -3,7 +3,7 @@ import BackHeader from '../../../components/layout/BackHeader'
 import { useRouter } from 'next/router'
 import IntakeAdequateTag from '../../../components/tag/IntakeAdequateTag'
 import { CompareContent } from '../../../utils/functions/CompareContent'
-import { InfoOutlined } from '@mui/icons-material'
+import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { useEffect, useState } from 'react'
 
 // interface QueryProps extends UserIntakeNutrientType {

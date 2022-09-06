@@ -1,5 +1,5 @@
 import IntakeAdequateTag from '../../tag/IntakeAdequateTag'
-import { ChevronRight } from '@mui/icons-material'
+import ChevronRight from '@mui/icons-material/ChevronRight'
 import Link from 'next/link'
 import { UserIntakeNutrientType } from '../../../utils/types'
 import { CompareContent } from '../../../utils/functions/CompareContent'

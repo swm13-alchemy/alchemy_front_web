@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { NextRouter, useRouter } from 'next/router'
-import { GraphicEq, Home } from '@mui/icons-material'
+import Home from '@mui/icons-material/Home'
+import GraphicEq from '@mui/icons-material/GraphicEq'
 import { useEffect, useState } from 'react'
 
 // const menuList = [
@@ -33,6 +34,7 @@ interface MenuProps {
 }
 function Menu({ children, router, id, name, paths }: MenuProps) {
   // TODO: 추후 useMatch 쓰는 걸 고려해볼 예정
+  // startsWith라는 함수도 있더라
   const [isActive, setIsActive] = useState<boolean>(false)
 
   useEffect(() => {

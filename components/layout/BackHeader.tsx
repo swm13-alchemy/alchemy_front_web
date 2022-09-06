@@ -1,5 +1,5 @@
 import { NextRouter } from 'next/router'
-import { ChevronLeft } from '@mui/icons-material'
+import ChevronLeft from '@mui/icons-material/ChevronLeft'
 import React from 'react'
 
 interface Props {
