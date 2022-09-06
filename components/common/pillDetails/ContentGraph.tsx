@@ -52,12 +52,14 @@ function ContentGraph({ mergedNutrientData }: Props) {
         }
       </section>
 
-      <button
-        className='mt-6 w-full h-10 rounded-[0.625rem] bg-gray-200 text-gray-900'
-        onClick={() => setIsOpenGraph(!isOpenGraph)}
-      >
-        {isOpenGraph ? '닫기' : '전체 변화량 그래프 보기'}
-      </button>
+      {arrayIsNotEmpty(secondDisplayedData) &&
+        <button
+          className='mt-6 w-full h-10 rounded-[0.625rem] bg-gray-200 text-gray-900'
+          onClick={() => setIsOpenGraph(!isOpenGraph)}
+        >
+          {isOpenGraph ? '닫기' : '전체 변화량 그래프 보기'}
+        </button>
+      }
     </>
     // <div className='flex flex-col border-[#D8D8D8] w-full rounded-xl border p-2 gap-1 items-center space-y-2'>
     //   <div className='flex w-full items-center justify-between px-2'>

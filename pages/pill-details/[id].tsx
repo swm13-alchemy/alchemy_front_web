@@ -271,7 +271,7 @@ const Details = ({ details }: Props) => {
         {/*    <ContentGraph mergedNutrientData={mergedNutrientData} />*/}
         {/*  </article>*/}
         {/*}*/}
-        {/* 변화량 그래프 부분 */}
+        {/* 변화량 그래프 부분(임시) */}
         {arrayIsNotEmpty(임시) &&
           <article className='bg-white p-6 text-gray-900'>
             <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>
