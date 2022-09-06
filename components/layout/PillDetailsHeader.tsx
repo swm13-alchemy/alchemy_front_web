@@ -2,6 +2,7 @@ import Share from '@mui/icons-material/Share'
 import ChevronLeft from '@mui/icons-material/ChevronLeft'
 import React from 'react'
 import { NextRouter } from 'next/router'
+import { copyURL } from '../../utils/functions/copyURL'
 
 interface Props {
   router: NextRouter
@@ -20,7 +21,7 @@ function PillDetailsHeader({ router, pillName }: Props) {
       <h1 className='text-base'>{pillName}</h1>
       <button
         className='flex items-center justify-center'
-        // onClick={}
+        onClick={copyURL}
       >
         <Share className='text-2xl' />
       </button>

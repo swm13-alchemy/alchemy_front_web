@@ -10,16 +10,16 @@ import {
 } from '../../utils/types'
 import { useUserHealthDataStore, useUserPillListStore } from '../../stores/store'
 import { pillApi, requestURLs } from '../../utils/api'
-import {
-  PlaylistAdd,
-  DeleteForever,
-  Star,
-  StarBorder,
-  ExpandMore,
-  ExpandLess,
-  InfoOutlined,
-  Today, LocalDining, Filter1,
-} from '@mui/icons-material'
+import PlaylistAdd from '@mui/icons-material/PlaylistAdd'
+import DeleteForever from '@mui/icons-material/DeleteForever'
+import Star from '@mui/icons-material/Star'
+import StarBorder from '@mui/icons-material/StarBorder'
+import ExpandMore from '@mui/icons-material/ExpandMore'
+import ExpandLess from '@mui/icons-material/ExpandLess'
+import InfoOutlined from '@mui/icons-material/InfoOutlined'
+import Today from '@mui/icons-material/Today'
+import LocalDining from '@mui/icons-material/LocalDining'
+import Filter1 from '@mui/icons-material/Filter1'
 import { useRouter } from 'next/router'
 import PillDetailsHeader from '../../components/layout/PillDetailsHeader'
 import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
