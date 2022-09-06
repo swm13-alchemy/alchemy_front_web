@@ -1,91 +1,71 @@
-import SearchResultListItem from '../components/common/SearchResultListItem'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faSearch } from '@fortawesome/free-solid-svg-icons'
-import React, { useEffect, useState } from 'react'
+import SearchResultListItem from '../components/common/search/SearchResultListItem'
+import React, { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import requests from '../utils/requests'
 import { SearchResultsItemType } from '../utils/types'
+import { pillApi } from '../utils/api'
+import SearchBar from '../components/layout/SearchBar'
+import BackHeader from '../components/layout/BackHeader'
+import { NextPage } from 'next'
+import ContainerWithBottomNav from '../components/layout/ContainerWithBottomNav'
+import { arrayIsNotEmpty } from '../utils/functions/arrayIsNotEmpty'
 
-const Search = () => {
+const Search: NextPage = () => {
   const router = useRouter()
-  const [formInputs, setFormInputs] = useState({})
-  const [searchTerm, setSearchTerm] = useState('')
+  // const [formInputs, setFormInputs] = useState({})
+  const [searchTerm, setSearchTerm] = useState<string>('')
   const [searchResults, setSearchResults] = useState<SearchResultsItemType[]>([])
 
+  useEffect(() => {
+    if (router.query.name) {
+      (async function reloadingSearch() {
+        const { data: { data: result } } = await pillApi.getSearchResults(router.query.name)
+        setSearchResults(result)
+      })()
+    }
+  }, [router.query.name])
+
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormInputs({ ...formInputs, [name]: value })
+    // const { name, value } = e.target
+    // setFormInputs({ ...formInputs, [name]: value })
     setSearchTerm(e.target.value)
   }
 
-  const search = async (e: any) => {
+  const submitSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // @ts-ignore
-    let supplements = await fetch(requests.fetchSearchResults + `?name=%${formInputs.searchTerm}%`)
-    supplements = await supplements.json()
-    // @ts-ignore
-    const result: SearchResultsItemType[] = supplements.pill
-    setSearchResults(result)
-    // @ts-ignore
-    router.replace({ query: { name: formInputs.searchTerm } })
+    // 주소 쿼리스트링 추가해서 상세페이지 들어갔다 나올 때 그대로 검색되게 유지
+    await router.replace({ query: { name: searchTerm } })
   }
 
-  useEffect(() => {
-    if (router.query.name && !searchResults.length) {
-      const reloadingSearch = async () => {
-        let supplements = await fetch(requests.fetchSearchResults + `?name=%${router.query.name}%`)
-        supplements = await supplements.json()
-        // @ts-ignore
-        const result: SearchResultsItemType[] = supplements.pill
-        setSearchResults(result)
-      }
-      reloadingSearch()
-    }
-  })
-
   return (
-    <div>
-      <div className='relative left-0 top-0 w-full h-14 px-3 flex items-center justify-between border-b-[#BABABA] border-b'>
-        <FontAwesomeIcon
-          icon={faAngleLeft}
-          className='text-2xl cursor-pointer pr-5'
-          onClick={() => router.back()}
+    <ContainerWithBottomNav>
+      <div className='min-h-screen bg-white space-y-4'>
+        <BackHeader router={router} name='Search' />
+
+        <SearchBar
+          submitSearch={submitSearch}
+          handleInputs={handleInputs}
+          searchTerm={searchTerm}
         />
-        <form className='w-full h-full text-xl flex items-center justify-between' onSubmit={search}>
-          <input
-            className='appearance-none w-full bg-transparent h-full'
-            name='searchTerm'
-            placeholder='영양제를 검색해 보세요.'
-            value={searchTerm}
-            type='text'
-            onChange={handleInputs}
-            required
-          />
-          <button className='pl-5'>
-            <FontAwesomeIcon icon={faSearch} className='text-2xl' />
-          </button>
-        </form>
-      </div>
-      {searchResults.length !== 0 && (
-        <div className='px-3 py-5'>
-          <p className='text-gray-500 text-base'>검색 결과 {searchResults.length}개</p>
-          <div className='flex flex-col w-full mt-3 space-y-2'>
-            {searchResults.map((supplement) => {
-              return (
-                <SearchResultListItem
-                  key={supplement.name}
-                  id={supplement.id}
-                  name={supplement.name}
-                  imageUrl={supplement.imageUrl}
-                  maker={supplement.maker}
-                  information={supplement.information}
-                />
-              )
-            })}
+
+        {arrayIsNotEmpty(searchResults) && (
+          <div className='px-6 pt-2'>
+            <p className='text-gray-900 text-base'>검색된 영양제 {searchResults?.length}개</p>
+            <div className='flex flex-col w-full mt-4 space-y-4'>
+              {searchResults.map((supplement) => {
+                return (
+                  <SearchResultListItem
+                    key={supplement.name}
+                    id={supplement.id}
+                    name={supplement.name}
+                    maker={supplement.maker}
+                  />
+                )
+              })}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </ContainerWithBottomNav>
   )
 }
 

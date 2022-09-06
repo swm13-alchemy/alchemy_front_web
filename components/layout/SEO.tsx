@@ -4,7 +4,7 @@ interface Props {
   title: string
 }
 
-function Seo({ title }: Props) {
+function SEO({ title }: Props) {
   return (
     <Head>
       <title>{title}</title>
@@ -12,4 +12,4 @@ function Seo({ title }: Props) {
   )
 }
 
-export default Seo
+export default SEO

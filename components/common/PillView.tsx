@@ -11,7 +11,7 @@ function PillView({ imageUrl, name }: Props) {
       <div className='relative w-14 h-14 rounded-3xl overflow-hidden'>
         <Image src={imageUrl} className='object-cover' layout='fill' />
       </div>
-      <p className='text-base truncate w-20'>{name}</p>
+      <p className='text-base truncate w-20 text-center'>{name}</p>
     </div>
   )
 }
