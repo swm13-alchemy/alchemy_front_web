@@ -37,35 +37,33 @@ const Search: NextPage = () => {
   }
 
   return (
-    <ContainerWithBottomNav>
-      <div className='min-h-screen bg-white space-y-4'>
-        <BackHeader router={router} name='Search' />
+    <div className='min-h-screen bg-white space-y-4'>
+      <BackHeader router={router} name='Search' />
 
-        <SearchBar
-          submitSearch={submitSearch}
-          handleInputs={handleInputs}
-          searchTerm={searchTerm}
-        />
+      <SearchBar
+        submitSearch={submitSearch}
+        handleInputs={handleInputs}
+        searchTerm={searchTerm}
+      />
 
-        {arrayIsNotEmpty(searchResults) && (
-          <div className='px-6 pt-2'>
-            <p className='text-gray-900 text-base'>검색된 영양제 {searchResults?.length}개</p>
-            <div className='flex flex-col w-full mt-4 space-y-4'>
-              {searchResults.map((supplement) => {
-                return (
-                  <SearchResultListItem
-                    key={supplement.name}
-                    id={supplement.id}
-                    name={supplement.name}
-                    maker={supplement.maker}
-                  />
-                )
-              })}
-            </div>
+      {arrayIsNotEmpty(searchResults) && (
+        <div className='px-6 pt-2'>
+          <p className='text-gray-900 text-base'>검색된 영양제 {searchResults?.length}개</p>
+          <div className='flex flex-col w-full mt-4 space-y-4'>
+            {searchResults.map((supplement) => {
+              return (
+                <SearchResultListItem
+                  key={supplement.name}
+                  id={supplement.id}
+                  name={supplement.name}
+                  maker={supplement.maker}
+                />
+              )
+            })}
           </div>
-        )}
-      </div>
-    </ContainerWithBottomNav>
+        </div>
+      )}
+    </div>
   )
 }
 

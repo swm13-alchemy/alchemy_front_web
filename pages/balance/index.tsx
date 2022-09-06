@@ -9,11 +9,13 @@ import IntakeReport from '../../components/common/balance/IntakeReport'
 import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
 import Image from 'next/image'
 import balanceIcon from '../../public/asset/image/balanceIcon.png'
+import balanceIllust from '../../public/asset/image/balanceIllust.png'
 import MuiCarousel from '../../components/common/MuiCarousel'
 import MainHeader from '../../components/layout/MainHeader'
 import { CompareContent } from '../../utils/functions/CompareContent'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 import { getTodayDate } from '../../utils/functions/getTodayDate'
+import Link from 'next/link'
 
 const Index: NextPage = () => {
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
@@ -80,40 +82,62 @@ const Index: NextPage = () => {
       {/*<BackHeader router={router} name='영양제 분석 리포트' />*/}
       <MainHeader />
 
-      <div className='flex flex-col space-y-4'>
-        {/* 머리 부분 */}
-        <div className='w-full bg-white px-6 py-4 flex items-center justify-between'>
-          <div className='flex flex-col'>
-            <p className='text-sm text-gray-500'>{todayDateStr}</p>
-            <h1 className='text-lg font-bold text-gray-900'>영양제 분석 리포트 💊</h1>
+      {arrayIsNotEmpty(userTakingPillList) ? (
+        // 등록된 영양제가 있는 경우 보여지는 화면
+        <div className='flex flex-col space-y-4'>
+          {/* 머리 부분 */}
+          <div className='w-full bg-white px-6 py-4 flex items-center justify-between'>
+            <div className='flex flex-col'>
+              <p className='text-sm text-gray-500'>{todayDateStr}</p>
+              <h1 className='text-lg font-bold text-gray-900'>영양제 분석 리포트 💊</h1>
+            </div>
+            <div className='relative w-[3.25rem] h-[3.25rem]'>
+              <Image
+                src={balanceIcon}
+                className='object-cover'
+                layout='fill'
+              />
+            </div>
           </div>
-          <div className='relative w-[3.25rem] h-[3.25rem]'>
+
+          {/* 요약 리포트 부분 */}
+          <BalanceSummary />
+
+          {/* 배너 부분 */}
+          <MuiCarousel whereToUse='balanceBanner' />
+
+          {/* 필수 영양분 리포트 부분 */}
+          {arrayIsNotEmpty(intakeNutrientData) &&
+            <IntakeReport
+              intakeNutrientData={intakeNutrientData}
+              excessNutrients={excessNutrients}
+              properNutrients={properNutrients}
+              minimumNutrients={minimumNutrients}
+              lackNutrients={lackNutrients}
+            />
+          }
+        </div>
+      ) : (
+        // 등록된 영양제가 없는 경우 보여지는 화면
+        <div className='bg-white w-full h-full flex flex-col items-center'>
+          <div className='mt-[6.25rem] relative w-[18.75rem] h-[12.5rem]'>
             <Image
-              src={balanceIcon}
+              src={balanceIllust}
               className='object-cover'
               layout='fill'
             />
           </div>
+          <h1 className='mt-[1.5625rem] text-xl'>영양제 밸런스 분석 시작하기</h1>
+          <p className='mt-[1.25rem] text-base'>섭취중인 영양제를 먼저 등록해주세요</p>
+          <Link
+            href='/search'
+          >
+            <a className='mt-[2.1875rem] w-11/12 h-10 bg-primary rounded-[0.625rem] text-base text-white flex items-center justify-center'>
+              섭취중인 영양제 등록하러 가기
+            </a>
+          </Link>
         </div>
-
-        {/* 요약 리포트 부분 */}
-        <BalanceSummary />
-
-        {/* 배너 부분 */}
-        <MuiCarousel whereToUse='balanceBanner' />
-
-        {/* 필수 영양분 리포트 부분 */}
-        {arrayIsNotEmpty(intakeNutrientData) &&
-          <IntakeReport
-            intakeNutrientData={intakeNutrientData}
-            excessNutrients={excessNutrients}
-            properNutrients={properNutrients}
-            minimumNutrients={minimumNutrients}
-            lackNutrients={lackNutrients}
-          />
-        }
-
-      </div>
+      )}
     </ContainerWithBottomNav>
   )
 }
