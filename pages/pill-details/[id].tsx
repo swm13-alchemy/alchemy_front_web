@@ -229,6 +229,7 @@ const Details = ({ details }: Props) => {
           {/*</div>*/}
         </div>
         <div className='flex items-center space-x-2'>
+          {/* 영양제 리스트 추가 버튼 */}
           <button
             className={
               'py-2 rounded-[0.625rem] text-white duration-500 grow' +
@@ -241,18 +242,19 @@ const Details = ({ details }: Props) => {
             ) : (
               <PlaylistAdd className='text-lg' />
             )}
-            <p className='text-center text-xs inline ml-2'>{isTaking ? '영양제 리스트 제거' : '영양제 리스트 추가'}</p>
+            <p className='text-center text-xs inline ml-2'>{isTaking ? '내 영양제 제거' : '내 영양제 추가'}</p>
           </button>
-          <button
-            className='p-3 rounded-[0.625rem] bg-surface flex items-center justify-center'
-            onClick={() => setIsWish(!isWish)}
-          >
-            {isWish ? (
-              <Star className='text-base text-primary' />
-            ) : (
-              <StarBorder className='text-base text-primary' />
-            )}
-          </button>
+          {/* 찜 버튼 */}
+          {/*<button*/}
+          {/*  className='p-3 rounded-[0.625rem] bg-surface flex items-center justify-center'*/}
+          {/*  onClick={() => setIsWish(!isWish)}*/}
+          {/*>*/}
+          {/*  {isWish ? (*/}
+          {/*    <Star className='text-base text-primary' />*/}
+          {/*  ) : (*/}
+          {/*    <StarBorder className='text-base text-primary' />*/}
+          {/*  )}*/}
+          {/*</button>*/}
         </div>
       </main>
 

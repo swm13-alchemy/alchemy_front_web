@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // const API_KEY = process.env.API_KEY
 // const HASURA_BASE_URL = 'http://ec2-3-38-255-41.ap-northeast-2.compute.amazonaws.com:8080/api/rest'
-const NEST_BASE_URL = 'http://ec2-3-38-255-41.ap-northeast-2.compute.amazonaws.com:3000'
+const NEST_BASE_URL = 'https://api-server.beehealer.ml'
 const S3_BASE_URL = 'https://healerbee-dev.s3.ap-northeast-2.amazonaws.com'
 
 
