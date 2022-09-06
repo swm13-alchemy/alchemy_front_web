@@ -15,7 +15,9 @@ export interface NutrientType {
 export interface IngredientType {
   content: number
   unit: string
-  nutrient: NutrientType
+  nutrient: NutrientType  // {name: string
+                          //  tips: string
+                          //  efficacy: string}
 }
 
 export interface SupplementDetailsType {
@@ -48,6 +50,9 @@ export interface IntakeType {
 }
 
 export interface MergedNutrientDataType extends IntakeType {
+  // reqMin: number
+  // reqAvg: number
+  // reqLimit: number
   name: string
   intakeContent: number
   newContent: number
@@ -55,9 +60,21 @@ export interface MergedNutrientDataType extends IntakeType {
 }
 
 export interface NutrientWithIntakesType extends NutrientType {
-  intakes: IntakeType
+  // name: string
+  // tips: string
+  // efficacy: string
+  intakes: IntakeType // {reqMin: number
+                      //  reqAvg: number
+                      //  reqLimit: number}
 }
 
 export interface IngredientWithIntakesType extends IngredientType {
-  nutrients: NutrientWithIntakesType
+  // content: number
+  // unit: string
+  nutrients: NutrientWithIntakesType  // name: string
+                                      // tips: string
+                                      // efficacy: string
+                                      // intakes: IntakeType // {reqMin: number
+                                      //                     //  reqAvg: number
+                                      //                     //  reqLimit: number}
 }
