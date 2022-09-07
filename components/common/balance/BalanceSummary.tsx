@@ -1,8 +1,8 @@
 interface Props {
-  nickName: string
+  intakeSupplementsCnt: number
 }
 
-function BalanceSummary() {
+function BalanceSummary({ intakeSupplementsCnt }: Props) {
   return (
     <section className='w-full h-[12.5rem] px-8 py-6 bg-white'>
       <p className='text-base font-bold text-gray-900'>나의 건강 알약  💊</p>
@@ -29,7 +29,7 @@ function BalanceSummary() {
           <PillIcon isFill={false} />
         </div>
       </div>
-      <p className='text-sm text-gray-900'>홍길동님이 섭취중이신 <span className='font-bold'>4개</span>의 영양제 덕분에<br/>14가지 건강 알약 중 <span className='font-bold text-primary'>6개의 알약</span>을 가지고 있어요!</p>
+      <p className='text-sm text-gray-900'>섭취중이신 <span className='font-bold'>{intakeSupplementsCnt}개</span>의 영양제를 통해<br/>14가지 건강 알약 중 <span className='font-bold text-primary'>6개</span>를 먹고 있어요!</p>
     </section>
   )
 }

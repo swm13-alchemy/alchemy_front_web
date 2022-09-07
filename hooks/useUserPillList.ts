@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { SupplementDetailsType } from '../utils/types'
 
 const useUserPillList = (): SupplementDetailsType[] => {
-  const { userTakingPillList } = useUserPillListStore()
+  const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   const [pillList, setPillList] = useState<SupplementDetailsType[]>([])
 
   useEffect(() => setPillList(userTakingPillList), [])
