@@ -203,7 +203,7 @@ const Details = ({ details }: Props) => {
   }
 
   return (
-    <ContainerWithBottomNav headerHeight='pt-10'>
+    <div className='pt-10'>
       <PillDetailsHeader router={router} pillName={name} />
 
       {/* 영양제 이미지 */}
@@ -260,6 +260,29 @@ const Details = ({ details }: Props) => {
 
       {/* 상세 정보 부분 */}
       <section className='mt-2 space-y-4'>
+        {/*/!* 변화량 그래프 부분 *!/*/}
+        {/*{arrayIsNotEmpty(mergedNutrientData) &&*/}
+        {/*  <article className='bg-white p-6 text-gray-900'>*/}
+        {/*    <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>*/}
+        {/*    <InfoOutlined className='text-base text-gray-400 ml-1' />*/}
+        {/*    <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>*/}
+
+        {/*    /!* 그래프 부분 *!/*/}
+        {/*    <ContentGraph mergedNutrientData={mergedNutrientData} />*/}
+        {/*  </article>*/}
+        {/*}*/}
+        {/* 변화량 그래프 부분(임시) */}
+        {arrayIsNotEmpty(임시) &&
+          <article className='bg-white p-6 text-gray-900'>
+            <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>
+            <InfoOutlined className='text-base text-gray-400 ml-1' />
+            <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>
+
+            {/* 그래프 부분 */}
+            <ContentGraph mergedNutrientData={임시} />
+          </article>
+        }
+
         {/* 효능 부분 */}
         <article className='bg-white p-6 text-gray-900'>
           {/* 주요 효능 부분 */}
@@ -293,29 +316,6 @@ const Details = ({ details }: Props) => {
           </div>
         </article>
 
-        {/*/!* 변화량 그래프 부분 *!/*/}
-        {/*{arrayIsNotEmpty(mergedNutrientData) &&*/}
-        {/*  <article className='bg-white p-6 text-gray-900'>*/}
-        {/*    <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>*/}
-        {/*    <InfoOutlined className='text-base text-gray-400 ml-1' />*/}
-        {/*    <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>*/}
-
-        {/*    /!* 그래프 부분 *!/*/}
-        {/*    <ContentGraph mergedNutrientData={mergedNutrientData} />*/}
-        {/*  </article>*/}
-        {/*}*/}
-        {/* 변화량 그래프 부분 */}
-        {arrayIsNotEmpty(임시) &&
-          <article className='bg-white p-6 text-gray-900'>
-            <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>
-            <InfoOutlined className='text-base text-gray-400 ml-1' />
-            <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>
-
-            {/* 그래프 부분 */}
-            <ContentGraph mergedNutrientData={임시} />
-          </article>
-        }
-
         {/* 추천 섭취 방법 부분 */}
         <article className='bg-white p-6'>
           <p className='text-base font-bold text-gray-900'>추천 섭취 방법</p>
@@ -344,7 +344,7 @@ const Details = ({ details }: Props) => {
           </div>
         </article>
       </section>
-    </ContainerWithBottomNav>
+    </div>
   )
 }
 
