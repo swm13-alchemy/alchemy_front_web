@@ -1,4 +1,12 @@
-export function getTodayDate(): string {
+export type todayDataType = {
+  year: number
+  month: number
+  date: number
+  day: string
+  todayDateObject: Date
+}
+
+export function getTodayDate(version: string = 'ko'): todayDataType {
   const today = new Date()
 
   const year = today.getFullYear().toString().slice(2,4)
@@ -7,29 +15,57 @@ export function getTodayDate(): string {
   const day = today.getDay()
 
   let dayStr = ''
-  switch (day) {
-    case 0:
-      dayStr = '(일)'
-      break
-    case 1:
-      dayStr = '(월)'
-      break
-    case 2:
-      dayStr = '(화)'
-      break
-    case 3:
-      dayStr = '(수)'
-      break
-    case 4:
-      dayStr = '(목)'
-      break
-    case 5:
-      dayStr = '(금)'
-      break
-    case 6:
-      dayStr = '(토)'
-      break
+  if (version === 'en') {
+    switch (day) {
+      case 0:
+        dayStr = 'Sun'
+        break
+      case 1:
+        dayStr = 'Mon'
+        break
+      case 2:
+        dayStr = 'Tue'
+        break
+      case 3:
+        dayStr = 'Wed'
+        break
+      case 4:
+        dayStr = 'Thu'
+        break
+      case 5:
+        dayStr = 'Fri'
+        break
+      case 6:
+        dayStr = 'Sat'
+        break
+    }
+  } else {
+    switch (day) {
+      case 0:
+        dayStr = '(일)'
+        break
+      case 1:
+        dayStr = '(월)'
+        break
+      case 2:
+        dayStr = '(화)'
+        break
+      case 3:
+        dayStr = '(수)'
+        break
+      case 4:
+        dayStr = '(목)'
+        break
+      case 5:
+        dayStr = '(금)'
+        break
+      case 6:
+        dayStr = '(토)'
+        break
+    }
   }
 
-  return year + '.' + month + '.' + date + ` ${dayStr}`
+
+
+  return { year: parseInt(year), month: parseInt(month), date: parseInt(date), day: dayStr, todayDateObject: today }
 }
