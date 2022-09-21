@@ -16,10 +16,10 @@ function BottomNavBar() {
   return (
     <nav className='h-12 flex items-center fixed bottom-0 left-0 right-0 bg-surface z-50'>
       <Menu router={router} id={1} name='HOME' paths={['/', '/search', '/pill-details']}>
-        <Home className='text-2xl'/>
+        <Home className='text-2xl' />
       </Menu>
       <Menu router={router} id={2} name='Balance' paths={['/balance']}>
-        <GraphicEq className='text-2xl'/>
+        <GraphicEq className='text-2xl' />
       </Menu>
     </nav>
   )
@@ -48,15 +48,14 @@ function Menu({ children, router, id, name, paths }: MenuProps) {
   }, [])
 
   return (
-    <Link
-      key={id}
-      href={paths[0]}
-    >
+    <Link key={id} href={paths[0]}>
       <a className='grow w-full'>
         <div
           className={
             'flex flex-col items-center justify-between' +
-            (isActive ? ' text-primary bg-indigo-50 border-t-2 border-t-primary' : ' text-gray-300 bg-surface border-none')
+            (isActive
+              ? ' text-primary bg-indigo-50 border-t-2 border-t-primary'
+              : ' text-gray-300 bg-surface border-none')
           }
         >
           {children}
