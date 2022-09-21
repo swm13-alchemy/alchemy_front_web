@@ -1,7 +1,14 @@
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
-import { SupplementDetailsType } from '../utils/types'
-import { pillListPersist, pillListState, userHealthPersist, userHealthState } from './storeTypes'
+import { IntakeManagementType, SupplementDetailsType } from '../utils/types'
+import {
+  intakeManagementPersist,
+  intakeManagementState,
+  pillListPersist,
+  pillListState,
+  userHealthPersist,
+  userHealthState,
+} from './storeTypes'
 
 export const useUserPillListStore = create<pillListState>(
   // @ts-ignore
@@ -38,6 +45,25 @@ export const useUserHealthDataStore = create<userHealthState>(
     }),
     {
       name: 'userHealthData'
+    }
+  )
+)
+
+export const useUserIntakeManagementStore = create<intakeManagementState>(
+  // @ts-ignore
+  (persist as intakeManagementPersist)(
+    (set) => ({
+      intakeServiceStartDate: null,
+      setIntakeServiceStartDate: (intakeServiceDate: Date) => {
+        set((state) => ({...state, intakeServiceStartDate: intakeServiceDate}))
+      },
+      intakePillList: [],
+      setIntakePillList: (intakePillList: IntakeManagementType[]) => {
+        set((state) => ({...state, intakePillList: intakePillList}))
+      }
+    }),
+    {
+      name: 'userIntakeManagement'
     }
   )
 )

@@ -78,3 +78,29 @@ export interface IngredientWithIntakesType extends IngredientType {
                                       //                     //  reqAvg: number
                                       //                     //  reqLimit: number}
 }
+
+export type Days = 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat'
+export interface IntakeManagementType {
+  pillId: number
+  pillNickName: string
+  intakeDays: Days[]
+  intakeNumber: number
+  intakeTime: number[][]
+  intakeAmount: number
+  startIntakeDate: Date
+}
+
+export interface TimeTableType {
+  pillId: number
+  pillNickName: string
+  isTake: boolean
+  startIntakeDate: Date
+}
+
+export interface TimeTableByTimeType {
+  [time: string]: TimeTableType[]
+}
+
+export type TimeTableByDayType = {
+  [day in Days]: TimeTableByTimeType | null
+}

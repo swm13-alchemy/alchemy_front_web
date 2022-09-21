@@ -3,6 +3,7 @@ import BackHeader from '../../../components/layout/BackHeader'
 import { useRouter } from 'next/router'
 import EditScheduleBox from '../../../components/common/intake/EditScheduleBox'
 import Add from '@mui/icons-material/Add'
+import Link from 'next/link'
 
 const EditSchedule = () => {
   const router = useRouter()
@@ -15,20 +16,31 @@ const EditSchedule = () => {
     <ContainerWithBottomNav>
       <BackHeader router={router} name='영양제 시간표 편집' />
 
+      {/* 상단 + 새로운 복용 관리 영양제 추가 버튼 */}
+      <div className='w-full flex items-center justify-between text-gray-900 px-6 py-4'>
+        <h1 className='text-base'>길동님의 복용 스케쥴</h1>
+        <Link href={`/intake/edit-schedule/add`}>
+          <a className='flex items-center justify-center'>
+            <Add className='text-2xl' />
+          </a>
+        </Link>
+      </div>
+
+      {/* 시간별 복용 스케쥴 */}
       <div className='space-y-2 pb-5'>
         <EditScheduleBox time='09:00' />
         <EditScheduleBox time='09:00' />
         <EditScheduleBox time='09:00' />
 
-        <button
-          className='bg-white w-full py-4'
-          onClick={addNewSchedule}
-        >
-          <div className='flex items-center space-x-2 text-primary justify-center'>
-            <Add className='text-2xl' />
-            <p className='text-base'>새로운 시간 추가하기</p>
-          </div>
-        </button>
+        {/*<button*/}
+        {/*  className='bg-white w-full py-4'*/}
+        {/*  onClick={addNewSchedule}*/}
+        {/*>*/}
+        {/*  <div className='flex items-center space-x-2 text-primary justify-center'>*/}
+        {/*    <Add className='text-2xl' />*/}
+        {/*    <p className='text-base'>새로운 시간 추가하기</p>*/}
+        {/*  </div>*/}
+        {/*</button>*/}
       </div>
     </ContainerWithBottomNav>
   )

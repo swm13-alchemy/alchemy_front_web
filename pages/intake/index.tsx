@@ -4,8 +4,29 @@ import IntakeCalendar from '../../components/common/intakeCalendar/IntakeCalenda
 import MainHeader from '../../components/layout/MainHeader'
 import ScheduleBox from '../../components/common/intake/ScheduleBox'
 import Link from 'next/link'
+import { useUserIntakeManagementStore } from '../../stores/store'
+import { useEffect, useState } from 'react'
+import { TimeTableByDayType } from '../../utils/types'
+import { makeIntakeTimeTableByDay } from '../../utils/functions/makeIntakeTimeTableByDay'
 
 const Intake: NextPage = () => {
+  const intakeServiceStartDate = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
+  const setIntakeServiceStartDate = useUserIntakeManagementStore(state => state.setIntakeServiceStartDate)
+  const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
+  const setIntakePillList = useUserIntakeManagementStore(state => state.setIntakePillList)
+  const [intakeTimeTableData, setIntakeTimeTableData] = useState<TimeTableByDayType>({
+    'Sun': null,
+    'Mon': null,
+    'Tue': null,
+    'Wed': null,
+    'Thu': null,
+    'Fri': null,
+    'Sat': null
+  })
+
+  useEffect(() => {
+    makeIntakeTimeTableByDay(intakePillList, intakeTimeTableData, setIntakeTimeTableData)
+  }, [])
 
   return (
     <ContainerWithBottomNav>
