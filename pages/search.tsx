@@ -20,15 +20,26 @@ const Search: NextPage = () => {
 
   useEffect(() => {
     if (router.query.name) {
-      (async function reloadingSearch() { // 쿼리 스트링 보고 검색하는 함수
-        const { data: { data: result } } = await pillApi.getSearchResults(router.query.name)
+      ;(async function reloadingSearch() {
+        // 쿼리 스트링 보고 검색하는 함수
+        const {
+          data: { data: result },
+        } = await pillApi.getSearchResults(router.query.name)
         if (arrayIsNotEmpty(result)) {
           setIsNoResult(false)
           setSearchResults(result)
-        } else {  // 받아온 data의 배열이 비어있는 경우 isNoResult를 true로 바꿈
+        } else {
+          // 받아온 data의 배열이 비어있는 경우 isNoResult를 true로 바꿈
           setIsNoResult(true)
         }
       })()
+
+      /**
+       *  2022-09-23 표지원 추가
+       *
+       *  QueryString으로 /search에 name을 넘겨주는 경우, 검색어 State 변경
+       */
+      setSearchTerm(router.query.name)
     }
   }, [router.query.name])
 
@@ -48,13 +59,9 @@ const Search: NextPage = () => {
     <div className='min-h-screen bg-white space-y-4'>
       <BackHeader router={router} name='Search' />
 
-      <SearchBar
-        submitSearch={submitSearch}
-        handleInputs={handleInputs}
-        searchTerm={searchTerm}
-      />
+      <SearchBar submitSearch={submitSearch} handleInputs={handleInputs} searchTerm={searchTerm} />
 
-      {!isNoResult ? (  // 검색 결과가 있는 경우
+      {!isNoResult ? ( // 검색 결과가 있는 경우
         arrayIsNotEmpty(searchResults) && (
           <div className='px-6 pt-2'>
             <p className='text-gray-900 text-base'>검색된 영양제 {searchResults?.length}개</p>
@@ -72,13 +79,10 @@ const Search: NextPage = () => {
             </div>
           </div>
         )
-      ) : ( // 검색 결과가 없는 경우
+      ) : (
+        // 검색 결과가 없는 경우
         <div className='!mt-60 mx-auto relative w-[10.3125rem] h-[4.625rem]'>
-          <Image
-            src={noSearchResult}
-            className='object-cover'
-            layout='fill'
-          />
+          <Image src={noSearchResult} className='object-cover' layout='fill' />
         </div>
       )}
     </div>

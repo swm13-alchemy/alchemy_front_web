@@ -1,12 +1,14 @@
 import { NextPage } from 'next'
-import { useRouter } from 'next/router'
+import { useRouter, withRouter } from 'next/router'
 import BackHeader from '../../components/layout/BackHeader'
 import TaskAltIcon from '@mui/icons-material/TaskAlt'
 import CancelIcon from '@mui/icons-material/Cancel'
 import Link from 'next/link'
 
-const PillLense: NextPage = () => {
+const PillLense: NextPage = (props) => {
   const router = useRouter()
+
+  const capturedImage = props.router.query.image
 
   return (
     <div>
@@ -20,7 +22,7 @@ const PillLense: NextPage = () => {
         </span>
 
         <div className='mt-8 h-[250px] flex justify-around'>
-          <ImageContainer type='captured' imgSrc='black' />
+          <ImageContainer type='captured' imgSrc={capturedImage} />
 
           <ImageContainer type='example' />
         </div>
@@ -55,7 +57,7 @@ const ImageContainer = (props) => {
 
   const isExample = type === 'example'
 
-  const imgBoxStyle = `w-40 h-48 bg-black rounded-xl ${isExample && ' border-4 border-[#1C65D1]'}`
+  const imgBoxStyle = `w-32 h-48 bg-black rounded-xl ${isExample && ' border-4 border-[#1C65D1]'}`
 
   const textStyle = `block mt-2 text-center text-sm leading-5 font-normal ${
     isExample && 'text-[#1C65D1]'
@@ -92,4 +94,4 @@ const TryAgain = ({ router }) => {
   )
 }
 
-export default PillLense
+export default withRouter(PillLense)
