@@ -6,26 +6,27 @@ import ScheduleBox from '../../components/common/intake/ScheduleBox'
 import Link from 'next/link'
 import { useUserIntakeManagementStore } from '../../stores/store'
 import { useEffect, useState } from 'react'
-import { TimeTableByDayType } from '../../utils/types'
+import { IntakeManagementType, TimeTableByDayType } from '../../utils/types'
 import { makeIntakeTimeTableByDay } from '../../utils/functions/makeIntakeTimeTableByDay'
 
 const Intake: NextPage = () => {
   const intakeServiceStartDate = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
   const setIntakeServiceStartDate = useUserIntakeManagementStore(state => state.setIntakeServiceStartDate)
-  const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
+  const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
   const setIntakePillList = useUserIntakeManagementStore(state => state.setIntakePillList)
   const [intakeTimeTableData, setIntakeTimeTableData] = useState<TimeTableByDayType>({
-    'Sun': null,
-    'Mon': null,
-    'Tue': null,
-    'Wed': null,
-    'Thu': null,
-    'Fri': null,
-    'Sat': null
+    'Sun': {},
+    'Mon': {},
+    'Tue': {},
+    'Wed': {},
+    'Thu': {},
+    'Fri': {},
+    'Sat': {}
   })
 
+  // 복용 관리 중인 영양제들 리스트를 활용해 '요일' 기준으로 요일 기준 영양제 시간표 데이터를 가공함
   useEffect(() => {
-    makeIntakeTimeTableByDay(intakePillList, intakeTimeTableData, setIntakeTimeTableData)
+    setIntakeTimeTableData(makeIntakeTimeTableByDay(intakePillList))
   }, [])
 
   return (

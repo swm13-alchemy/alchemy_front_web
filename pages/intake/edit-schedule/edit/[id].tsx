@@ -1,26 +1,19 @@
 import BackHeader from '../../../../components/layout/BackHeader'
 import PillListItem from '../../../../components/common/PillListItem'
-import IntakeDaysBtns, { IntakeDaysType } from '../../../../components/common/intake/IntakeDaysBtns'
+import IntakeDaysBtns from '../../../../components/common/intake/IntakeDaysBtns'
 import RemoveCircleOutline from '@mui/icons-material/RemoveCircleOutline'
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline'
 import ChevronRight from '@mui/icons-material/ChevronRight'
 import ContainerWithBottomNav from '../../../../components/layout/ContainerWithBottomNav'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { Days } from '../../../../utils/types'
 
 const EditingPillNotification = () => {
   const router = useRouter()
   const id: number = parseInt(router.query.id as string)
   const [pillNickName, setPillNickName] = useState<string>()  // TODO: 추후 초기 값 설정
-  const [intakeDays, setIntakeDays] = useState<IntakeDaysType>({  // TODO: 추후 초기 값 설정
-    'Sun': false,
-    'Mon': false,
-    'Tue': false,
-    'Wed': false,
-    'Thu': false,
-    'Fri': false,
-    'Sat': false
-  })
+  const [intakeDays, setIntakeDays] = useState<Days[]>([])  // TODO: 추후 초기 값 설정
   const [intakeNum, setIntakeNum] = useState<number>(1) // TODO: 추후 초기 값 설정
   const [intakeTimes, setIntakeTimes] = useState<Array<Array<number>>>([[9,0]]) // TODO: 추후 초기 값 설정
   const [amountIntake, setAmountIntake] = useState<number>(1) // TODO: 추후 초기 값 설정

@@ -1,3 +1,5 @@
+import { Dayjs } from 'dayjs'
+
 export interface SearchResultsItemType {
   id: number
   name: string
@@ -82,10 +84,12 @@ export interface IngredientWithIntakesType extends IngredientType {
 export type Days = 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat'
 export interface IntakeManagementType {
   pillId: number
+  pillMaker: string
+  pillName: string
   pillNickName: string
   intakeDays: Days[]
   intakeNumber: number
-  intakeTime: number[][]
+  intakeTimesDayjs: Dayjs[]
   intakeAmount: number
   startIntakeDate: Date
 }
@@ -102,5 +106,5 @@ export interface TimeTableByTimeType {
 }
 
 export type TimeTableByDayType = {
-  [day in Days]: TimeTableByTimeType | null
+  [day in Days]: TimeTableByTimeType
 }
