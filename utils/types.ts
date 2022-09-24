@@ -94,7 +94,7 @@ export interface IntakeManagementType {
   startIntakeDate: Date
 }
 
-export interface TimeTableType {
+export interface TimeTableDataType {
   pillId: number
   pillNickName: string
   isTake: boolean
@@ -102,9 +102,19 @@ export interface TimeTableType {
 }
 
 export interface TimeTableByTimeType {
-  [time: string]: TimeTableType[]
+  [time: string]: TimeTableDataType[]
 }
 
 export type TimeTableByDayType = {
   [day in Days]: TimeTableByTimeType
+}
+
+export interface FinalTimeTableDataType {
+  remainIntakePillCnt: number | null
+  totalIntakePillCnt: number
+  intakeHistory: TimeTableByTimeType
+}
+
+export interface TimeTableByDateType {
+  [date: string]: FinalTimeTableDataType
 }

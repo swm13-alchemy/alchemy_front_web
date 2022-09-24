@@ -1,5 +1,5 @@
 import { arrayIsNotEmpty } from './arrayIsNotEmpty'
-import { Days, IntakeManagementType, TimeTableByDayType, TimeTableType } from '../types'
+import { Days, IntakeManagementType, TimeTableByDayType, TimeTableDataType } from '../types'
 import dayjs from 'dayjs'
 
 export function makeIntakeTimeTableByDay(intakePillList: IntakeManagementType[]): TimeTableByDayType {
@@ -17,7 +17,7 @@ export function makeIntakeTimeTableByDay(intakePillList: IntakeManagementType[])
     // 비어있지 않다면 하나씩 꺼냄
     for (const intakePill of intakePillList) {
       // 꺼내서 영양제 시간표 양식에 맞게(복용 기록용) 데이터를 가공해 만듦
-      const timeTableData: TimeTableType = {
+      const timeTableData: TimeTableDataType = {
         pillId: intakePill.pillId,
         pillNickName: intakePill.pillNickName,
         isTake: false,
