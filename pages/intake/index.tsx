@@ -13,6 +13,7 @@ import {
 } from '../../utils/types'
 import { makeIntakeTimeTableByDay } from '../../utils/functions/makeIntakeTimeTableByDay'
 import { makeIntakeTimeTableByDate } from '../../utils/functions/makeIntakeTimeTableByDate'
+import dayjs from 'dayjs'
 
 
 
@@ -27,8 +28,7 @@ const Intake: NextPage = () => {
     // 복용 관리 중인 영양제들 리스트를 활용해 '요일' 기준으로 요일 기준 영양제 시간표 데이터를 만듦
     const timeTableByDay: TimeTableByDayType = makeIntakeTimeTableByDay(intakePillList)
 
-    // 여기서부터 위에서 만든 요일 기준 영양제 시간표 데이터를 활용하여
-    // '영양제 시간표 틀 데이터'를 만듦
+    // 위에서 만든 요일 기준 영양제 시간표 데이터를 활용하여 '영양제 시간표 틀 데이터'를 만들고 state에 저장
     setIntakeTimeTableByDate(makeIntakeTimeTableByDate(timeTableByDay))
   }, [])
 

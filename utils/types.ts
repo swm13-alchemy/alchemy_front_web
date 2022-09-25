@@ -91,14 +91,14 @@ export interface IntakeManagementType {
   intakeNumber: number
   intakeTimesDayjs: Dayjs[]
   intakeAmount: number
-  startIntakeDate: Date
+  startIntakeDate: Dayjs
 }
 
 export interface TimeTableDataType {
   pillId: number
   pillNickName: string
   isTake: boolean
-  startIntakeDate: Date
+  startIntakeDate: Dayjs
 }
 
 export interface TimeTableByTimeType {

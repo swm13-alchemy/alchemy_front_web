@@ -1,8 +1,10 @@
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { Days, TimeTableByDateType, TimeTableByDayType, TimeTableByTimeType } from '../types'
 import { arrayIsNotEmpty } from './arrayIsNotEmpty'
 import weekday from 'dayjs/plugin/weekday'
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 dayjs.extend(weekday)
+dayjs.extend(isSameOrBefore)
 
 export function makeIntakeTimeTableByDate(timeTableByDay: TimeTableByDayType): TimeTableByDateType {
   const INITIAL_YEAR: number = parseInt(dayjs().format('YYYY'))
@@ -79,16 +81,33 @@ export function makeIntakeTimeTableByDate(timeTableByDay: TimeTableByDayType): T
     const curDate = dayjs(date)
     const curDayOfDate: Days = curDate.format('ddd') as 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat'
 
+    const processedData = validateStartIntakeDate(timeTableByDay[curDayOfDate], curDate)
+
     timeTableByDate[curDate.format('YYYY-MM-DD')] = {
       remainIntakePillCnt: null,
-      totalIntakePillCnt: countTotalIntakePillNum(timeTableByDay[curDayOfDate]),
-      intakeHistory: timeTableByDay[curDayOfDate],
+      totalIntakePillCnt: countTotalIntakePillNum(processedData),
+      intakeHistory: processedData,
     }
+  }
+
+  function validateStartIntakeDate(dataBeforeProcessing: TimeTableByTimeType, curDate: Dayjs): TimeTableByTimeType {
+    const processedData = structuredClone(dataBeforeProcessing) // 객체 깊은 복사
+    if (!!processedData && arrayIsNotEmpty(Object.keys(processedData))) {
+      for (const time of Object.keys(processedData)) {
+        // 현재 다루고 있는 날짜가 해당 영양제 복용 시작 시점보다 이전이면 복용 기록 데이터에서 제외
+        processedData[time] = processedData[time].filter((timeTableData) => dayjs(timeTableData.startIntakeDate).isSameOrBefore(curDate))
+        // 만약 제거했는데 해당 시간 key값의 value가 빈 배열이 된다면 해당 key를 삭제
+        if (!arrayIsNotEmpty(processedData[time])) {
+          delete processedData[time]
+        }
+      }
+    }
+    return processedData
   }
 
   function countTotalIntakePillNum(timeTableBySpecificDay: TimeTableByTimeType): number {
     let cnt: number = 0
-    if (timeTableBySpecificDay !== null && timeTableBySpecificDay !== undefined && arrayIsNotEmpty(Object.values(timeTableBySpecificDay))) {
+    if (!!timeTableBySpecificDay && arrayIsNotEmpty(Object.values(timeTableBySpecificDay))) {
       for (const li of Object.values(timeTableBySpecificDay)) {
         cnt += li.length
       }
