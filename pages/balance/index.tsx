@@ -69,7 +69,10 @@ const Index: NextPage = () => {
 
   // 날짜 불러오기
   useEffect(() => {
-    setTodayDateStr(getTodayDate())
+    const todayDate = getTodayDate()
+
+
+    setTodayDateStr(todayDate.year + '.' + todayDate.month + '.' + todayDate.date + ` ${todayDate.day}`)
   }, [userTakingPillList, age, isMale])
 
   //
