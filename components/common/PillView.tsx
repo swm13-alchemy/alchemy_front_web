@@ -7,7 +7,7 @@ interface Props {
 
 function PillView({ imageUrl, name }: Props) {
   return (
-    <div className='flex flex-col items-center justify-center w-20'>
+    <div className='flex flex-col items-center justify-center'>
       <div className='relative w-14 h-14 rounded-3xl overflow-hidden'>
         <Image src={imageUrl} className='object-cover' layout='fill' />
       </div>

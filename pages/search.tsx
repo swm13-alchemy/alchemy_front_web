@@ -1,9 +1,9 @@
-import SearchResultListItem from '../components/common/search/SearchResultListItem'
+import PillListItem from '../components/common/PillListItem'
 import React, { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { SearchResultsItemType } from '../utils/types'
 import { pillApi } from '../utils/api'
-import SearchBar from '../components/layout/SearchBar'
+import SearchBar from '../components/common/search/SearchBar'
 import BackHeader from '../components/layout/BackHeader'
 import { NextPage } from 'next'
 import ContainerWithBottomNav from '../components/layout/ContainerWithBottomNav'
@@ -68,11 +68,12 @@ const Search: NextPage = () => {
             <div className='flex flex-col w-full mt-4 space-y-4'>
               {searchResults.map((supplement) => {
                 return (
-                  <SearchResultListItem
+                  <PillListItem
                     key={supplement.name}
                     id={supplement.id}
                     name={supplement.name}
                     maker={supplement.maker}
+                    prefixDomain='/pill-details'
                   />
                 )
               })}
