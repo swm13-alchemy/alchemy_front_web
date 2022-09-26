@@ -118,3 +118,13 @@ export interface FinalTimeTableDataType {
 export interface TimeTableByDateType {
   [date: string]: FinalTimeTableDataType
 }
+
+interface ServerSideIntakeHistoryDataType {
+  pillId: number
+  isIntake: boolean
+  intakeTime: string
+}
+
+export interface ServerSideIntakeHistoryByDateType {
+  [date: string]: ServerSideIntakeHistoryDataType[]
+}

@@ -14,7 +14,6 @@ export function makeIntakeTimeTableByDate(timeTableByDay: TimeTableByDayType): T
   let previousMonthDays: TimeTableByDateType
   let nextMonthDays: TimeTableByDateType
 
-  console.log(createCalendar())
   return createCalendar()
 
 
