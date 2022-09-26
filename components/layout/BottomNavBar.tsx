@@ -20,7 +20,7 @@ function BottomNavBar() {
         <GraphicEq className='text-2xl'/>
       </Menu>
       <Menu router={router} id={1} name='HOME' paths={['/', '/search', '/pill-details']}>
-        <Home className='text-2xl'/>
+        <Home className='text-2xl' />
       </Menu>
       <Menu router={router} id={3} name='복용관리' paths={['/intake']}>
         <ListAlt className='text-2xl'/>
@@ -52,15 +52,14 @@ function Menu({ children, router, id, name, paths }: MenuProps) {
   }, [])
 
   return (
-    <Link
-      key={id}
-      href={paths[0]}
-    >
+    <Link key={id} href={paths[0]}>
       <a className='grow w-full'>
         <div
           className={
             'flex flex-col items-center justify-between' +
-            (isActive ? ' text-primary bg-indigo-50 border-t-2 border-t-primary' : ' text-gray-300 bg-surface border-none')
+            (isActive
+              ? ' text-primary bg-indigo-50 border-t-2 border-t-primary'
+              : ' text-gray-300 bg-surface border-none')
           }
         >
           {children}
