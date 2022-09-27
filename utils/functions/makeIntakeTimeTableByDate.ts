@@ -7,8 +7,6 @@ dayjs.extend(weekday)
 dayjs.extend(isSameOrBefore)
 
 export function makeIntakeTimeTableByDate(timeTableByDay: TimeTableByDayType): TimeTableByDateType {
-  const today: Dayjs = dayjs()
-
   const INITIAL_YEAR: number = parseInt(dayjs().format('YYYY'))
   const INITIAL_MONTH: number = parseInt(dayjs().format('M'))
 
@@ -16,21 +14,7 @@ export function makeIntakeTimeTableByDate(timeTableByDay: TimeTableByDayType): T
   let previousMonthDays: TimeTableByDateType
   let nextMonthDays: TimeTableByDateType
 
-  const timeTableByDate: TimeTableByDateType = createCalendar()
-
-  // 현재 보고 있는 달이 오늘이 포함된 달이라면
-  if (Object.prototype.hasOwnProperty.call(timeTableByDate, today.format('YYYY-MM-DD')))  {
-    Object.keys(timeTableByDate).forEach((date) => {
-      // 선택된 날짜가 오늘 이전의 날이라면
-      if (dayjs(date).isBefore(today)) {
-        // TODO: 서버에서 받는 데이터를 가지고 처리
-      }
-    })
-  } else {  // 현재 보고 있는 달이 과거의 달이라면 (오늘이 포함되지 않은 달) (미래의 달은 아예 보여주지 않으므로)
-    // TODO: 서버에서 받는 데이터를 가지고 처리
-  }
-
-  return timeTableByDate
+  return createCalendar()
 
 
 

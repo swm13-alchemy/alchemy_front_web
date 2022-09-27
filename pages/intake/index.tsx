@@ -7,16 +7,16 @@ import Link from 'next/link'
 import { useUserIntakeManagementStore } from '../../stores/store'
 import { useEffect, useState } from 'react'
 import {
-  IntakeManagementType, ServerSideIntakeHistoryByDateType,
+  IntakeManagementType,
   TimeTableByDateType,
   TimeTableByDayType,
 } from '../../utils/types'
 import { makeIntakeTimeTableByDay } from '../../utils/functions/makeIntakeTimeTableByDay'
 import { makeIntakeTimeTableByDate } from '../../utils/functions/makeIntakeTimeTableByDate'
-import { intakeApi } from '../../utils/api'
-import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 import LoadingCircular from '../../components/layout/LoadingCircular'
 import dayjs from 'dayjs'
+import { useIntakeTimeTableByDate } from '../../stores/nonLocalStorageStore'
+import { processPastIntakeHistory } from '../../utils/functions/processPastIntakeHistory'
 
 
 
@@ -25,7 +25,8 @@ const Intake: NextPage = () => {
   const setIntakeServiceStartDate = useUserIntakeManagementStore(state => state.setIntakeServiceStartDate)
   const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
   const setIntakePillList = useUserIntakeManagementStore(state => state.setIntakePillList)
-  const [intakeTimeTableByDate, setIntakeTimeTableByDate] = useState<TimeTableByDateType | null>(null)
+  const { intakeTimeTableByDate, setIntakeTimeTableByDate } = useIntakeTimeTableByDate()
+  // const [intakeTimeTableByDate, setIntakeTimeTableByDate] = useState<TimeTableByDateType | null>(null)
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().format('YYYY-MM-DD'))  // 오늘 날짜로 초기 설정
 
   useEffect(() => {
@@ -38,31 +39,11 @@ const Intake: NextPage = () => {
     console.log(temporaryIntakeTimeTableByDate)
     setIntakeTimeTableByDate(temporaryIntakeTimeTableByDate)
 
-    async function checkIntake(temporaryIntakeTimeTableByDate: TimeTableByDateType, setIntakeTimeTableByDate: (data: TimeTableByDateType) => void) {
-      const { data: { intake: result } } = await intakeApi.getIntakeHistory('kbw1018', 2022, 9)
-      const intakeHistoryByDate: TimeTableByDateType = result[0]
-
-      // 서버에서 받아온 복용 기록 객체가 비어있지 않다면,
-      if (!!intakeHistoryByDate && arrayIsNotEmpty(Object.keys(intakeHistoryByDate))) {
-        // 복용 기록 객체의 key값을 순회
-        Object.keys(intakeHistoryByDate).forEach((date: string) => {
-          // 서버에서 받은 복용 기록을 같은 날짜에 넣음
-          temporaryIntakeTimeTableByDate[date] = intakeHistoryByDate[date]
-          // // 서버에서 받아온 복용 기록 객체 중 한 날짜 key값 안에 있는 복용 기록들을 순회
-          // intakeHistoryByDate[date].forEach((intakeHistory) => {
-          //   // 만약 해당 복용 기록이 '섭취했다'(isIntake === true)라면
-          //   if (intakeHistory.isIntake) {
-          //     // 영양제 시간표 틀 데이터에서 해당 기록에 해당되는 기록을 찾아내 isTake를 true로 바꿔줌
-          //     temporaryIntakeTimeTableByDate[date].intakeHistory[intakeHistory.intakeTime].forEach((timeTableData) => {
-          //       if (timeTableData.pillId === intakeHistory.pillId) {
-          //         timeTableData.isTake = true
-          //       }
-          //     })
-          //   }
-          // })
-        })
-      }
-    }
+    // // 과거 복용 기록을 서버에서 가져와 '영양제 시간표 틀 데이터'에 넣음
+    // processPastIntakeHistory(temporaryIntakeTimeTableByDate, "userId")
+    //   .then((finalIntakeTimeTableByDate) =>
+    //     setIntakeTimeTableByDate(finalIntakeTimeTableByDate)
+    //   )
   }, [])
 
   if (!intakeTimeTableByDate) return <LoadingCircular />

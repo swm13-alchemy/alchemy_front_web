@@ -12,11 +12,13 @@ import { useUserIntakeManagementStore } from '../../../../stores/store'
 import { replaceValueInArray } from '../../../../utils/functions/replaceValueInArray'
 import dayjs, { Dayjs } from 'dayjs'
 import TimePickerModal from '../../../../components/common/intake/TimePickerModal'
+import { arrayIsNotEmpty } from '../../../../utils/functions/arrayIsNotEmpty'
 
 const EditingPillNotification = () => {
   const router = useRouter()
   const id: number = parseInt(router.query.id as string)
   const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
+  const setIntakePillList = useUserIntakeManagementStore(state => state.setIntakePillList)
   const [pillName, setPillName] = useState<string>('')
   const [pillMaker, setPillMaker] = useState<string>('')
   const [pillNickName, setPillNickName] = useState<string>('')
@@ -25,6 +27,7 @@ const EditingPillNotification = () => {
   const [isTimePickerOpen, setIsTimePickerOpen] = useState<boolean[]>([false, false, false, false, false])
   const [intakeTimesDayjs, setIntakeTimesDayjs] = useState<Dayjs[]>([dayjs().set('h', 9).set('m', 0)])
   const [intakeAmount, setIntakeAmount] = useState<number>(1)
+  const [editingPillManagementData, setEditingPillManagementData] = useState<IntakeManagementType>({})
 
   // 해당 영양제 복용 관리 저장된 정보들을 가져옴 (사용자 설정 값들로 초기 설정)
   useEffect(() => {
@@ -38,6 +41,7 @@ const EditingPillNotification = () => {
       setIntakeNum(matchOne.intakeNumber)
       setIntakeTimesDayjs(matchOne.intakeTimesDayjs.map((dayjsStr) => dayjs(dayjsStr)))
       setIntakeAmount(matchOne.intakeAmount)
+      setEditingPillManagementData(matchOne)
     } else {
       alert("Error: 복용 관리중인 영양제가 아닙니다.")
     }
@@ -80,12 +84,34 @@ const EditingPillNotification = () => {
     }
   }
 
-  // 저장 함수
+  // 변경사항 저장 함수
   const saveNotification = () => {
+    const tempIntakePillList = intakePillList.filter((pill) => pill.pillId !== id)
+    // TODO: delete api 개발되면 editingPillManagementData 값 이용해서 서버에 기록된 복용 기록 삭제하기
 
+    if (pillNickName !== '' && arrayIsNotEmpty(intakeDays)) {
+      setIntakePillList(tempIntakePillList.concat({
+        pillId: id,
+        pillMaker: pillMaker,
+        pillName: pillName,
+        pillNickName: pillNickName,
+        intakeDays: intakeDays,
+        intakeNumber: intakeNum,
+        intakeTimesDayjs: intakeTimesDayjs,
+        intakeAmount: intakeAmount,
+        startIntakeDate: dayjs()
+      }))
+      router.back()
+    } else {
+      if (pillNickName === '') {
+        alert('영양제 별명을 입력해주세요')
+      } else {
+        alert('섭취 요일을 선택해주세요')
+      }
+    }
   }
 
-  // 알림 삭제 함수
+  // 복용 관리 목록에서 제거 함수
   const deleteNotification = () => {
 
   }
@@ -180,7 +206,7 @@ const EditingPillNotification = () => {
             className='py-3.5 w-full bg-transparent text-red-400'
             onClick={deleteNotification}
           >
-            알림 삭제
+            복용 관리 목록에서 제거
           </button>
         </div>
       </div>

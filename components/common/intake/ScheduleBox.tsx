@@ -3,7 +3,6 @@ import { useState } from 'react'
 import PillIntakeBtn from './PillIntakeBtn'
 import { TimeTableDataType } from '../../../utils/types'
 import { convert12hourTo24hour } from '../../../utils/functions/timeFormatFunc/convert12hourTo24hour'
-import { requestURLs } from '../../../utils/api'
 import LoadingCircular from '../../layout/LoadingCircular'
 
 interface Props {
@@ -63,8 +62,7 @@ function ScheduleBox({ intakeTime, timeTableDataList }: Props) {
           {timeTableDataList.map((timeTableData) =>
             <PillIntakeBtn
               key={timeTableData.pillId}
-              imgUrl={requestURLs.getSupplementThumbnailURL(timeTableData.pillId.toString())}
-              pillNickName={timeTableData.pillNickName}
+              pillId={timeTableData.pillId}
               isPillIntake={timeTableData.isTake}
             />
           )}

@@ -96,7 +96,6 @@ export interface IntakeManagementType {
 
 export interface TimeTableDataType {
   pillId: number
-  pillNickName: string
   isTake: boolean
 }
 

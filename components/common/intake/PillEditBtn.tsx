@@ -1,20 +1,32 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import Edit from '@mui/icons-material/Edit'
+import { useUserIntakeManagementStore } from '../../../stores/store'
+import { useEffect, useState } from 'react'
+import { requestURLs } from '../../../utils/api'
 
 interface Props {
-  id: number
-  imgUrl: string
-  pillName: string
+  pillId: number
 }
 
-function PillEditBtn({ id, imgUrl, pillName }: Props) {
+function PillEditBtn({ pillId }: Props) {
+  const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
+  const [pillNickName, setPillNickName] = useState<string>('')
+
+  useEffect(() => {
+    intakePillList.forEach((pill) => {
+      if (pill.pillId === pillId) {
+        setPillNickName(pill.pillNickName)
+      }
+    })
+  }, [])
+
   return (
-    <Link href={`/intake/edit-schedule/edit/${id}`}>
+    <Link href={`/intake/edit-schedule/edit/${pillId}`}>
       <a>
         <div className='relative w-16 h-16 rounded-full overflow-hidden'>
           <Image
-            src={imgUrl}
+            src={requestURLs.getSupplementThumbnailURL(pillId.toString())}
             className='object-cover'
             layout='fill'
           />
@@ -24,7 +36,7 @@ function PillEditBtn({ id, imgUrl, pillName }: Props) {
             </div>
           </div>
         </div>
-        <p className='w-full text-xs text-gray-900 truncate'>{pillName}</p>
+        <p className='w-full text-xs text-gray-900 truncate'>{pillNickName}</p>
       </a>
     </Link>
   )

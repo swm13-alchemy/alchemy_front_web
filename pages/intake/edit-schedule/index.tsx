@@ -4,13 +4,20 @@ import { useRouter } from 'next/router'
 import EditScheduleBox from '../../../components/common/intake/EditScheduleBox'
 import Add from '@mui/icons-material/Add'
 import Link from 'next/link'
+import { useIntakeTimeTableByDate } from '../../../stores/nonLocalStorageStore'
+import dayjs from 'dayjs'
+import LoadingCircular from '../../../components/layout/LoadingCircular'
 
 const EditSchedule = () => {
   const router = useRouter()
+  const todayDate: string = dayjs().format('YYYY-MM-DD')
+  const intakeTimeTableByDate = useIntakeTimeTableByDate(state => state.intakeTimeTableByDate)
 
   const addNewSchedule = () => {
 
   }
+
+  if (!intakeTimeTableByDate) return <LoadingCircular />
 
   return (
     <ContainerWithBottomNav>
@@ -28,9 +35,16 @@ const EditSchedule = () => {
 
       {/* 시간별 복용 스케쥴 */}
       <div className='space-y-2 pb-5'>
-        <EditScheduleBox time='09:00' />
-        <EditScheduleBox time='09:00' />
-        <EditScheduleBox time='09:00' />
+        {
+          intakeTimeTableByDate[todayDate] &&
+          Object.keys(intakeTimeTableByDate[todayDate].intakeHistory).sort().map((intakeTime) =>
+            <EditScheduleBox
+              key={intakeTime}
+              intakeTime={intakeTime}
+              timeTableDataList={intakeTimeTableByDate[todayDate].intakeHistory[intakeTime]}
+            />
+          )
+        }
 
         {/*<button*/}
         {/*  className='bg-white w-full py-4'*/}

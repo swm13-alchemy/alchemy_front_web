@@ -31,5 +31,5 @@ export const pillApi = {
 }
 
 export const intakeApi = {
-  getIntakeHistory: (userId: string, year: number, month: number) => nest.get(`/intakeHistory?userId=${userId}&year=${year}&month=${month}`)
+  getIntakeHistory: (userId: string, startDate: string, endDate: string) => nest.get(`/intake-log/${userId}?start=${startDate}&end=${endDate}`)
 }

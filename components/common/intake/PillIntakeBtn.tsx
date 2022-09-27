@@ -1,15 +1,26 @@
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CheckCircle from '@mui/icons-material/CheckCircle'
+import { requestURLs } from '../../../utils/api'
+import { useUserIntakeManagementStore } from '../../../stores/store'
 
 interface Props {
-  imgUrl: string
-  pillNickName: string
+  pillId: number
   isPillIntake: boolean
 }
 
-function PillIntakeBtn({ imgUrl, pillNickName, isPillIntake }: Props) {
+function PillIntakeBtn({ pillId, isPillIntake }: Props) {
   const [isIntake, setIsIntake] = useState<boolean | null>(isPillIntake)
+  const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
+  const [pillNickName, setPillNickName] = useState<string>('')
+
+  useEffect(() => {
+    intakePillList.forEach((pill) => {
+      if (pill.pillId === pillId) {
+        setPillNickName(pill.pillNickName)
+      }
+    })
+  }, [])
 
   return (
     <button
@@ -18,7 +29,7 @@ function PillIntakeBtn({ imgUrl, pillNickName, isPillIntake }: Props) {
     >
       <div className='relative w-16 h-16 rounded-full overflow-hidden'>
         <Image
-          src={imgUrl}
+          src={requestURLs.getSupplementThumbnailURL(pillId.toString())}
           className='object-cover'
           layout='fill'
         />

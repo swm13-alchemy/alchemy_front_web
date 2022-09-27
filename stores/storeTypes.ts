@@ -1,6 +1,7 @@
 import { IntakeManagementType, SupplementDetailsType } from '../utils/types'
 import { StateCreator } from 'zustand'
 import { PersistOptions } from 'zustand/middleware'
+import { Dayjs } from 'dayjs'
 
 // export const dummyStorageApi = {
 //   getItem: () => null,
@@ -30,8 +31,8 @@ export type userHealthPersist = (
 ) => StateCreator<userHealthState>
 
 export type intakeManagementState = {
-  intakeServiceStartDate: Date | null,
-  setIntakeServiceStartDate: (date: Date) => void
+  intakeServiceStartDate: Dayjs | null,
+  setIntakeServiceStartDate: (date: Dayjs) => void
   intakePillList: IntakeManagementType[]
   setIntakePillList: (pillList: IntakeManagementType[]) => void
 }
