@@ -1,3 +1,5 @@
+import { Dayjs } from 'dayjs'
+
 export interface SearchResultsItemType {
   id: number
   name: string
@@ -77,4 +79,52 @@ export interface IngredientWithIntakesType extends IngredientType {
                                       // intakes: IntakeType // {reqMin: number
                                       //                     //  reqAvg: number
                                       //                     //  reqLimit: number}
+}
+
+export type Days = 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat'
+export interface IntakeManagementType {
+  pillId: number
+  pillMaker: string
+  pillName: string
+  pillNickName: string
+  intakeDays: Days[]
+  intakeNumber: number
+  intakeTimesDayjs: Dayjs[]
+  intakeAmount: number
+  startIntakeDate: Dayjs
+}
+
+export interface TimeTableDataType {
+  pillId: number
+  pillNickName: string
+  isTake: boolean
+  startIntakeDate: Dayjs
+}
+
+export interface TimeTableByTimeType {
+  [time: string]: TimeTableDataType[]
+}
+
+export type TimeTableByDayType = {
+  [day in Days]: TimeTableByTimeType
+}
+
+export interface FinalTimeTableDataType {
+  remainIntakePillCnt: number | null
+  totalIntakePillCnt: number
+  intakeHistory: TimeTableByTimeType
+}
+
+export interface TimeTableByDateType {
+  [date: string]: FinalTimeTableDataType
+}
+
+interface ServerSideIntakeHistoryDataType {
+  pillId: number
+  isIntake: boolean
+  intakeTime: string
+}
+
+export interface ServerSideIntakeHistoryByDateType {
+  [date: string]: ServerSideIntakeHistoryDataType[]
 }

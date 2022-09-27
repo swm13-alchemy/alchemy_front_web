@@ -4,22 +4,64 @@ import IntakeCalendar from '../../components/common/intakeCalendar/IntakeCalenda
 import MainHeader from '../../components/layout/MainHeader'
 import ScheduleBox from '../../components/common/intake/ScheduleBox'
 import Link from 'next/link'
+import { useUserIntakeManagementStore } from '../../stores/store'
+import { useEffect, useState } from 'react'
+import {
+  IntakeManagementType, ServerSideIntakeHistoryByDateType,
+  TimeTableByDateType,
+  TimeTableByDayType,
+} from '../../utils/types'
+import { makeIntakeTimeTableByDay } from '../../utils/functions/makeIntakeTimeTableByDay'
+import { makeIntakeTimeTableByDate } from '../../utils/functions/makeIntakeTimeTableByDate'
+import { intakeApi } from '../../utils/api'
+import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
+
+
 
 const Intake: NextPage = () => {
+  const intakeServiceStartDate = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
+  const setIntakeServiceStartDate = useUserIntakeManagementStore(state => state.setIntakeServiceStartDate)
+  const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
+  const setIntakePillList = useUserIntakeManagementStore(state => state.setIntakePillList)
+  const [intakeTimeTableByDate, setIntakeTimeTableByDate] = useState<TimeTableByDateType | null>(null)
+
+  useEffect(() => {
+    // 복용 관리 중인 영양제들 리스트를 활용해 '요일' 기준으로 요일 기준 영양제 시간표 데이터를 만듦
+    const timeTableByDay: TimeTableByDayType = makeIntakeTimeTableByDay(intakePillList)
+
+    // 위에서 만든 요일 기준 영양제 시간표 데이터를 활용하여 '영양제 시간표 틀 데이터'를 만듦
+    const temporaryIntakeTimeTableByDate: TimeTableByDateType = makeIntakeTimeTableByDate(timeTableByDay)
+
+    console.log(temporaryIntakeTimeTableByDate)
+
+    async function checkIntake(temporaryIntakeTimeTableByDate: TimeTableByDateType, setIntakeTimeTableByDate: (data: TimeTableByDateType) => void) {
+      const { data: { intake: result } } = await intakeApi.getIntakeHistory('kbw1018', 2022, 9)
+      const intakeHistoryByDate: ServerSideIntakeHistoryByDateType = result[0]
+
+      // 서버에서 받아온 복용 기록 객체가 비어있지 않다면,
+      if (!!intakeHistoryByDate && arrayIsNotEmpty(Object.keys(intakeHistoryByDate))) {
+        // 복용 기록 객체의 key값을 순회
+        Object.keys(intakeHistoryByDate).forEach((date: string) => {
+          // 서버에서 받아온 복용 기록 객체 중 한 날짜 key값 안에 있는 복용 기록들을 순회
+          intakeHistoryByDate[date].forEach((intakeHistory) => {
+            // 만약 해당 복용 기록이 '섭취했다'(isIntake === true)라면
+            if (intakeHistory.isIntake) {
+              // 영양제 시간표 틀 데이터에서 해당 기록에 해당되는 기록을 찾아내 isTake를 true로 바꿔줌
+              temporaryIntakeTimeTableByDate[date].intakeHistory[intakeHistory.intakeTime].forEach((timeTableData) => {
+                if (timeTableData.pillId === intakeHistory.pillId) {
+                  timeTableData.isTake = true
+                }
+              })
+            }
+          })
+        })
+      }
+    }
+  }, [])
 
   return (
     <ContainerWithBottomNav>
-      <MainHeader/>
-        {/*<div className='flex flex-col items-center space-y-12 py-6 bg-white'>*/}
-        {/*  <section className='flex flex-col space-y-5 w-full'>*/}
-        {/*    <h2 className='text-xl font-bold px-3'>123일째 잘 먹고 있어요!😉</h2>*/}
-        {/*    <div className='flex w-full items-center justify-evenly'>*/}
-        {/*      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((name) => (*/}
-        {/*        <DateBox key={name} name={name} />*/}
-        {/*      ))}*/}
-        {/*    </div>*/}
-        {/*  </section>*/}
-        {/*</div>*/}
+      <MainHeader />
       <div className='mt-2 space-y-2'>
         {/* 복용 기록 캘린더 */}
         <IntakeCalendar />

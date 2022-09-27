@@ -46,11 +46,11 @@ function EditScheduleBox({ time }: Props) {
           imgUrl='https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
           pillName='슈퍼 항산화제'
         />
-        <Link href={`/intake/edit-schedule/add/${time}`}>
-          <a className='bg-gray-300 rounded-full w-16 h-16 flex items-center justify-center'>
-            <Add className='text-2xl text-white' />
-          </a>
-        </Link>
+        {/*<Link href={`/intake/edit-schedule/add/${time}`}>*/}
+        {/*  <a className='bg-gray-300 rounded-full w-16 h-16 flex items-center justify-center'>*/}
+        {/*    <Add className='text-2xl text-white' />*/}
+        {/*  </a>*/}
+        {/*</Link>*/}
       </div>
     </div>
   )

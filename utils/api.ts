@@ -29,3 +29,7 @@ export const pillApi = {
   }),
   getTotalBalance: (age: number, isMale: boolean, pillsId: number[]) => nest.get(`/balance?age=${age}&is_male=${isMale}&${pillsId.map((id) => `pills_id=${id}`).join('&')}`)
 }
+
+export const intakeApi = {
+  getIntakeHistory: (userId: string, year: number, month: number) => nest.get(`/intakeHistory?userId=${userId}&year=${year}&month=${month}`)
+}

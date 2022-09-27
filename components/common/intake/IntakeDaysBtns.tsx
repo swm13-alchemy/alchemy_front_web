@@ -1,19 +1,22 @@
-export type IntakeDaysType = {
-  'Sun': boolean
-  'Mon': boolean
-  'Tue': boolean
-  'Wed': boolean
-  'Thu': boolean
-  'Fri': boolean
-  'Sat': boolean
-}
+import { Days } from '../../../utils/types'
 
 interface Props {
-  intakeDays: IntakeDaysType
-  setIntakeDays: (intakeDays: IntakeDaysType) => void
+  intakeDays: Days[]
+  setIntakeDays: (intakeDays: Days[]) => void
 }
 
 function IntakeDaysBtns({ intakeDays, setIntakeDays }: Props) {
+
+  const clickDay = (day: Days) => {
+    // 해당 요일이 체크 되어있는 상태
+    if (intakeDays.includes(day)) {
+      // 해당 요일을 제거
+      setIntakeDays(intakeDays.filter(x => x !== day))
+    } else {  // 해당 요일이 체크되지 않은 상태
+      setIntakeDays(intakeDays.concat(day)) // 해당 요일 추가
+    }
+  }
+
   return (
     <div className='bg-white px-6 pt-6 pb-7 space-y-7'>
       <p className='text-base font-bold text-primary'>섭취 요일</p>
@@ -21,50 +24,50 @@ function IntakeDaysBtns({ intakeDays, setIntakeDays }: Props) {
       <div className='w-full flex items-center justify-between text-base text-gray-900'>
         <button
           className={'w-8 h-8 rounded-full' +
-            (intakeDays.Sun ? ' border border-primary text-primary' : ' border-none text-red-500')}
-          onClick={() => setIntakeDays({...intakeDays, 'Sun': !intakeDays.Sun})}
+            (intakeDays.includes('Sun') ? ' border border-primary text-primary' : ' border-none text-red-500')}
+          onClick={() => clickDay('Sun')}
         >
           일
         </button>
         <button
           className={'w-8 h-8 rounded-full' +
-            (intakeDays.Mon ? ' border border-primary text-primary' : ' border-none')}
-          onClick={() => setIntakeDays({...intakeDays, 'Mon': !intakeDays.Mon})}
+            (intakeDays.includes('Mon') ? ' border border-primary text-primary' : ' border-none')}
+          onClick={() => clickDay('Mon')}
         >
           월
         </button>
         <button
           className={'w-8 h-8 rounded-full' +
-            (intakeDays.Tue ? ' border border-primary text-primary' : ' border-none')}
-          onClick={() => setIntakeDays({...intakeDays, 'Tue': !intakeDays.Tue})}
+            (intakeDays.includes('Tue') ? ' border border-primary text-primary' : ' border-none')}
+          onClick={() => clickDay('Tue')}
         >
           화
         </button>
         <button
           className={'w-8 h-8 rounded-full' +
-            (intakeDays.Wed ? ' border border-primary text-primary' : ' border-none')}
-          onClick={() => setIntakeDays({...intakeDays, 'Wed': !intakeDays.Wed})}
+            (intakeDays.includes('Wed') ? ' border border-primary text-primary' : ' border-none')}
+          onClick={() => clickDay('Wed')}
         >
           수
         </button>
         <button
           className={'w-8 h-8 rounded-full' +
-            (intakeDays.Thu ? ' border border-primary text-primary' : ' border-none')}
-          onClick={() => setIntakeDays({...intakeDays, 'Thu': !intakeDays.Thu})}
+            (intakeDays.includes('Thu') ? ' border border-primary text-primary' : ' border-none')}
+          onClick={() => clickDay('Thu')}
         >
           목
         </button>
         <button
           className={'w-8 h-8 rounded-full' +
-            (intakeDays.Fri ? ' border border-primary text-primary' : ' border-none')}
-          onClick={() => setIntakeDays({...intakeDays, 'Fri': !intakeDays.Fri})}
+            (intakeDays.includes('Fri') ? ' border border-primary text-primary' : ' border-none')}
+          onClick={() => clickDay('Fri')}
         >
           금
         </button>
         <button
           className={'w-8 h-8 rounded-full' +
-            (intakeDays.Sat ? ' border border-primary text-primary' : ' border-none')}
-          onClick={() => setIntakeDays({...intakeDays, 'Sat': !intakeDays.Sat})}
+            (intakeDays.includes('Sat') ? ' border border-primary text-primary' : ' border-none')}
+          onClick={() => clickDay('Sat')}
         >
           토
         </button>
