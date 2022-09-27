@@ -20,8 +20,7 @@ export function makeIntakeTimeTableByDay(intakePillList: IntakeManagementType[])
       const timeTableData: TimeTableDataType = {
         pillId: intakePill.pillId,
         pillNickName: intakePill.pillNickName,
-        isTake: false,
-        startIntakeDate: intakePill.startIntakeDate
+        isTake: false
       }
 
       // 아래 switch문에서 사용되는 함수

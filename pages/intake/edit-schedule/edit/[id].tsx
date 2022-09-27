@@ -6,45 +6,87 @@ import AddCircleOutline from '@mui/icons-material/AddCircleOutline'
 import ChevronRight from '@mui/icons-material/ChevronRight'
 import ContainerWithBottomNav from '../../../../components/layout/ContainerWithBottomNav'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
-import { Days } from '../../../../utils/types'
+import React, { useEffect, useState } from 'react'
+import { Days, IntakeManagementType } from '../../../../utils/types'
+import { useUserIntakeManagementStore } from '../../../../stores/store'
+import { replaceValueInArray } from '../../../../utils/functions/replaceValueInArray'
+import dayjs, { Dayjs } from 'dayjs'
+import TimePickerModal from '../../../../components/common/intake/TimePickerModal'
 
 const EditingPillNotification = () => {
   const router = useRouter()
   const id: number = parseInt(router.query.id as string)
-  const [pillNickName, setPillNickName] = useState<string>()  // TODO: 추후 초기 값 설정
-  const [intakeDays, setIntakeDays] = useState<Days[]>([])  // TODO: 추후 초기 값 설정
-  const [intakeNum, setIntakeNum] = useState<number>(1) // TODO: 추후 초기 값 설정
-  const [intakeTimes, setIntakeTimes] = useState<Array<Array<number>>>([[9,0]]) // TODO: 추후 초기 값 설정
-  const [amountIntake, setAmountIntake] = useState<number>(1) // TODO: 추후 초기 값 설정
+  const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
+  const [pillName, setPillName] = useState<string>('')
+  const [pillMaker, setPillMaker] = useState<string>('')
+  const [pillNickName, setPillNickName] = useState<string>('')
+  const [intakeDays, setIntakeDays] = useState<Days[]>([])
+  const [intakeNum, setIntakeNum] = useState<number>(1)
+  const [isTimePickerOpen, setIsTimePickerOpen] = useState<boolean[]>([false, false, false, false, false])
+  const [intakeTimesDayjs, setIntakeTimesDayjs] = useState<Dayjs[]>([dayjs().set('h', 9).set('m', 0)])
+  const [intakeAmount, setIntakeAmount] = useState<number>(1)
 
+  // 해당 영양제 복용 관리 저장된 정보들을 가져옴 (사용자 설정 값들로 초기 설정)
+  useEffect(() => {
+    // 영양제 복용 관리 저장 값을 가져오기 위해 id로 검색
+    const matchOne: IntakeManagementType | undefined = intakePillList.find(x => x.pillId === id)
+    if (matchOne !== undefined) {
+      setPillName(matchOne.pillName)
+      setPillMaker(matchOne.pillMaker)
+      setPillNickName(matchOne.pillNickName)
+      setIntakeDays(matchOne.intakeDays)
+      setIntakeNum(matchOne.intakeNumber)
+      setIntakeTimesDayjs(matchOne.intakeTimesDayjs.map((dayjsStr) => dayjs(dayjsStr)))
+      setIntakeAmount(matchOne.intakeAmount)
+    } else {
+      alert("Error: 복용 관리중인 영양제가 아닙니다.")
+    }
+  }, [])
+
+  // 섭취 횟수 수정 함수
   const adjustIntakeNum = (isUp: boolean) => {
     if (isUp) {
       if (intakeNum < 5) {
         setIntakeNum(intakeNum + 1)
-        setIntakeTimes(intakeTimes.concat([[9,0]]))
+        setIntakeTimesDayjs(intakeTimesDayjs.concat(dayjs().set('h', 9).set('m', 0)))
       }
     } else {
       if (intakeNum > 1) {
         setIntakeNum(intakeNum - 1)
-        setIntakeTimes(intakeTimes.slice(0, -1))
+        setIntakeTimesDayjs(intakeTimesDayjs.slice(0, -1))
       }
     }
   }
 
+  // 섭취 시간 모달 on, off 조작하는 함수
+  const onOffModal = (isTurnOnModal: boolean, index: number) => {
+    if (isTurnOnModal) {
+      setIsTimePickerOpen(replaceValueInArray(isTimePickerOpen, index, true))
+    } else {
+      setIsTimePickerOpen(replaceValueInArray(isTimePickerOpen, index, false))
+    }
+  }
+
+  // 섭취량 수정 함수
   const adjustAmountIntake = (isUp: boolean) => {
     if (isUp) {
-      if (amountIntake < 10) {
-        setAmountIntake(amountIntake + 1)
+      if (intakeAmount < 10) {
+        setIntakeAmount(intakeAmount + 1)
       }
     } else {
-      if (amountIntake > 1) {
-        setAmountIntake(amountIntake - 1)
+      if (intakeAmount > 1) {
+        setIntakeAmount(intakeAmount - 1)
       }
     }
   }
 
+  // 저장 함수
   const saveNotification = () => {
+
+  }
+
+  // 알림 삭제 함수
+  const deleteNotification = () => {
 
   }
 
@@ -56,20 +98,23 @@ const EditingPillNotification = () => {
         {/* 영양제 정보 부분 */}
         <div className='m-6'>
           <PillListItem
-            id={1}
-            name='Alpha GPS 300mg 60 Veg Capsule (Cognigination)'
-            maker='now'
+            id={id}
+            name={pillName}
+            maker={pillMaker}
             prefixDomain='/pill-details'
           />
         </div>
 
         {/* 별명 설정 */}
-        <input
-          className='w-full px-4 py-3.5 bg-white text-sm text-gray-500 focus: outline-none'
-          value={pillNickName}
-          onChange={(e) => setPillNickName(e.target.value)}
-          placeholder='(선택) 사용자 지정 영양제 별명'
-        />
+        <div className='bg-white p-6 space-y-3'>
+          <p className='text-base font-bold text-primary'>영양제 별명</p>
+          <input
+            className='w-full px-4 py-3.5 bg-white text-sm text-gray-500 border border-gray-500 rounded-lg focus: outline-none'
+            value={pillNickName}
+            onChange={(e) => setPillNickName(e.target.value)}
+            placeholder='(선택) 사용자 지정 영양제 별명'
+          />
+        </div>
 
         {/* 섭취 요일 */}
         <IntakeDaysBtns intakeDays={intakeDays} setIntakeDays={setIntakeDays} />
@@ -92,14 +137,18 @@ const EditingPillNotification = () => {
 
         {/* 섭취 시간 */}
         {
-          intakeTimes.map((time, index) =>
-            <div key={index} className='bg-white w-full flex items-center justify-between p-6 text-base font-bold text-gray-900'>
+          intakeTimesDayjs.map((dayjs, index) =>
+            <button
+              key={index}
+              className='bg-white w-full flex items-center justify-between p-6 text-base font-bold text-gray-900'
+              onClick={() => onOffModal(true, index)}
+            >
               <p className='text-primary'>{index + 1}차 섭취 시간</p>
               <div className='flex items-center space-x-4'>
-                <p>{time}</p>
+                <p>{dayjs.format('hh:mm A')}</p>
                 <ChevronRight className='text-2xl' />
               </div>
-            </div>
+            </button>
           )
         }
 
@@ -111,7 +160,7 @@ const EditingPillNotification = () => {
               className='text-2xl'
               onClick={() => adjustAmountIntake(false)}
             />
-            <p>{amountIntake}</p>
+            <p>{intakeAmount}</p>
             <AddCircleOutline
               className='text-2xl'
               onClick={() => adjustAmountIntake(true)}
@@ -120,15 +169,58 @@ const EditingPillNotification = () => {
         </div>
 
         {/* 저장하기 버튼 */}
-        <div className='px-8'>
+        <div className='px-8 space-y-2 text-sm'>
           <button
-            className='py-3.5 w-full rounded-[0.625rem] bg-primary text-gray-50 shadow-md'
+            className='py-3.5 w-full rounded-[0.625rem] bg-primary font-bold text-gray-50 shadow-md'
             onClick={saveNotification}
           >
-            저장하기
+            변경사항 저장
+          </button>
+          <button
+            className='py-3.5 w-full bg-transparent text-red-400'
+            onClick={deleteNotification}
+          >
+            알림 삭제
           </button>
         </div>
       </div>
+
+      {/* TimePicker 모달들 */}
+      <TimePickerModal
+        idx={0}
+        isTimePickerOpen={isTimePickerOpen}
+        onOffModal={onOffModal}
+        intakeTimesDayjs={intakeTimesDayjs}
+        setIntakeTimesDayjs={setIntakeTimesDayjs}
+      />
+      <TimePickerModal
+        idx={1}
+        isTimePickerOpen={isTimePickerOpen}
+        onOffModal={onOffModal}
+        intakeTimesDayjs={intakeTimesDayjs}
+        setIntakeTimesDayjs={setIntakeTimesDayjs}
+      />
+      <TimePickerModal
+        idx={2}
+        isTimePickerOpen={isTimePickerOpen}
+        onOffModal={onOffModal}
+        intakeTimesDayjs={intakeTimesDayjs}
+        setIntakeTimesDayjs={setIntakeTimesDayjs}
+      />
+      <TimePickerModal
+        idx={3}
+        isTimePickerOpen={isTimePickerOpen}
+        onOffModal={onOffModal}
+        intakeTimesDayjs={intakeTimesDayjs}
+        setIntakeTimesDayjs={setIntakeTimesDayjs}
+      />
+      <TimePickerModal
+        idx={4}
+        isTimePickerOpen={isTimePickerOpen}
+        onOffModal={onOffModal}
+        intakeTimesDayjs={intakeTimesDayjs}
+        setIntakeTimesDayjs={setIntakeTimesDayjs}
+      />
     </ContainerWithBottomNav>
   )
 }

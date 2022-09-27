@@ -98,7 +98,7 @@ const AddingPillNotification = () => {
         intakeNumber: intakeNum,
         intakeTimesDayjs: intakeTimesDayjs,
         intakeAmount: intakeAmount,
-        startIntakeDate: new Date
+        startIntakeDate: dayjs()
       }))
       router.back()
     } else {
@@ -192,7 +192,7 @@ const AddingPillNotification = () => {
         {/* 저장하기 버튼 */}
         <div className='px-8'>
           <button
-            className='py-3.5 w-full rounded-[0.625rem] bg-primary text-gray-50 shadow-md'
+            className='py-3.5 w-full rounded-[0.625rem] bg-primary text-sm font-bold text-gray-50 shadow-md'
             onClick={saveNotification}
           >
             저장하기

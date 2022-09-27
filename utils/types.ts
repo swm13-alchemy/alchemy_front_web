@@ -98,7 +98,6 @@ export interface TimeTableDataType {
   pillId: number
   pillNickName: string
   isTake: boolean
-  startIntakeDate: Dayjs
 }
 
 export interface TimeTableByTimeType {
@@ -110,7 +109,7 @@ export type TimeTableByDayType = {
 }
 
 export interface FinalTimeTableDataType {
-  remainIntakePillCnt: number | null
+  remainIntakePillCnt: number
   totalIntakePillCnt: number
   intakeHistory: TimeTableByTimeType
 }
@@ -119,12 +118,12 @@ export interface TimeTableByDateType {
   [date: string]: FinalTimeTableDataType
 }
 
-interface ServerSideIntakeHistoryDataType {
-  pillId: number
-  isIntake: boolean
-  intakeTime: string
-}
-
-export interface ServerSideIntakeHistoryByDateType {
-  [date: string]: ServerSideIntakeHistoryDataType[]
-}
+// interface ServerSideIntakeHistoryDataType {
+//   pillId: number
+//   isIntake: boolean
+//   intakeTime: string
+// }
+//
+// export interface ServerSideIntakeHistoryByDateType {
+//   [date: string]: ServerSideIntakeHistoryDataType[]
+// }

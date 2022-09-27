@@ -2,81 +2,31 @@ import { useEffect, useState } from 'react'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import DateBox from './DateBox'
-import { getTodayDate, todayDataType } from '../../../utils/functions/getTodayDate'
+import dayjs, { Dayjs } from 'dayjs'
+import { TimeTableByDateType } from '../../../utils/types'
+import { getTodayDate } from '../../../utils/functions/getTodayDate'
 
-const 임시 = [
-  {
-    year: 2022,
-    month: 8,
-    date: 30,
-    day: 'Sun',
-    intakeDate: new Date,
-    remainNum: 0,
-    totalNum: 5
-  },
-  {
-    year: 2022,
-    month: 8,
-    date: 31,
-    day: 'Mon',
-    remainNum: 0,
-    totalNum: 5
-  },
-  {
-    year: 2022,
-    month: 9,
-    date: 1,
-    day: 'Tue',
-    remainNum: 1,
-    totalNum: 5
-  },
-  {
-    year: 2022,
-    month: 9,
-    date: 2,
-    day: 'Wed',
-    remainNum: 4,
-    totalNum: 5
-  },
-  {
-    year: 2022,
-    month: 9,
-    date: 3,
-    day: 'Thu',
-    remainNum: 5,
-    totalNum: 5
-  },
-  {
-    year: 2022,
-    month: 9,
-    date: 4,
-    day: 'Fri',
-    remainNum: 5,
-    totalNum: 5
-  },
-  {
-    year: 2022,
-    month: 9,
-    date: 5,
-    day: 'Sat',
-    remainNum: 5,
-    totalNum: 5
-  },
-]
+export type CalendarModeType = 'Month' | 'Week'
+interface Props {
+  calendarMode: CalendarModeType
+  intakeTimeTableByDate: TimeTableByDateType
+  setSelectedDate: (selectedDate: string) => void
+}
 
-function IntakeCalendar() {
+function IntakeCalendar({ calendarMode, intakeTimeTableByDate, setSelectedDate }: Props) {
   const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false)
-  const [todayDate, setTodayDate] = useState<todayDataType | null>(null)
+  const [today, setToday] = useState<Dayjs>(dayjs())
+  const [datesOfThisWeek, setDatesOfThisWeek] = useState<string[]>([])
 
   useEffect(() => {
-    // setTodayData(getTodayDate('en'))
-    setTodayDate({
-      year: 2022,
-      month: 9,
-      date: 2,
-      day: '(수)',
-      todayDateObject: new Date
-    })
+    setToday(dayjs())
+    let firstDateOfTheWeek = dayjs().day(0)
+    const tempDates: string[] = []
+    for (let i = 0; i < 7; i++) {
+      tempDates.push(firstDateOfTheWeek.format('YYYY-MM-DD'))
+      firstDateOfTheWeek = firstDateOfTheWeek.add(1, 'day')
+    }
+    setDatesOfThisWeek(tempDates)
   }, [])
 
   return (
@@ -86,28 +36,65 @@ function IntakeCalendar() {
         onClick={() => setIsCalendarOpen(!isCalendarOpen)}
       >
         <p className='text-sm font-bold text-gray-900 flex items-center'>
-          2022년 9월 {isCalendarOpen ? <ExpandLess className='text2xl ml-1' /> : <ExpandMore className='text-2xl ml-1' />}
+          {today.format('YYYY년 M월')} {isCalendarOpen ? <ExpandLess className='text2xl ml-1' /> : <ExpandMore className='text-2xl ml-1' />}
         </p>
-        {todayDate !== null &&
-          <p className='text-xs text-gray-500'>
-            {todayDate.year}년 {todayDate.month}월 {todayDate.date}일 {todayDate.day}
-          </p>
-        }
+        <p className='text-xs text-gray-500'>
+          {today.format('YYYY년 M월 D일 ') + getTodayDate().day}
+        </p>
       </button>
-      <div className='flex items-center justify-between'>
-        {todayDate && 임시.map((days) =>
-          <DateBox
-            key={days.day}
-            year={days.year}
-            month={days.month}
-            day={days.day}
-            date={days.date}
-            todayDate={todayDate}
-            remainNum={days.remainNum}
-            totalNum={days.totalNum}
-          />
-        )}
-      </div>
+      {isCalendarOpen ? (
+        <MonthDateBoxContainer
+          intakeTimeTableByDate={intakeTimeTableByDate}
+          setSelectedDate={setSelectedDate}
+        />
+      ): (
+        <WeekDateBoxContainer
+          datesOfThisWeek={datesOfThisWeek}
+          intakeTimeTableByDate={intakeTimeTableByDate}
+          setSelectedDate={setSelectedDate}
+        />
+      )}
+    </div>
+  )
+}
+
+interface WeekDateBoxContainerProps {
+  datesOfThisWeek: string[]
+  intakeTimeTableByDate: TimeTableByDateType
+  setSelectedDate: (selectedDate: string) => void
+}
+function WeekDateBoxContainer({ datesOfThisWeek, intakeTimeTableByDate, setSelectedDate }: WeekDateBoxContainerProps) {
+  return (
+    <div className='flex items-center justify-between'>
+      {datesOfThisWeek.map((date) =>
+        <DateBox
+          key={date}
+          calendarMode='Week'
+          date={date}
+          remainNum={intakeTimeTableByDate[date].remainIntakePillCnt}
+          setSelectedDate={setSelectedDate}
+        />
+      )}
+    </div>
+  )
+}
+
+interface MonthDateBoxContainerProps {
+  intakeTimeTableByDate: TimeTableByDateType
+  setSelectedDate: (selectedDate: string) => void
+}
+function MonthDateBoxContainer({ intakeTimeTableByDate, setSelectedDate }: MonthDateBoxContainerProps) {
+  return (
+    <div className='grid grid-cols-7 grid-rows-5'>
+      {Object.keys(intakeTimeTableByDate).map((date) =>
+        <DateBox
+          key={date}
+          calendarMode='Month'
+          date={date}
+          remainNum={intakeTimeTableByDate[date].remainIntakePillCnt}
+          setSelectedDate={setSelectedDate}
+        />
+      )}
     </div>
   )
 }

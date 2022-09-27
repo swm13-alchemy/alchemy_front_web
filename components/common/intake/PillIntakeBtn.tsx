@@ -4,11 +4,11 @@ import CheckCircle from '@mui/icons-material/CheckCircle'
 
 interface Props {
   imgUrl: string
-  pillName: string
+  pillNickName: string
   isPillIntake: boolean
 }
 
-function PillIntakeBtn({ imgUrl, pillName, isPillIntake }: Props) {
+function PillIntakeBtn({ imgUrl, pillNickName, isPillIntake }: Props) {
   const [isIntake, setIsIntake] = useState<boolean | null>(isPillIntake)
 
   return (
@@ -28,7 +28,7 @@ function PillIntakeBtn({ imgUrl, pillName, isPillIntake }: Props) {
           </div>
         }
       </div>
-      <p className='w-full text-xs text-gray-900 truncate'>{pillName}</p>
+      <p className='w-full text-xs text-gray-900 truncate'>{pillNickName}</p>
     </button>
   )
 }
