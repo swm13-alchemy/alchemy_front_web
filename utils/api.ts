@@ -1,4 +1,5 @@
 import axios from 'axios'
+import dayjs, { Dayjs } from 'dayjs'
 
 // const API_KEY = process.env.API_KEY
 // const HASURA_BASE_URL = 'http://ec2-3-38-255-41.ap-northeast-2.compute.amazonaws.com:8080/api/rest'
@@ -31,5 +32,13 @@ export const pillApi = {
 }
 
 export const intakeApi = {
-  getIntakeHistory: (userId: string, startDate: string, endDate: string) => nest.get(`/intake-log/${userId}?start=${startDate}&end=${endDate}`)
+  getIntakeHistory: (userId: string, startDate: string, endDate: string) => nest.get(`/intake-log/${userId}?start=${startDate}&end=${endDate}`),
+  putIntakeHistory: (userId: string, pillId: number, intakeDate: Dayjs, intakeTime: string, isTake: boolean) => nest.put(`/intake-log/${userId}`, {
+    uid: userId,
+    pillId: pillId,
+    intakeDate: intakeDate,
+    intakeTime: intakeTime,
+    isTake: isTake,
+    createdAt: dayjs()
+  })
 }

@@ -13,6 +13,8 @@ import { replaceValueInArray } from '../../../../utils/functions/replaceValueInA
 import dayjs, { Dayjs } from 'dayjs'
 import TimePickerModal from '../../../../components/common/intake/TimePickerModal'
 import { arrayIsNotEmpty } from '../../../../utils/functions/arrayIsNotEmpty'
+import { isMobile } from '../../../../utils/functions/isMobile'
+import { editWeeklyNotification } from '../../../../utils/functions/flutterBridgeFunc/intakeNotification'
 
 const EditingPillNotification = () => {
   const router = useRouter()
@@ -27,7 +29,7 @@ const EditingPillNotification = () => {
   const [isTimePickerOpen, setIsTimePickerOpen] = useState<boolean[]>([false, false, false, false, false])
   const [intakeTimesDayjs, setIntakeTimesDayjs] = useState<Dayjs[]>([dayjs().set('h', 9).set('m', 0)])
   const [intakeAmount, setIntakeAmount] = useState<number>(1)
-  const [editingPillManagementData, setEditingPillManagementData] = useState<IntakeManagementType>({})
+  const [editingPillManagementData, setEditingPillManagementData] = useState<IntakeManagementType | null>(null)
 
   // 해당 영양제 복용 관리 저장된 정보들을 가져옴 (사용자 설정 값들로 초기 설정)
   useEffect(() => {
@@ -90,6 +92,7 @@ const EditingPillNotification = () => {
     // TODO: delete api 개발되면 editingPillManagementData 값 이용해서 서버에 기록된 복용 기록 삭제하기
 
     if (pillNickName !== '' && arrayIsNotEmpty(intakeDays)) {
+      // local storage에 저장
       setIntakePillList(tempIntakePillList.concat({
         pillId: id,
         pillMaker: pillMaker,
@@ -101,6 +104,12 @@ const EditingPillNotification = () => {
         intakeAmount: intakeAmount,
         startIntakeDate: dayjs()
       }))
+
+      // flutter_local_notification 기존 알림 수정
+      if (isMobile()) {
+        editWeeklyNotification(id, intakeDays, intakeTimesDayjs, `${pillNickName} 드실 시간이에요😉 비힐러가 늘 곁에서 챙겨드릴게요!`)
+      }
+
       router.back()
     } else {
       if (pillNickName === '') {

@@ -13,6 +13,8 @@ import dayjs, { Dayjs } from 'dayjs'
 import { replaceValueInArray } from '../../../../utils/functions/replaceValueInArray'
 import TimePickerModal from '../../../../components/common/intake/TimePickerModal'
 import { arrayIsNotEmpty } from '../../../../utils/functions/arrayIsNotEmpty'
+import { addWeeklyNotification } from '../../../../utils/functions/flutterBridgeFunc/intakeNotification'
+import { isMobile } from '../../../../utils/functions/isMobile'
 
 const AddingPillNotification = () => {
   const router = useRouter()
@@ -89,6 +91,7 @@ const AddingPillNotification = () => {
     }
 
     if (pillNickName !== '' && arrayIsNotEmpty(intakeDays)) {
+      // local storage에 저장
       setIntakePillList(intakePillList.concat({
         pillId: id,
         pillMaker: pillMaker,
@@ -100,6 +103,12 @@ const AddingPillNotification = () => {
         intakeAmount: intakeAmount,
         startIntakeDate: dayjs()
       }))
+
+      // flutter_local_notification에 알림 만듦
+      if (isMobile()) {
+        addWeeklyNotification(id, intakeDays, intakeTimesDayjs, `${pillNickName} 드실 시간이에요😉 비힐러가 늘 곁에서 챙겨드릴게요!`)
+      }
+
       router.back()
     } else {
       if (pillNickName === '') {

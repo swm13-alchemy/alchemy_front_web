@@ -34,7 +34,8 @@ function ScheduleBox({ intakeTime, timeTableDataList }: Props) {
             {convert12hourTo24hour(intakeTime).split(' ')[0]}
           </p>
           <p
-            className={'text-xs' + (isSwitchOn ? ' text-primary' : ' text-gray-300')}
+            className={'text-xs' +
+              (isSwitchOn ? ' text-primary' : ' text-gray-300')}
           >
             {convert12hourTo24hour(intakeTime).split(' ')[1]}
           </p>
@@ -63,6 +64,7 @@ function ScheduleBox({ intakeTime, timeTableDataList }: Props) {
             <PillIntakeBtn
               key={timeTableData.pillId}
               pillId={timeTableData.pillId}
+              intakeTime={intakeTime}
               isPillIntake={timeTableData.isTake}
             />
           )}
