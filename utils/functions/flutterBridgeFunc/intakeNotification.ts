@@ -41,3 +41,11 @@ export function editWeeklyNotification(pillId: number, intakeDays: Days[], intak
     message: message
   }))
 }
+
+export function deleteWeeklyNotification(pillId: number) {
+  // @ts-ignore
+  // eslint-disable-next-line no-undef
+  DeleteWeeklyNotification.postMessage(JSON.stringify({
+    pillId: pillId
+  }))
+}

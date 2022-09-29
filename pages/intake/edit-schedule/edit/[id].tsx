@@ -14,7 +14,10 @@ import dayjs, { Dayjs } from 'dayjs'
 import TimePickerModal from '../../../../components/common/intake/TimePickerModal'
 import { arrayIsNotEmpty } from '../../../../utils/functions/arrayIsNotEmpty'
 import { isMobile } from '../../../../utils/functions/isMobile'
-import { editWeeklyNotification } from '../../../../utils/functions/flutterBridgeFunc/intakeNotification'
+import {
+  deleteWeeklyNotification,
+  editWeeklyNotification,
+} from '../../../../utils/functions/flutterBridgeFunc/intakeNotification'
 
 const EditingPillNotification = () => {
   const router = useRouter()
@@ -122,7 +125,13 @@ const EditingPillNotification = () => {
 
   // 복용 관리 목록에서 제거 함수
   const deleteNotification = () => {
+    // local storage에서 해당 영양제 제거
+    setIntakePillList(intakePillList.filter((pill) => pill.pillId !== id))
 
+    // flutter_local_notification 기존 알림 삭제
+    if (isMobile()) {
+      deleteWeeklyNotification(id)
+    }
   }
 
   return (
