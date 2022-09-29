@@ -33,6 +33,7 @@ export const pillApi = {
 
 export const intakeApi = {
   getIntakeHistory: (userId: string, startDate: string, endDate: string) => nest.get(`/intake-log/${userId}?start=${startDate}&end=${endDate}`),
+  // TODO: api 개발 완료되면 put이랑 delete 함수 수정
   putIntakeHistory: (userId: string, pillId: number, intakeDate: Dayjs, intakeTime: string, isTake: boolean) => nest.put(`/intake-log/${userId}`, {
     uid: userId,
     pillId: pillId,
@@ -40,5 +41,6 @@ export const intakeApi = {
     intakeTime: intakeTime,
     isTake: isTake,
     createdAt: dayjs()
-  })
+  }),
+  deleteIntakeHistory: (userId: string, pillId: number) => nest.delete(`/intake-log/${userId}/${pillId}`)
 }
