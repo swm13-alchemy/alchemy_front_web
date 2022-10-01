@@ -31,16 +31,22 @@ export const pillApi = {
   getTotalBalance: (age: number, isMale: boolean, pillsId: number[]) => nest.get(`/balance?age=${age}&is_male=${isMale}&${pillsId.map((id) => `pills_id=${id}`).join('&')}`)
 }
 
+export interface PutIntakeHistoryType {
+  userId: string
+  pillId: number
+  intakeDate: string
+  intakeTime: string
+  isTake: boolean
+}
 export const intakeApi = {
   getIntakeHistory: (userId: string, startDate: string, endDate: string) => nest.get(`/intake-log/${userId}?start=${startDate}&end=${endDate}`),
-  // TODO: api 개발 완료되면 put이랑 delete 함수 수정
-  putIntakeHistory: (userId: string, pillId: number, intakeDate: Dayjs, intakeTime: string, isTake: boolean) => nest.put(`/intake-log/${userId}`, {
-    uid: userId,
-    pillId: pillId,
-    intakeDate: intakeDate,
-    intakeTime: intakeTime,
-    isTake: isTake,
-    createdAt: dayjs()
+  putIntakeHistory: (historyArray: PutIntakeHistoryType[]) => nest.put(`/intake-log`, {
+    intakeData: historyArray
   }),
-  deleteIntakeHistory: (userId: string, pillId: number) => nest.delete(`/intake-log/${userId}/${pillId}`)
+  deleteIntakeHistory: (userId: string, pillId: number) => nest.delete('/user-pill', {
+    data: {
+      userId: userId,
+      pillId: pillId
+    }
+  })
 }

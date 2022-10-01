@@ -18,7 +18,7 @@ import {
   deleteWeeklyNotification,
   editWeeklyNotification,
 } from '../../../../utils/functions/flutterBridgeFunc/intakeNotification'
-import { intakeApi } from '../../../../utils/api'
+import { intakeApi, PutIntakeHistoryType } from '../../../../utils/api'
 
 const EditingPillNotification = () => {
   const router = useRouter()
@@ -33,7 +33,7 @@ const EditingPillNotification = () => {
   const [isTimePickerOpen, setIsTimePickerOpen] = useState<boolean[]>([false, false, false, false, false])
   const [intakeTimesDayjs, setIntakeTimesDayjs] = useState<Dayjs[]>([dayjs().set('h', 9).set('m', 0)])
   const [intakeAmount, setIntakeAmount] = useState<number>(1)
-  // const [editingPillManagementData, setEditingPillManagementData] = useState<IntakeManagementType | null>(null)
+  const [editingPillManagementData, setEditingPillManagementData] = useState<IntakeManagementType | null>(null) // 수정 전, 기존 값들
 
   // 해당 영양제 복용 관리 저장된 정보들을 가져옴 (사용자 설정 값들로 초기 설정)
   useEffect(() => {
@@ -47,13 +47,13 @@ const EditingPillNotification = () => {
       setIntakeNum(matchOne.intakeNumber)
       setIntakeTimesDayjs(matchOne.intakeTimesDayjs.map((dayjsStr) => dayjs(dayjsStr)))
       setIntakeAmount(matchOne.intakeAmount)
-      // setEditingPillManagementData(matchOne)
+      setEditingPillManagementData(matchOne)
     } else {
       alert("Error: 복용 관리중인 영양제가 아닙니다.")
     }
   }, [])
 
-  // 섭취 횟수 수정 함수
+  /** 섭취 횟수 수정 함수 */
   const adjustIntakeNum = (isUp: boolean) => {
     if (isUp) {
       if (intakeNum < 5) {
@@ -68,7 +68,7 @@ const EditingPillNotification = () => {
     }
   }
 
-  // 섭취 시간 모달 on, off 조작하는 함수
+  /** 섭취 시간 모달 on, off 조작하는 함수 */
   const onOffModal = (isTurnOnModal: boolean, index: number) => {
     if (isTurnOnModal) {
       setIsTimePickerOpen(replaceValueInArray(isTimePickerOpen, index, true))
@@ -77,7 +77,7 @@ const EditingPillNotification = () => {
     }
   }
 
-  // 섭취량 수정 함수
+  /** 섭취량 수정 함수 */
   const adjustAmountIntake = (isUp: boolean) => {
     if (isUp) {
       if (intakeAmount < 10) {
@@ -90,7 +90,7 @@ const EditingPillNotification = () => {
     }
   }
 
-  // 변경사항 저장 함수
+  /** 변경사항 저장 함수 */
   const saveNotification = () => {
     const tempIntakePillList = intakePillList.filter((pill) => pill.pillId !== id)
     if (pillNickName !== '' && arrayIsNotEmpty(intakeDays)) {
@@ -104,20 +104,39 @@ const EditingPillNotification = () => {
         intakeNumber: intakeNum,
         intakeTimesDayjs: intakeTimesDayjs,
         intakeAmount: intakeAmount,
-        startIntakeDate: dayjs()
+        startIntakeDate: editingPillManagementData?.startIntakeDate ?? dayjs()  // TODO: 이 부분 수정
       }))
 
-      // TODO: put api 개발되면 값 수정하기
-      // TODO: delete api 개발되면 editingPillManagementData 값 이용해서 서버에 기록된 복용 기록 삭제하기
-      // ↑ delete api 개발 완료되면 아래 코드 수정하기
+      // TODO: 유저 아이디 수정
+      // TODO: 현재 오늘 날짜 시간표에 대한 시간표 편집만 가능함 (나중에 아예 UI 변경 자체가 필요함 -> 수정 누르면 오늘 시간표 편집이 아니라 그냥 전체 시간표 등록 영양제들 목록이 나오도록)
       // 서버에 저장된 기존 복용 기록 삭제
-      // if (!intakeDays.includes(dayjs().format('ddd') as Days)) {  // 수정한 복용 요일에 오늘 요일이 제거됐다면,
-      //   // 오늘 저장된 해당 영양제의 모든 복용 기록들을 삭제함
-      //   (async () => {
-      //     await intakeApi.deleteIntakeHistory('유저아이디', id)
-      //   })()
-      // }
-      // TODO: ↑ 현재 오늘 날짜 시간표에 대한 시간표 편집만 가능하므로 고려 X (나중에 아예 UI 변경 자체가 필요함)
+      if (!intakeDays.includes(dayjs().format('ddd') as Days)) {  // 수정한 복용 요일에 오늘 요일이 제거됐다면,
+        // 오늘 저장된 해당 영양제의 모든 복용 기록들을 삭제함
+        (async () => {
+          await intakeApi.deleteIntakeHistory('유저아이디', id)
+        })()
+      } else {  // 수정한 복용 요일에 오늘 요일이 포함되는 경우
+        (async () => {
+          // 오늘 저장된 해당 영양제의 모든 복용 기록을 삭제함
+          await intakeApi.deleteIntakeHistory('유저아이디', id)
+            .then(() => { // 삭제가 완료되면 변경된 사항들을 바탕으로 복용 기록을 새로 채워넣음
+              const tempPutHistoryJSONList: PutIntakeHistoryType[] = []
+
+              intakeTimesDayjs.forEach((intakeTimeDayjs) => {
+                tempPutHistoryJSONList.push({
+                  userId: '유저아이디',
+                  pillId: id,
+                  intakeDate: dayjs().format('YYYY-MM-DD'),
+                  intakeTime: intakeTimeDayjs.format('HH:mm'),
+                  isTake: false
+                })
+              })
+
+              intakeApi.putIntakeHistory(tempPutHistoryJSONList)
+            })
+        })()
+      }
+
 
       // flutter_local_notification 기존 알림 수정
       if (isMobile()) {
@@ -134,26 +153,25 @@ const EditingPillNotification = () => {
     }
   }
 
-  // 복용 관리 목록에서 제거 함수
-  // const deleteNotification = async () => {
-  //   // TODO: put api 개발되면 값 수정하기
-  //   // TODO: delete api 개발 완료되면 아래 코드 수정하기
-  //   // 오늘 저장된 서버에 있는 해당 영양제의 모든 복용 기록들을 삭제함
-  //   await intakeApi.deleteIntakeHistory('유저아이디', id)
-  //     .then(() => {
-  //       // local storage에서 해당 영양제 제거
-  //       setIntakePillList(intakePillList.filter((pill) => pill.pillId !== id))
-  //
-  //       // flutter_local_notification 기존 알림 삭제
-  //       if (isMobile()) {
-  //         deleteWeeklyNotification(id)
-  //       }
-  //
-  //       alert('복용 관리 목록에서 해당 영양제가 제거되었습니다.')
-  //
-  //       router.back()
-  //     })
-  // }
+  /** 복용 관리 목록에서 제거 함수 */
+  const deleteNotification = async () => {
+    // TODO: 유저아이디 수정
+    // 오늘 저장된 서버에 있는 해당 영양제의 모든 복용 기록들을 삭제함
+    await intakeApi.deleteIntakeHistory('유저아이디', id)
+      .then(() => {
+        // local storage에서 해당 영양제 제거
+        setIntakePillList(intakePillList.filter((pill) => pill.pillId !== id))
+
+        // flutter_local_notification 기존 알림 삭제
+        if (isMobile()) {
+          deleteWeeklyNotification(id)
+        }
+
+        alert('복용 관리 목록에서 해당 영양제가 제거되었습니다.')
+
+        router.back()
+      })
+  }
 
   return (
     <ContainerWithBottomNav>
