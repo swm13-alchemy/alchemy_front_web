@@ -92,8 +92,8 @@ const _2: NextPage = (props) => {
     selectedTopics.length >= 8 ? 'bold' : 'normal'
   } text-${selectedTopics.length >= 8 ? '[#FF0000]' : 'gray-400'}`
 
-  const nextButtonStyle = `absolute mt-2 bottom-16 w-[100%] h-12 flex justify-center items-center rounded-xl shadow-md bg-${
-    selectedTopics.length ? '[#1C65D1]' : 'gray-500'
+  const nextButtonStyle = `absolute mt-2 bottom-16 w-[100%] h-12 flex justify-center items-center rounded-xl shadow-md bg-[#1C65D1] ${
+    selectedTopics.length ? '' : 'hidden'
   }`
 
   const handleNextButtonClick = (e) => {

@@ -23,8 +23,8 @@ const _1: NextPage = (props) => {
       gen === gender ? 'white font-bold' : 'gray-900 font-normal'
     }`
 
-  const nextButtonStyle = `absolute mt-2 bottom-16 w-[100%] h-12 flex justify-center items-center rounded-xl shadow-md bg-${
-    startDate && gender ? '[#1C65D1]' : 'gray-500'
+  const nextButtonStyle = `absolute mt-2 bottom-16 w-[100%] h-12 flex justify-center items-center rounded-xl shadow-md bg-[#1C65D1] ${
+    startDate && gender ? '' : 'hidden'
   }`
 
   const handleNextButtonClick = (e) => {
