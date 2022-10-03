@@ -1,7 +1,12 @@
 import { NextPage } from 'next'
+import { useRouter, withRouter } from 'next/router'
 import { useState } from 'react'
 
 const _2: NextPage = (props) => {
+  const router = useRouter()
+
+  console.log(router.state)
+
   // Dummy Constant
   // TODO :: 영양제 더미 제거해야함. (22-09-27 수정)
   const topics = [
@@ -87,6 +92,21 @@ const _2: NextPage = (props) => {
     selectedTopics.length >= 8 ? 'bold' : 'normal'
   } text-${selectedTopics.length >= 8 ? '[#FF0000]' : 'gray-400'}`
 
+  const nextButtonStyle = `absolute mt-2 bottom-16 w-[100%] h-12 flex justify-center items-center rounded-xl shadow-md bg-${
+    selectedTopics.length ? '[#1C65D1]' : 'gray-500'
+  }`
+
+  const handleNextButtonClick = (e) => {
+    e.preventDefault()
+
+    if (!selectedTopics.length) return
+
+    // TODO :: Push Logic => Zustand로 변경해서 관리해야함
+    router.push({
+      pathname: '/register/steps/3',
+    })
+  }
+
   return (
     <div className='bg-[#F9FAFB] h-screen mx-8 relative'>
       <div className=' pt-16'>
@@ -104,11 +124,11 @@ const _2: NextPage = (props) => {
       </div>
 
       {/* TODO :: Link + State 전달 */}
-      <div className='fixed mt-2 bottom-16 left-8 right-8 h-12 flex justify-center items-center bg-[#1C65D1] rounded-xl shadow-md'>
+      <div className={nextButtonStyle} onClick={handleNextButtonClick}>
         <span className='block text-white text-sm leading-5 font-bold'>다음</span>
       </div>
     </div>
   )
 }
 
-export default _2
+export default withRouter(_2)
