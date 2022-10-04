@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import CheckCircle from '@mui/icons-material/CheckCircle'
 import { intakeApi, PutIntakeHistoryType, requestURLs } from '../../../utils/api'
-import { useUserIntakeManagementStore } from '../../../stores/store'
+import { useUserInformation, useUserIntakeManagementStore } from '../../../stores/store'
 import { useIntakeTimeTableByDate } from '../../../stores/nonLocalStorageStore'
 import dayjs, { Dayjs } from 'dayjs'
 
@@ -13,6 +13,7 @@ interface Props {
 }
 
 function PillIntakeBtn({ pillId, intakeTime, isPillIntake }: Props) {
+  const userId = useUserInformation(state => state.userId)
   const [isIntake, setIsIntake] = useState<boolean | null>(isPillIntake)
   const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
   const intakeTimeTableByDate = useIntakeTimeTableByDate(state => state.intakeTimeTableByDate)
@@ -29,11 +30,11 @@ function PillIntakeBtn({ pillId, intakeTime, isPillIntake }: Props) {
   const clickIntakeBtn = () => {
     const todayDateStr: string = dayjs().format('YYYY-MM-DD')
     // TODO: 추후 테스트하기
-    // // intakeTimeTableByDate가 null이 아닐 때 (가공이 끝날을 때 눌려짐)
-    // if (intakeTimeTableByDate !== null) {
+    // intakeTimeTableByDate가 null이 아닐 때 (가공이 끝날을 때 눌려짐)
+    // if (intakeTimeTableByDate && userId) {
     //   const todayIntakeHistory = intakeTimeTableByDate[todayDateStr]
     //   const tempPutHistoryJSONList: PutIntakeHistoryType[] = [{ // put api로 보낼 json 배열 초기화
-    //     userId: '유저아이디',
+    //     userId: userId,
     //     pillId: pillId,
     //     intakeDate: todayDateStr,
     //     intakeTime: intakeTime,
@@ -46,7 +47,7 @@ function PillIntakeBtn({ pillId, intakeTime, isPillIntake }: Props) {
     //     Object.keys(todayIntakeHistory.intakeHistory).forEach((curIntakeTime) => {
     //       todayIntakeHistory.intakeHistory[curIntakeTime].forEach((timeTablePillData) => {
     //         tempPutHistoryJSONList.push({
-    //           userId: '유저아이디',
+    //           userId: userId,
     //           pillId: timeTablePillData.pillId,
     //           intakeDate: todayDateStr,
     //           intakeTime: curIntakeTime,

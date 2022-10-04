@@ -23,7 +23,7 @@ const AddingPillNotification = () => {
   const { intakeServiceStartDate, setIntakeServiceStartDate, intakePillList, setIntakePillList } = useUserIntakeManagementStore()
   const [pillName, setPillName] = useState<string>('')
   const [pillMaker, setPillMaker] = useState<string>('')
-  const [pillNickName, setPillNickName] = useState<string>('')  // TODO: 추후 영양제 이름을 초기 값으로 넣기 -> 완료
+  const [pillNickName, setPillNickName] = useState<string>('')
   const [intakeDays, setIntakeDays] = useState<Days[]>([])
   const [intakeNum, setIntakeNum] = useState<number>(1)
   const [isTimePickerOpen, setIsTimePickerOpen] = useState<boolean[]>([false, false, false, false, false])
@@ -165,7 +165,6 @@ const AddingPillNotification = () => {
         </div>
 
         {/* 섭취 시간 */}
-        {/* TODO: TimePicker 추가 */}
         {
           intakeTimesDayjs.map((dayjs, index) =>
             <button

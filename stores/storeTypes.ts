@@ -8,6 +8,17 @@ import { Dayjs } from 'dayjs'
 //   setItem: () => undefined,
 // }
 
+export type userInformationState = {
+  userId: string | null
+  setUserId: (userId: string) => void
+  oauthId: string | null
+  setOauthId: (oauthId: string) => void
+}
+export type userInformationPersist = (
+  config: StateCreator<userInformationState>,
+  options: PersistOptions<userInformationState>
+) => StateCreator<userInformationState>
+
 export type pillListState = {
   userTakingPillList: SupplementDetailsType[]
   setUserTakingPillList: (data: SupplementDetailsType[]) => void

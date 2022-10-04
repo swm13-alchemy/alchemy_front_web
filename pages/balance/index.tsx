@@ -82,111 +82,46 @@ const Index: NextPage = () => {
     })
   })
 
-  // TODO: 회원가입이 생기기 전까지만 회원 정보를 얻기 위해 임시로 있는 부분
-  const [writtenAge, setWrittenAge] = useState<number | null>(null)
-  const [writtenIsMale, setWrittenIsMale] = useState<boolean | null>(null)
-  const sexList = [
-    {
-      value: 'true',
-      label: '남성'
-    },
-    {
-      value: 'false',
-      label: '여성'
-    }
-  ]
-  
-  const submitHealthData = () => {
-    if (writtenAge !== null && writtenAge > 0 && writtenAge < 100) {
-      if (writtenIsMale !== null) {
-        setAge(writtenAge)
-        setIsMale(writtenIsMale)
-        alert('완료되었습니다!')
-      } else {
-        alert('성별을 선택해주세요')
-      }
-    } else {
-      alert('나이를 정확히 입력해주세요')
-    }
-  }
-
   return (
     <ContainerWithBottomNav>
       {/*<BackHeader router={router} name='영양제 분석 리포트' />*/}
       <MainHeader />
 
       {arrayIsNotEmpty(userTakingPillList) ? (
-        // TODO: 회원가입이 생기기 전까지만 회원 정보를 얻기 위해 임시로 있는 부분 (현재 복잡한 이중 삼항연산자 로직은 수정될 예정)
-        age === null || isMale === null ? (
-          <div className='mt-40 flex flex-col space-y-20 items-center'>
-            <TextField
-              required
-              label='나이'
-              type='number'
-              variant="standard"
-              InputProps={{
-                endAdornment: <InputAdornment position='end'>세</InputAdornment>
-              }}
-              helperText='1~99사이의 숫자만 입력할 수 있습니다'
-              onChange={(e) => setWrittenAge(parseInt(e.target.value))}
-              value={writtenAge}
-            />
-            <TextField
-              select
-              label='성별'
-              value={writtenIsMale}
-              onChange={(e) => setWrittenIsMale(e.target.value === 'true')}
-              className='w-3/5'
-            >
-              {sexList.map((option) => (
-                <MenuItem key={option.label} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <button
-              className='w-2/3 bg-primary py-3 rounded-[0.625rem] text-base text-white'
-              onClick={submitHealthData}
-            >
-              완료
-            </button>
-          </div>
-        ) : (
-          // 등록된 영양제가 있는 경우 보여지는 화면
-          <div className='flex flex-col space-y-4'>
-            {/* 머리 부분 */}
-            <div className='w-full bg-white px-6 py-4 flex items-center justify-between'>
-              <div className='flex flex-col'>
-                <p className='text-sm text-gray-500'>{todayDateStr}</p>
-                <h1 className='text-lg font-bold text-gray-900'>영양제 분석 리포트 💊</h1>
-              </div>
-              <div className='relative w-[3.25rem] h-[3.25rem]'>
-                <Image
-                  src={balanceIcon}
-                  className='object-cover'
-                  layout='fill'
-                />
-              </div>
+        // 등록된 영양제가 있는 경우 보여지는 화면
+        <div className='flex flex-col space-y-4'>
+          {/* 머리 부분 */}
+          <div className='w-full bg-white px-6 py-4 flex items-center justify-between'>
+            <div className='flex flex-col'>
+              <p className='text-sm text-gray-500'>{todayDateStr}</p>
+              <h1 className='text-lg font-bold text-gray-900'>영양제 분석 리포트 💊</h1>
             </div>
-
-            {/* 요약 리포트 부분 */}
-            <BalanceSummary intakeSupplementsCnt={arrayIsNotEmpty(userTakingPillList) ? userTakingPillList.length : 0} />
-
-            {/* 배너 부분 */}
-            <MuiCarousel whereToUse='balanceBanner' />
-
-            {/* 필수 영양분 리포트 부분 */}
-            {arrayIsNotEmpty(totalIntakeNutrients) &&
-              <IntakeReport
-                intakeNutrientData={totalIntakeNutrients}
-                excessNutrients={excessNutrients}
-                properNutrients={properNutrients}
-                minimumNutrients={minimumNutrients}
-                lackNutrients={lackNutrients}
+            <div className='relative w-[3.25rem] h-[3.25rem]'>
+              <Image
+                src={balanceIcon}
+                className='object-cover'
+                layout='fill'
               />
-            }
+            </div>
           </div>
-        )
+
+          {/* 요약 리포트 부분 */}
+          <BalanceSummary intakeSupplementsCnt={arrayIsNotEmpty(userTakingPillList) ? userTakingPillList.length : 0} />
+
+          {/* 배너 부분 */}
+          <MuiCarousel whereToUse='balanceBanner' />
+
+          {/* 필수 영양분 리포트 부분 */}
+          {arrayIsNotEmpty(totalIntakeNutrients) &&
+            <IntakeReport
+              intakeNutrientData={totalIntakeNutrients}
+              excessNutrients={excessNutrients}
+              properNutrients={properNutrients}
+              minimumNutrients={minimumNutrients}
+              lackNutrients={lackNutrients}
+            />
+          }
+        </div>
       ) : (
         // 등록된 영양제가 없는 경우 보여지는 화면
         <div className='bg-white w-full h-full flex flex-col items-center'>
