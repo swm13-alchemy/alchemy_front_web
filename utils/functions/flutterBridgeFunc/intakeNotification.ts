@@ -49,3 +49,9 @@ export function deleteWeeklyNotification(pillId: number) {
     pillId: pillId
   }))
 }
+
+export function requestCameraPermission() {
+  // @ts-ignore
+  // eslint-disable-next-line no-undef
+  RequestCameraPermission.postMessage('권한 얻기')
+}

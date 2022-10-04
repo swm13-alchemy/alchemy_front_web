@@ -6,9 +6,6 @@ interface Props {
 }
 
 const RegisterPage = ({ providers }: Props) => {
-
-  console.log(providers)
-
   return (
     <div className='bg-[#F9FAFB] h-screen mx-8'>
       <div className='pt-28'>
