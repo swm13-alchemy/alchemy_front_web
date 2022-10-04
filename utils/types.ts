@@ -4,7 +4,6 @@ export interface SearchResultsItemType {
   id: number
   name: string
   // imageUrl: string | null
-  information: string
   maker: string
 }
 
@@ -126,3 +125,14 @@ export interface TimeTableByDateType {
 // export interface ServerSideIntakeHistoryByDateType {
 //   [date: string]: ServerSideIntakeHistoryDataType[]
 // }
+
+export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 변경
+  userId: string
+  oauthId: string
+  nickname: string
+  birth: string
+  isMale: boolean
+  email: string | null
+  refreshToken: string | null
+  oauthRefreshToken: string | null
+}

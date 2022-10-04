@@ -1,8 +1,7 @@
-import { NextPage } from 'next'
-import { useRouter, withRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 
-const _2: NextPage = (props) => {
+function Second() {
   const router = useRouter()
 
   console.log(router.state)
@@ -103,7 +102,7 @@ const _2: NextPage = (props) => {
 
     // TODO :: Push Logic => Zustand로 변경해서 관리해야함
     router.push({
-      pathname: '/register/steps/3',
+      pathname: '/register/step/3',
     })
   }
 
@@ -131,4 +130,4 @@ const _2: NextPage = (props) => {
   )
 }
 
-export default withRouter(_2)
+export default Second

@@ -4,7 +4,7 @@ import IntakeCalendar from '../../components/common/intakeCalendar/IntakeCalenda
 import MainHeader from '../../components/layout/MainHeader'
 import ScheduleBox from '../../components/common/intake/ScheduleBox'
 import Link from 'next/link'
-import { useUserIntakeManagementStore } from '../../stores/store'
+import { useUserInformation, useUserIntakeManagementStore } from '../../stores/store'
 import { useEffect, useState } from 'react'
 import {
   IntakeManagementType,
@@ -17,10 +17,12 @@ import LoadingCircular from '../../components/layout/LoadingCircular'
 import dayjs from 'dayjs'
 import { useIntakeTimeTableByDate } from '../../stores/nonLocalStorageStore'
 import { processPastIntakeHistory } from '../../utils/functions/processPastIntakeHistory'
+import { useRouter } from 'next/router'
 
 
 
 const Intake: NextPage = () => {
+  const userId = useUserInformation(state => state.userId)
   const intakeServiceStartDate = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
   const setIntakeServiceStartDate = useUserIntakeManagementStore(state => state.setIntakeServiceStartDate)
   const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
@@ -45,6 +47,11 @@ const Intake: NextPage = () => {
     //     setIntakeTimeTableByDate(finalIntakeTimeTableByDate)
     //   )
   }, [])
+
+  if (!userId) {  // 로그인이 안되어 있는 경우 redirect
+    const router = useRouter()
+    router.push('/initial')
+  }
 
   if (!intakeTimeTableByDate) return <LoadingCircular />
 

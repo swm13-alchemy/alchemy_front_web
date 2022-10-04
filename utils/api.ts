@@ -1,5 +1,4 @@
 import axios from 'axios'
-import dayjs, { Dayjs } from 'dayjs'
 
 // const API_KEY = process.env.API_KEY
 // const HASURA_BASE_URL = 'http://ec2-3-38-255-41.ap-northeast-2.compute.amazonaws.com:8080/api/rest'
@@ -28,7 +27,7 @@ export const pillApi = {
       isMale: isMale
     }
   }),
-  getTotalBalance: (age: number, isMale: boolean, pillsId: number[]) => nest.get(`/balance?age=${age}&is_male=${isMale}&${pillsId.map((id) => `pills_id=${id}`).join('&')}`)
+  getTotalBalance: (age: number, isMale: boolean, pillsId: number[]) => nest.get(`/balance?age=${age}&isMale=${isMale}&${pillsId.map((id) => `pillsId=${id}`).join('&')}`)
 }
 
 export interface PutIntakeHistoryType {
@@ -48,5 +47,16 @@ export const intakeApi = {
       userId: userId,
       pillId: pillId
     }
+  })
+}
+
+export const userApi = {
+  checkExistingRegisteredUser: (oauthId: string) => nest.get(`/user/oauth/${oauthId}`),
+  postUserInformation: (oauthId: string, nickName: string, birth: string, isMale: boolean, oauthRefreshToken: string) => nest.post('/user', {
+    oauthId: oauthId,
+    nickname: nickName,
+    birth: birth,
+    isMale: isMale,
+    oauthRefreshToken: oauthRefreshToken
   })
 }
