@@ -7,9 +7,31 @@ import {
   pillListPersist,
   pillListState,
   userHealthPersist,
-  userHealthState,
+  userHealthState, userInformationPersist, userInformationState,
 } from './storeTypes'
+import { Dayjs } from 'dayjs'
 
+/** 유저아이디와 OAuth에서 받은 id를 저장하는 Store */
+export const useUserInformation = create<userInformationState>(
+  // @ts-ignore
+  (persist as userInformationPersist)(
+    (set) => ({
+      userId: null,
+      setUserId: (userId: string) => {
+        set((state) => ({...state, userId: userId}))
+      },
+      oauthId: null,
+      setOauthId: (oauthId: string) => {
+        set((state) => ({...state, oauthId: oauthId}))
+      }
+    }),
+    {
+      name: 'userInformation'
+    }
+  )
+)
+
+/** 유저가 내 영양제로 등록한 리스트 Store */
 export const useUserPillListStore = create<pillListState>(
   // @ts-ignore
   (persist as pillListPersist)(
@@ -30,6 +52,8 @@ export const useUserPillListStore = create<pillListState>(
   )
 )
 
+// TODO: 나중엔 사라져야 할 것. 백엔드에서 처리해야 함
+/** 유저의 나이와 성별을 관리하는 Store */
 export const useUserHealthDataStore = create<userHealthState>(
   // @ts-ignore
   (persist as userHealthPersist)(
@@ -49,12 +73,13 @@ export const useUserHealthDataStore = create<userHealthState>(
   )
 )
 
+/** 유저의 복용 관리 정보들을 담고 있는 Store */
 export const useUserIntakeManagementStore = create<intakeManagementState>(
   // @ts-ignore
   (persist as intakeManagementPersist)(
     (set) => ({
       intakeServiceStartDate: null,
-      setIntakeServiceStartDate: (intakeServiceDate: Date) => {
+      setIntakeServiceStartDate: (intakeServiceDate: Dayjs) => {
         set((state) => ({...state, intakeServiceStartDate: intakeServiceDate}))
       },
       intakePillList: [],

@@ -1,13 +1,25 @@
 import Switch from '@mui/material/Switch'
 import { useState } from 'react'
 import PillIntakeBtn from './PillIntakeBtn'
+import { TimeTableDataType } from '../../../utils/types'
+import { convert12hourTo24hour } from '../../../utils/functions/timeFormatFunc/convert12hourTo24hour'
+import LoadingCircular from '../../layout/LoadingCircular'
 
-function ScheduleBox() {
+interface Props {
+  intakeTime: string
+  timeTableDataList: TimeTableDataType[]
+}
+
+function ScheduleBox({ intakeTime, timeTableDataList }: Props) {
   const [isSwitchOn, setIsSwitchOn] = useState<boolean>(true)
 
   const checkAll = () => {
 
   }
+
+  if (!timeTableDataList) return (
+    <LoadingCircular />
+  )
 
   return (
     <div className='bg-white px-6 py-4'>
@@ -19,12 +31,13 @@ function ScheduleBox() {
             className={'text-2xl font-bold' +
               (isSwitchOn ? ' text-primary' : ' text-gray-300')}
           >
-            12:59
+            {convert12hourTo24hour(intakeTime).split(' ')[0]}
           </p>
           <p
-            className={'text-xs' + (isSwitchOn ? ' text-primary' : ' text-gray-300')}
+            className={'text-xs' +
+              (isSwitchOn ? ' text-primary' : ' text-gray-300')}
           >
-            AM
+            {convert12hourTo24hour(intakeTime).split(' ')[1]}
           </p>
         </div>
         <div className='flex items-center space-x-6'>
@@ -47,41 +60,14 @@ function ScheduleBox() {
       {/* 영양제 목록 부분 */}
       {isSwitchOn &&
         <div className='mt-4 grid grid-cols-4 gap-x-5 gap-y-4 justify-center'>
-          <PillIntakeBtn
-            imgUrl='https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
-            pillName='UC-II'
-            isPillIntake={false}
-          />
-          <PillIntakeBtn
-            imgUrl='https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
-            pillName='UC-II'
-            isPillIntake={false}
-          />
-          <PillIntakeBtn
-            imgUrl='https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
-            pillName='B Flex 종합비타민'
-            isPillIntake={false}
-          />
-          <PillIntakeBtn
-            imgUrl='https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
-            pillName='슈퍼 항산화제'
-            isPillIntake={false}
-          />
-          <PillIntakeBtn
-            imgUrl='https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
-            pillName='UC-II'
-            isPillIntake={false}
-          />
-          <PillIntakeBtn
-            imgUrl='https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
-            pillName='UC-II'
-            isPillIntake={false}
-          />
-          <PillIntakeBtn
-            imgUrl='https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now03322/v/23.jpg'
-            pillName='UC-II'
-            isPillIntake={false}
-          />
+          {timeTableDataList.map((timeTableData) =>
+            <PillIntakeBtn
+              key={timeTableData.pillId}
+              pillId={timeTableData.pillId}
+              intakeTime={intakeTime}
+              isPillIntake={timeTableData.isTake}
+            />
+          )}
         </div>
       }
     </div>

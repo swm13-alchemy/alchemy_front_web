@@ -19,9 +19,7 @@ export function makeIntakeTimeTableByDay(intakePillList: IntakeManagementType[])
       // 꺼내서 영양제 시간표 양식에 맞게(복용 기록용) 데이터를 가공해 만듦
       const timeTableData: TimeTableDataType = {
         pillId: intakePill.pillId,
-        pillNickName: intakePill.pillNickName,
-        isTake: false,
-        startIntakeDate: intakePill.startIntakeDate
+        isTake: false
       }
 
       // 아래 switch문에서 사용되는 함수

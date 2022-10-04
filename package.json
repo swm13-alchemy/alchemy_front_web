@@ -22,6 +22,7 @@
     "@mui/styles": "^5.9.3",
     "@mui/x-date-pickers": "^5.0.2",
     "axios": "^0.27.2",
+    "dayjs": "^1.11.5",
     "compressorjs": "^1.1.1",
     "dayjs": "^1.11.5",
     "next": "12.2.1",

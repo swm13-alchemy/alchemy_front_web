@@ -1,11 +1,23 @@
 import { IntakeManagementType, SupplementDetailsType } from '../utils/types'
 import { StateCreator } from 'zustand'
 import { PersistOptions } from 'zustand/middleware'
+import { Dayjs } from 'dayjs'
 
 // export const dummyStorageApi = {
 //   getItem: () => null,
 //   setItem: () => undefined,
 // }
+
+export type userInformationState = {
+  userId: string | null
+  setUserId: (userId: string) => void
+  oauthId: string | null
+  setOauthId: (oauthId: string) => void
+}
+export type userInformationPersist = (
+  config: StateCreator<userInformationState>,
+  options: PersistOptions<userInformationState>
+) => StateCreator<userInformationState>
 
 export type pillListState = {
   userTakingPillList: SupplementDetailsType[]
@@ -30,8 +42,8 @@ export type userHealthPersist = (
 ) => StateCreator<userHealthState>
 
 export type intakeManagementState = {
-  intakeServiceStartDate: Date | null,
-  setIntakeServiceStartDate: (date: Date) => void
+  intakeServiceStartDate: Dayjs | null,
+  setIntakeServiceStartDate: (date: Dayjs) => void
   intakePillList: IntakeManagementType[]
   setIntakePillList: (pillList: IntakeManagementType[]) => void
 }

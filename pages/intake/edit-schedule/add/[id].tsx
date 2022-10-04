@@ -13,6 +13,8 @@ import dayjs, { Dayjs } from 'dayjs'
 import { replaceValueInArray } from '../../../../utils/functions/replaceValueInArray'
 import TimePickerModal from '../../../../components/common/intake/TimePickerModal'
 import { arrayIsNotEmpty } from '../../../../utils/functions/arrayIsNotEmpty'
+import { addWeeklyNotification } from '../../../../utils/functions/flutterBridgeFunc/intakeNotification'
+import { isMobile } from '../../../../utils/functions/isMobile'
 
 const AddingPillNotification = () => {
   const router = useRouter()
@@ -21,7 +23,7 @@ const AddingPillNotification = () => {
   const { intakeServiceStartDate, setIntakeServiceStartDate, intakePillList, setIntakePillList } = useUserIntakeManagementStore()
   const [pillName, setPillName] = useState<string>('')
   const [pillMaker, setPillMaker] = useState<string>('')
-  const [pillNickName, setPillNickName] = useState<string>('')  // TODO: 추후 영양제 이름을 초기 값으로 넣기 -> 완료
+  const [pillNickName, setPillNickName] = useState<string>('')
   const [intakeDays, setIntakeDays] = useState<Days[]>([])
   const [intakeNum, setIntakeNum] = useState<number>(1)
   const [isTimePickerOpen, setIsTimePickerOpen] = useState<boolean[]>([false, false, false, false, false])
@@ -85,10 +87,11 @@ const AddingPillNotification = () => {
   const saveNotification = () => {
     // 지금 등록하는 영양제가 최초로 등록하는 영양제인 경우 서비스 시작 날짜를 저장
     if (intakeServiceStartDate === null) {
-      setIntakeServiceStartDate(new Date)
+      setIntakeServiceStartDate(dayjs())
     }
 
     if (pillNickName !== '' && arrayIsNotEmpty(intakeDays)) {
+      // local storage에 저장
       setIntakePillList(intakePillList.concat({
         pillId: id,
         pillMaker: pillMaker,
@@ -98,8 +101,14 @@ const AddingPillNotification = () => {
         intakeNumber: intakeNum,
         intakeTimesDayjs: intakeTimesDayjs,
         intakeAmount: intakeAmount,
-        startIntakeDate: new Date
+        startIntakeDate: dayjs()
       }))
+
+      // flutter_local_notification에 알림 만듦
+      if (isMobile()) {
+        addWeeklyNotification(id, intakeDays, intakeTimesDayjs, `${pillNickName} 드실 시간이에요😉 비힐러가 늘 곁에서 챙겨드릴게요!`)
+      }
+
       router.back()
     } else {
       if (pillNickName === '') {
@@ -156,7 +165,6 @@ const AddingPillNotification = () => {
         </div>
 
         {/* 섭취 시간 */}
-        {/* TODO: TimePicker 추가 */}
         {
           intakeTimesDayjs.map((dayjs, index) =>
             <button
@@ -192,7 +200,7 @@ const AddingPillNotification = () => {
         {/* 저장하기 버튼 */}
         <div className='px-8'>
           <button
-            className='py-3.5 w-full rounded-[0.625rem] bg-primary text-gray-50 shadow-md'
+            className='py-3.5 w-full rounded-[0.625rem] bg-primary text-sm font-bold text-gray-50 shadow-md'
             onClick={saveNotification}
           >
             저장하기
