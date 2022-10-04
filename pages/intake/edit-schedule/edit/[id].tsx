@@ -176,7 +176,7 @@ const EditingPillNotification = () => {
 
   return (
     <ContainerWithBottomNav>
-      <BackHeader router={router} name='영양제 알림 시간 수정' />
+      <BackHeader router={router} name='영양제 알림 시간 추가' />
 
       <div className='space-y-2 pb-5'>
         {/* 영양제 정보 부분 */}
