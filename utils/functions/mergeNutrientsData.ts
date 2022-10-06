@@ -10,7 +10,7 @@ export const mergeNutrientsData = (intakeNutrients: UserIntakeNutrientType[], ne
       console.log("newNutrient : ", newNutrient)
       // console.log("newNutrient : ", newNutrient.nutrient.name, typeof newNutrient.nutrient.name)
       // console.log("intakeNutrient : ", intakeNutrient.name, typeof intakeNutrient.name)
-      if (newNutrient.nutrients.name === intakeNutrient.name) {
+      if (newNutrient.nutrient.name === intakeNutrient.name) {
         mergedData.push({
           name: intakeNutrient.name,
           intakeContent: intakeNutrient.content,
@@ -27,16 +27,16 @@ export const mergeNutrientsData = (intakeNutrients: UserIntakeNutrientType[], ne
     // 해당 영양분을 기존에 섭취하지 않고 있는 경우
     if (!isIntake) {
       mergedData.push({
-        name: newNutrient.nutrients.name,
+        name: newNutrient.nutrient.name,
         intakeContent: 0,
         newContent: newNutrient.content,
         // TODO: 민준형한테 말해서 이거 intakes 배열형태로 안받아와지게 하기 (현재는 임시로 [0]사용)
         // @ts-ignore
-        reqMin: newNutrient.nutrients.intakes[0].reqMin,
+        reqMin: newNutrient.nutrient.intakes[0].reqMin,
         // @ts-ignore
-        reqAvg: newNutrient.nutrients.intakes[0].reqAvg,
+        reqAvg: newNutrient.nutrient.intakes[0].reqAvg,
         // @ts-ignore
-        reqLimit: newNutrient.nutrients.intakes[0].reqLimit,
+        reqLimit: newNutrient.nutrient.intakes[0].reqLimit,
         unit: newNutrient.unit
       })
     }

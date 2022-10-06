@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ContentGraph from '../../components/common/pillDetails/ContentGraph'
 import EfficiencyTag from '../../components/tag/EfficiencyTag'
 import {
@@ -8,7 +8,7 @@ import {
   MergedNutrientDataType,
   SupplementDetailsType
 } from '../../utils/types'
-import { useUserHealthDataStore, useUserPillListStore } from '../../stores/store'
+import { useUserHealthDataStore, useUserInformation, useUserPillListStore } from '../../stores/store'
 import { pillApi, requestURLs } from '../../utils/api'
 import PlaylistAdd from '@mui/icons-material/PlaylistAdd'
 import DeleteForever from '@mui/icons-material/DeleteForever'
@@ -22,109 +22,19 @@ import LocalDining from '@mui/icons-material/LocalDining'
 import Filter1 from '@mui/icons-material/Filter1'
 import { useRouter } from 'next/router'
 import PillDetailsHeader from '../../components/layout/PillDetailsHeader'
-import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
 import { mergeNutrientsData } from '../../utils/functions/mergeNutrientsData'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
+import { CONTENT_GRAPH_DUMMY_DATA } from '../../utils/constants'
+import balanceIllust from '../../public/asset/image/balanceIllust.png'
+import Link from 'next/link'
 
 interface Props {
   details: SupplementDetailsType
 }
 
-const 임시: MergedNutrientDataType[] = [
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminD',
-    intakeContent: 100,
-    newContent: 300,
-    unit: 'mg',
-    reqMin: 200,
-    reqAvg: 500,
-    reqLimit: 700
-  },
-  {
-    name: 'Magnesium',
-    intakeContent: 1200,
-    newContent: 2800,
-    unit: 'mg',
-    reqMin: 200,
-    reqAvg: 600,
-    reqLimit: 1000
-  },
-  {
-    name: 'Probiotics',
-    intakeContent: 500,
-    newContent: 500,
-    unit: 'mg',
-    reqMin: 400,
-    reqAvg: 900,
-    reqLimit: 1200
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  }
-]
-
 const Details = ({ details }: Props) => {
-  const { id, name, dailyDose, information, intakeCount, intakeTiming, maker, ingredients } = details
+  const userId = useUserInformation(state => state.userId)
+  const { id, name, dailyDose, information, intakeCount, intakeTimings, maker, ingredients }: SupplementDetailsType = details
   const router = useRouter()
   const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()
   const { age, isMale } = useUserHealthDataStore()
@@ -132,6 +42,7 @@ const Details = ({ details }: Props) => {
   const [isTaking, setIsTaking] = useState<boolean>(false)
   const [isOpenEfficiency, setIsOpenEfficiency] = useState<boolean>(false)
   const [mergedNutrientData, setMergedNutrientData] = useState<MergedNutrientDataType[]>([])
+  const [mainEfficacyList, setMainEfficacyList] = useState<string[]>([])
 
   // 최초 페이지 진입 시 한 번 실행 후 종료
   // 해당 페이지 영양제가 등록되어 있는지 확인하고 있으면 섭취중인 영양제로 표시
@@ -151,8 +62,8 @@ const Details = ({ details }: Props) => {
 
   // 기존 섭취 영양분 대비 변화량 그래프 그리기 위한 데이터 처리 부분
   useEffect(() => {
-    // 나이와 성별을 등록하고 섭취중인 영양제로 등록한 것이 있는 경우만 데이터를 받아옴
-    if (age !== null && isMale !== null && arrayIsNotEmpty(userTakingPillList)) {
+    // 나이와 성별을 등록(회원 가입을 한 경우)하고 섭취중인 영양제로 등록한 것이 있는 경우만 데이터를 받아옴
+    if (userId && age !== null && isMale !== null && arrayIsNotEmpty(userTakingPillList)) {
       // 섭취중인 영양제가 아닌 경우
       if (!isTaking) {
         (async () => {
@@ -183,6 +94,21 @@ const Details = ({ details }: Props) => {
       }
     }
   }, [userTakingPillList])
+
+  // 효능 태그 표시하기 위한 부분
+  useEffect(() => {
+    if (ingredients) {
+      const tempEfficacyList: string[] = []
+      ingredients.forEach((ingredient) => {
+        ingredient.nutrient.efficacy.forEach((efficacy) => {
+          if (!tempEfficacyList.includes(efficacy)) { // 중복되지 않은 효능이라면 리스트에 추가
+            tempEfficacyList.push(efficacy)
+          }
+        })
+      })
+      setMainEfficacyList(tempEfficacyList)
+    }
+  }, [ingredients])
 
   // 섭취중인 영양제 버튼 클릭 시
   const takingSubmit = (curIsTaking: boolean) => {
@@ -260,60 +186,69 @@ const Details = ({ details }: Props) => {
 
       {/* 상세 정보 부분 */}
       <section className='mt-2 space-y-4'>
-        {/*/!* 변화량 그래프 부분 *!/*/}
-        {/*{arrayIsNotEmpty(mergedNutrientData) &&*/}
-        {/*  <article className='bg-white p-6 text-gray-900'>*/}
-        {/*    <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>*/}
-        {/*    <InfoOutlined className='text-base text-gray-400 ml-1' />*/}
-        {/*    <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>*/}
-
-        {/*    /!* 그래프 부분 *!/*/}
-        {/*    <ContentGraph mergedNutrientData={mergedNutrientData} />*/}
-        {/*  </article>*/}
-        {/*}*/}
         {/* 변화량 그래프 부분(임시) */}
-        {arrayIsNotEmpty(임시) &&
-          <article className='bg-white p-6 text-gray-900'>
-            <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>
-            <InfoOutlined className='text-base text-gray-400 ml-1' />
-            <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>
+        <article className='bg-white p-6 text-gray-900'>
+          <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>
+          <InfoOutlined className='text-base text-gray-400 ml-1' />
+          <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>
 
-            {/* 그래프 부분 */}
-            <ContentGraph mergedNutrientData={임시} />
-          </article>
-        }
+          {/* TODO: CONTENT_GRAPH_DUMMY_DATA를 다 mergedNutrientData로 바꾸면 됨 */}
+          {userId ? (
+            arrayIsNotEmpty(CONTENT_GRAPH_DUMMY_DATA) &&
+              // 그래프 부분
+              <ContentGraph mergedNutrientData={CONTENT_GRAPH_DUMMY_DATA} />
+          ) : (
+            <div className='relative'>
+              <div className='blur-sm'>
+                <ContentGraph mergedNutrientData={CONTENT_GRAPH_DUMMY_DATA} />
+              </div>
+              <div className='absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center'>
+                <div className='relative w-[18.75rem] h-[12.5rem]'>
+                  <Image
+                    src={balanceIllust}
+                    className='object-cover'
+                    layout='fill'
+                  />
+                </div>
+                <Link href='/initial'>
+                  <a className='w-5/6 py-2.5 rounded-[0.625rem] bg-primary flex items-center justify-center text-white text-sm'>
+                    회원 가입 후 확인하기
+                  </a>
+                </Link>
+              </div>
+            </div>
+          )}
+        </article>
 
         {/* 효능 부분 */}
         <article className='bg-white p-6 text-gray-900'>
           {/* 주요 효능 부분 */}
           <p className='text-base font-bold'>주요 효능</p>
           <div className='mt-2 flex items-center flex-wrap gap-2'>
-            <EfficiencyTag tagName='노화&항산화' />
-            <EfficiencyTag tagName='면역 기능' />
-            <EfficiencyTag tagName='혈액 생성' />
-            <EfficiencyTag tagName='멀티미네랄' />
-            <EfficiencyTag tagName='콜레스테롤 합성 조절' />
+            {mainEfficacyList.map((efficacy) =>
+              <EfficiencyTag key={efficacy} tagName={efficacy} />
+            )}
           </div>
 
-          {/* 보조 효능 부분 */}
-          <button
-            className='mt-6 w-full flex items-center justify-between'
-            onClick={() => setIsOpenEfficiency(!isOpenEfficiency)}
-          >
-            <p className='text-base font-bold'>보조 효능</p>
-            {isOpenEfficiency ? (
-              <ExpandLess className='text-2xl' />
-            ) : (
-              <ExpandMore className='text-2xl' />
-            )}
-          </button>
-          <div className={'mt-2 flex items-center flex-wrap gap-2' + (isOpenEfficiency ? ' visible' : ' hidden')}>
-            <EfficiencyTag tagName='노화&항산화' />
-            <EfficiencyTag tagName='면역 기능' />
-            <EfficiencyTag tagName='혈액 생성' />
-            <EfficiencyTag tagName='멀티미네랄' />
-            <EfficiencyTag tagName='콜레스테롤 합성 조절' />
-          </div>
+          {/*/!* 보조 효능 부분 *!/*/}
+          {/*<button*/}
+          {/*  className='mt-6 w-full flex items-center justify-between'*/}
+          {/*  onClick={() => setIsOpenEfficiency(!isOpenEfficiency)}*/}
+          {/*>*/}
+          {/*  <p className='text-base font-bold'>보조 효능</p>*/}
+          {/*  {isOpenEfficiency ? (*/}
+          {/*    <ExpandLess className='text-2xl' />*/}
+          {/*  ) : (*/}
+          {/*    <ExpandMore className='text-2xl' />*/}
+          {/*  )}*/}
+          {/*</button>*/}
+          {/*<div className={'mt-2 flex items-center flex-wrap gap-2' + (isOpenEfficiency ? ' visible' : ' hidden')}>*/}
+          {/*  <EfficiencyTag tagName='노화&항산화' />*/}
+          {/*  <EfficiencyTag tagName='면역 기능' />*/}
+          {/*  <EfficiencyTag tagName='혈액 생성' />*/}
+          {/*  <EfficiencyTag tagName='멀티미네랄' />*/}
+          {/*  <EfficiencyTag tagName='콜레스테롤 합성 조절' />*/}
+          {/*</div>*/}
         </article>
 
         {/* 추천 섭취 방법 부분 */}
@@ -339,7 +274,7 @@ const Details = ({ details }: Props) => {
               <div className='w-10 h-10 rounded-[1.25rem] bg-surface flex items-center justify-center'>
                 <LocalDining className='text-2xl text-primary' />
               </div>
-              <p className='ml-2 text-sm font-bold text-primary'>{intakeTiming}</p>
+              <p className='ml-2 text-sm font-bold text-primary'>{intakeTimings}</p>
             </div>
           </div>
         </article>

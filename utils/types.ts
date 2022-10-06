@@ -10,7 +10,7 @@ export interface SearchResultsItemType {
 export interface NutrientType {
   name: string
   tips: string
-  efficacy: string
+  efficacy: string[]
 }
 
 export interface IngredientType {
@@ -28,7 +28,7 @@ export interface SupplementDetailsType {
   // imageUrl: string | null
   information: string
   intakeCount: number
-  intakeTiming: string
+  intakeTimings: string
   maker: string
   ingredients: IngredientType[]
 }

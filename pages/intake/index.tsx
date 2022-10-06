@@ -4,8 +4,8 @@ import IntakeCalendar from '../../components/common/intakeCalendar/IntakeCalenda
 import MainHeader from '../../components/layout/MainHeader'
 import ScheduleBox from '../../components/common/intake/ScheduleBox'
 import Link from 'next/link'
-import { useUserInformation, useUserIntakeManagementStore } from '../../stores/store'
-import { useEffect, useState } from 'react'
+import { useUserInformation, useUserIntakeManagementStore, useUserPillListStore } from '../../stores/store'
+import React, { useEffect, useState } from 'react'
 import {
   IntakeManagementType,
   TimeTableByDateType,
@@ -18,11 +18,16 @@ import dayjs from 'dayjs'
 import { useIntakeTimeTableByDate } from '../../stores/nonLocalStorageStore'
 import { processPastIntakeHistory } from '../../utils/functions/processPastIntakeHistory'
 import { useRouter } from 'next/router'
+import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
+import Image from 'next/image'
+import balanceIllust from '../../public/asset/image/balanceIllust.png'
+import intakeIllust from '../../public/asset/image/intakeIllust.png'
 
 
 
 const Intake: NextPage = () => {
   const userId = useUserInformation(state => state.userId)
+  const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   const intakeServiceStartDate = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
   const setIntakeServiceStartDate = useUserIntakeManagementStore(state => state.setIntakeServiceStartDate)
   const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
@@ -53,7 +58,61 @@ const Intake: NextPage = () => {
     router.push('/initial')
   }
 
-  if (!intakeTimeTableByDate) return <LoadingCircular />
+  if (!arrayIsNotEmpty(userTakingPillList)) { // 등록된 영양제가 없는 경우 보여지는 화면
+    return (
+      <ContainerWithBottomNav>
+        <MainHeader />
+
+        <div className='bg-white w-full h-full flex flex-col items-center'>
+          <div className='mt-[6.25rem] relative w-[18.75rem] h-[12.5rem]'>
+            <Image
+              src={balanceIllust}
+              className='object-cover'
+              layout='fill'
+            />
+          </div>
+          <h1 className='mt-[1.5625rem] text-xl'>영양제 복용 관리 시작하기</h1>
+          <p className='mt-[1.25rem] text-base'>섭취중인 영양제를 먼저 등록해주세요</p>
+          <Link
+            href='/search'
+          >
+            <a className='mt-[2.1875rem] w-11/12 h-10 bg-primary rounded-[0.625rem] text-base text-white flex items-center justify-center'>
+              섭취중인 영양제 등록하러 가기
+            </a>
+          </Link>
+        </div>
+      </ContainerWithBottomNav>
+    )
+  }
+
+  if (!arrayIsNotEmpty(intakePillList)) { // 등록된 영양제들은 있지만 영양제 시간표를 생성하지 않은 경우
+    return (
+      <ContainerWithBottomNav>
+        <MainHeader />
+
+        <div className='bg-white w-full h-full flex flex-col items-center'>
+          <div className='mt-[6.25rem] relative w-[12.5rem] h-[12.5rem]'>
+            <Image
+              src={intakeIllust}
+              className='object-cover'
+              layout='fill'
+            />
+          </div>
+          <h1 className='mt-[1.5625rem] text-xl'>영양제 복용 관리 시작하기</h1>
+          <p className='mt-[1.25rem] text-base'>섭취중인 영양제를 먼저 등록해주세요</p>
+          <Link
+            href='/search'
+          >
+            <a className='mt-[2.1875rem] w-11/12 h-10 bg-primary rounded-[0.625rem] text-base text-white flex items-center justify-center'>
+              섭취중인 영양제 등록하러 가기
+            </a>
+          </Link>
+        </div>
+      </ContainerWithBottomNav>
+    )
+  }
+
+  if (!intakeTimeTableByDate) return <LoadingCircular />  // 로딩
 
   return (
     <ContainerWithBottomNav>
