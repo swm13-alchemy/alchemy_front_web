@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import { useUserHealthDataStore, useUserInformation, useUserPillListStore } from '../../stores/store'
 import { pillApi } from '../../utils/api'
 import { UserIntakeNutrientType } from '../../utils/types'
-import { ESSENTIAL_NUTRIENTS_LIST } from '../../utils/constants'
+import { Essential14Nutrients, ESSENTIAL_NUTRIENTS_LIST, EssentialNutrientsTakeCheckType } from '../../utils/constants'
 import BalanceSummary from '../../components/common/balance/BalanceSummary'
 import IntakeReport from '../../components/common/balance/IntakeReport'
 import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
@@ -25,13 +25,28 @@ const Index: NextPage = () => {
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   // const pillListVersion = useUserPillListStore(state => state.pillListVersion)
   // const addPillListVersion = useUserPillListStore(state => state.addPillListVersion)
-  const { age, isMale, setAge, setIsMale } = useUserHealthDataStore()
+  const { age, isMale } = useUserHealthDataStore()
   const [totalIntakeNutrients, setTotalIntakeNutrients] = useState<UserIntakeNutrientType[]>([])
   const [excessNutrients, setExcessNutrients] = useState<UserIntakeNutrientType[]>([])
   const [properNutrients, setProperNutrients] = useState<UserIntakeNutrientType[]>([])
   const [minimumNutrients, setMinimumNutrients] = useState<UserIntakeNutrientType[]>([])
   const [lackNutrients, setLackNutrients] = useState<UserIntakeNutrientType[]>([])
-  const [essentialNutrients, setEssentialNutrients] = useState()
+  const [isTakeEssentialNutrients, setIsTakeEssentialNutrients] = useState<EssentialNutrientsTakeCheckType>({
+    '비타민C': false,
+    '비타민D': false,
+    '비타민B1': false,
+    '비타민B2': false,
+    '나이아신(B3)': false,
+    '판토텐산(B5)': false,
+    '비타민B6': false,
+    '비오틴': false,
+    '엽산': false,
+    '비타민B12': false,
+    '오메가3(EPA+DHA)': false,
+    '마그네슘': false,
+    '칼슘': false,
+    '프로바이오틱스(유산균)': false,
+  })
   const [todayDateStr, setTodayDateStr] = useState<string>('')
 
   // 섭취중인 영양분 데이터 가져오기
@@ -73,16 +88,26 @@ const Index: NextPage = () => {
   useEffect(() => {
     const todayDate = getTodayDate()
 
-
     setTodayDateStr(todayDate.year + '.' + todayDate.month + '.' + todayDate.date + ` ${todayDate.day}`)
   }, [userTakingPillList, age, isMale])
 
-  //
+  // 필수 영양분 14가지 잘 먹고 있는지 보여주는 부분
   useEffect(() => {
-    ESSENTIAL_NUTRIENTS_LIST.map((essentialNutrient) => {
-
-    })
-  })
+    if (arrayIsNotEmpty(properNutrients) || arrayIsNotEmpty(minimumNutrients)) {
+      ESSENTIAL_NUTRIENTS_LIST.forEach((essentialNutrient) => {
+        // 해당 필수 영양분의 이름과 같은 이름의 영양분을 섭취하고 있는지 find 함수로 확인
+        const essentialNutrientIntakeByUser: UserIntakeNutrientType | undefined = totalIntakeNutrients.find(x => x.name === essentialNutrient.name)
+        // 필수 영양분에 해당하는 영양제를 섭취중이고 (not undefined)
+        if (essentialNutrientIntakeByUser !== undefined &&  // 적정 또는 최소 기준량에 맞춰 섭취중이라면,
+          (properNutrients.includes(essentialNutrientIntakeByUser) || minimumNutrients.includes(essentialNutrientIntakeByUser))) {
+          // 해당 영양분 알약을 채우기 위해 true로 바꿈
+          const tempIsTakeEssentialNutrients = {...isTakeEssentialNutrients}
+          tempIsTakeEssentialNutrients[essentialNutrientIntakeByUser.name as Essential14Nutrients] = true
+          setIsTakeEssentialNutrients(tempIsTakeEssentialNutrients)
+        }
+      })
+    }
+  }, [properNutrients, minimumNutrients])
 
   if (!userId) {  // 로그인이 안되어 있는 경우 redirect
     const router = useRouter()
@@ -139,7 +164,10 @@ const Index: NextPage = () => {
         </div>
 
         {/* 요약 리포트 부분 */}
-        <BalanceSummary intakeSupplementsCnt={arrayIsNotEmpty(userTakingPillList) ? userTakingPillList.length : 0} />
+        <BalanceSummary
+          intakeSupplementsCnt={arrayIsNotEmpty(userTakingPillList) ? userTakingPillList.length : 0}
+          isTakeEssentialNutrients={isTakeEssentialNutrients}
+        />
 
         {/* 배너 부분 */}
         <MuiCarousel whereToUse='balanceBanner' />

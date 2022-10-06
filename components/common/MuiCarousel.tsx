@@ -17,9 +17,9 @@ function MuiCarousel({ whereToUse }: Props) {
       return (
         <CustomCarousel>
           {
-            [{ image: balancePageBanner1, src: '/balance/category' },
+            [{ image: balancePageBanner1, src: '/balance/introduction-essential-nutrients' },
               { image: balancePageBanner2, src: '/balance/category' },
-              { image: balancePageBanner1, src: '/balance/category' },
+              { image: balancePageBanner1, src: '/balance/introduction-essential-nutrients' },
               { image: balancePageBanner2, src: '/balance/category' }].map((item, i) => (
               <Link key={i} href={item.src}>
                 <a>
@@ -42,7 +42,7 @@ function CustomCarousel({ children }: any) {
     <Carousel
       autoPlay={true}
       animation='slide'
-      duration={3500}
+      duration={1500}
       interval={20000}
       className='text-center'
       indicatorIconButtonProps={{
