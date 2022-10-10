@@ -9,7 +9,7 @@ function MyPillList() {
   const userTakingPillList = useUserPillList()
 
   return (
-    <Link href='/pillList-management'>
+    <Link href='/editMyPillList'>
       <a className='w-full space-y-4'>
         <div className='flex items-center justify-between text-gray-900'>
           <h1 className='text-base font-bold'>내 영양제</h1>
