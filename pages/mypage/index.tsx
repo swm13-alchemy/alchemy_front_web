@@ -84,10 +84,10 @@ const MyPage = () => {
           <ListLinkBtn href='/mypage/customer-service' btnName='문의/건의하기'>
             <LiveHelpOutlined className='text-2xl text-gray-400' />
           </ListLinkBtn>
-          <ListLinkBtn href='' btnName='서비스 이용약관'>
+          <ListLinkBtn href='https://swm13-alchemists.notion.site/56d438e60baa4f8a86a88fbcb23e86d7' btnName='서비스 이용약관'>
             <CheckCircleOutline className='text-2xl text-gray-400' />
           </ListLinkBtn>
-          <ListLinkBtn href='' btnName='개인정보 처리 방침'>
+          <ListLinkBtn href='https://swm13-alchemists.notion.site/de276bcf42a74938a7d6bd1ee3353358' btnName='개인정보 처리 방침'>
             <Lock className='text-2xl text-gray-400' />
           </ListLinkBtn>
 
