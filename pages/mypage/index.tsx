@@ -1,12 +1,11 @@
-import ContainerWithBottomNav from '../components/layout/ContainerWithBottomNav'
+import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
 import MoreHoriz from '@mui/icons-material/MoreHoriz'
-import ProfileImgView from '../components/common/ProfileImgView'
-import test from '/public/asset/image/bigLogo.png'
+import ProfileImgView from '../../components/common/ProfileImgView'
 import BookmarkBorder from '@mui/icons-material/BookmarkBorder'
 import Edit from '@mui/icons-material/Edit'
 import ChatBubbleOutline from '@mui/icons-material/ChatBubbleOutline'
-import MyPillList from '../components/common/MyPillList'
-import EfficiencyTag from '../components/tag/EfficiencyTag'
+import MyPillList from '../../components/common/MyPillList'
+import EfficiencyTag from '../../components/tag/EfficiencyTag'
 import React from 'react'
 import ListAlt from '@mui/icons-material/ListAlt'
 import ChevronRight from '@mui/icons-material/ChevronRight'
@@ -82,7 +81,7 @@ const MyPage = () => {
         {/* 고객 센터 부분 */}
         <section className='bg-white px-6 py-4'>
           <p className='text-base font-bold text-gray-900 mb-1'>고객 센터</p>
-          <ListLinkBtn href='' btnName='문의하기'>
+          <ListLinkBtn href='/mypage/customer-service' btnName='문의/건의하기'>
             <LiveHelpOutlined className='text-2xl text-gray-400' />
           </ListLinkBtn>
           <ListLinkBtn href='' btnName='서비스 이용약관'>

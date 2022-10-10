@@ -20,7 +20,7 @@ import TextField from '@mui/material/TextField'
 import { InputAdornment, MenuItem } from '@mui/material'
 import { useRouter } from 'next/router'
 
-const Index: NextPage = () => {
+const Balance: NextPage = () => {
   const userId = useUserInformation(state => state.userId)
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   // const pillListVersion = useUserPillListStore(state => state.pillListVersion)
@@ -187,7 +187,7 @@ const Index: NextPage = () => {
   )
 }
 
-export default Index
+export default Balance
 
 // SSR
 // export const getServerSideProps: GetServerSideProps = async () => {
