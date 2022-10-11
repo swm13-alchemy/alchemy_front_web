@@ -110,7 +110,7 @@ const Details = ({ details }: Props) => {
     }
   }, [ingredients])
 
-  // 섭취중인 영양제 버튼 클릭 시
+  // 내 영양제 추가/삭제 버튼 클릭 시
   const takingSubmit = (curIsTaking: boolean) => {
     // 현재 섭취중이 아니라면
     if (!curIsTaking) {
@@ -155,7 +155,7 @@ const Details = ({ details }: Props) => {
           {/*</div>*/}
         </div>
         <div className='flex items-center space-x-2'>
-          {/* 영양제 리스트 추가 버튼 */}
+          {/* 내 영양제 추가 버튼 */}
           <button
             className={
               'py-2 rounded-[0.625rem] text-white duration-500 grow' +

@@ -4,34 +4,43 @@ import { useRouter } from 'next/router'
 import { SupplementDetailsType } from '../../utils/types'
 import { useSession } from 'next-auth/react'
 import LoadingCircular from '../layout/LoadingCircular'
-import { useUserHealthDataStore, useUserInformation } from '../../stores/store'
-import dayjs from 'dayjs'
+import { useUserHealthDataStore, useUserInformation, useUserPillListStore } from '../../stores/store'
+import dayjs, { Dayjs } from 'dayjs'
 import { userApi } from '../../utils/api'
 
 interface Props {
   nickName: string
-  birth: string
+  birth: Dayjs | null
   isMale: boolean | undefined
-  // interestTopics: number[]
+  interestTopicIds: number[]
   userPillList: SupplementDetailsType[]
 }
 
-function Finish({ nickName, birth, isMale, userPillList }: Props) {
+function Finish({ nickName, birth, isMale, interestTopicIds, userPillList }: Props) {
   const router = useRouter()
   const {data: session} = useSession()
   const { setUserId, setOauthId } = useUserInformation()
   const { setAge, setIsMale } = useUserHealthDataStore()
+  // const setUserTakingPillList = useUserPillListStore(state => state.setUserTakingPillList)
 
   const completeSignUp = () => {
     // TODO: 되는지 Test 필요
     if (nickName && birth && isMale !== undefined && session) {
       ;(async () => {
-        await userApi.postUserInformation(session.user.oauthId, nickName, session.user.email, birth, isMale, session.refreshToken)
-          .then((response) => {
+        await userApi.postUserInformation(
+          session.user.oauthId,
+          nickName,
+          session.user.email,
+          birth.format('YYYY-MM-DD'),
+          isMale,
+          interestTopicIds,
+          session.refreshToken
+        ).then((response) => {
             setUserId(response.data.data)
             setOauthId(session.user.oauthId)
             setAge(dayjs().get('year') - dayjs(birth).get('year') + 1)  // 나이 계산
             setIsMale(isMale)
+            // setUserTakingPillList(userPillList)  // TODO: 추후 Third.tsx 리팩토링 후 추가
             router.push('/')
           })
           .catch((error) => {

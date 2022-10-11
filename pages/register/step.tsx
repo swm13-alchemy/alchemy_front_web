@@ -5,14 +5,23 @@ import { SupplementDetailsType } from '../../utils/types'
 import { useState } from 'react'
 import Finish from '../../components/login/Finish'
 import { Dayjs } from 'dayjs'
+import { useUserInformation } from '../../stores/store'
+import { useRouter } from 'next/router'
 
-const Sequence = () => {
+const Step = () => {
+  const { userId, oauthId } = useUserInformation()
   const [pageNum, setPageNum] = useState<number>(1) // 페이지 컴포넌트 변경 시키는 값
   const [nickName, setNickName] = useState<string>('')
   const [birth, setBirth] = useState<Dayjs | null>(null)
   const [isMale, setIsMale] = useState<boolean | undefined>(undefined)
-  // const [interestTopics, setInterestTopics] = useState<number[]>([])
+  const [interestTopicIds, setInterestTopicIds] = useState<number[]>([])
   const [userPillList, setUserPillList] = useState<SupplementDetailsType[]>([])
+
+  // 이미 로그인을 한 사람의 경우 Redirect
+  if (userId || oauthId) {
+    const router = useRouter()
+    router.push('/')
+  }
 
   switch (pageNum) {
     case 1:
@@ -27,13 +36,14 @@ const Sequence = () => {
           setIsMale={setIsMale}
         />
       )
-    // TODO: 추후 구현
-    // case 2:
-    //   return (
-    //     <Second
-    //
-    //     />
-    //   )
+    case 2:
+      return (
+        <Second
+          setPageNum={setPageNum}
+          interestTopicIds={interestTopicIds}
+          setInterestTopicIds={setInterestTopicIds}
+        />
+      )
     case 3:
       return (
         <Third
@@ -48,11 +58,11 @@ const Sequence = () => {
           nickName={nickName}
           birth={birth}
           isMale={isMale}
-          // interestTopics={interestTopics}
+          interestTopicIds={interestTopicIds}
           userPillList={userPillList}
         />
       )
   }
 }
 
-export default Sequence
+export default Step

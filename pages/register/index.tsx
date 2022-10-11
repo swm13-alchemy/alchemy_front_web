@@ -1,11 +1,21 @@
 import { ClientSafeProvider, getProviders, LiteralUnion, signIn } from 'next-auth/react'
 import { BuiltInProviderType } from 'next-auth/providers'
+import { useRouter } from 'next/router'
+import { useUserInformation } from '../../stores/store'
 
 interface Props {
   providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null
 }
 
 const RegisterPage = ({ providers }: Props) => {
+  const { userId, oauthId } = useUserInformation()
+
+  // 이미 로그인을 한 사람의 경우 Redirect
+  if (userId || oauthId) {
+    const router = useRouter()
+    router.push('/')
+  }
+
   return (
     <div className='bg-[#F9FAFB] h-screen mx-8'>
       <div className='pt-28'>

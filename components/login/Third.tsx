@@ -6,6 +6,7 @@ import Modal from '../layout/Modal'
 import Image from 'next/image'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { SearchResultsItemType, SupplementDetailsType } from '../../utils/types'
+import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 
 interface Props {
   setPageNum: (pageNum: number) => void
@@ -26,10 +27,10 @@ function Third({ setPageNum, userPillList, setUserPillList }: Props) {
 
   const [myPillList, setMyPillList] = useState<SearchResultsItemType[]>([])
 
-  useEffect(() => {
-    console.log("myPillList : ", myPillList)
-    console.log("type : ", typeof myPillList)
-  }, [myPillList])
+  // TODO: 임시로 추가한 코드(추후 이 페이지 리팩토링)
+  const saveUserPillList = () => {
+
+  }
 
   const handleSearch = async (e) => {
     e.preventDefault()
@@ -163,9 +164,11 @@ function Third({ setPageNum, userPillList, setUserPillList }: Props) {
       </div>
 
       {/* TODO :: Link + State 전달 + 마지막 요소에는 Padding 값을 넣어야함. (버튼이 fixed Content이므로 화면 가림 방지)*/}
-      <div className='absolute mt-2 bottom-28 left-0 right-0  h-12 flex justify-center items-center bg-[#1C65D1] rounded-xl shadow-md'>
-        <button onClick={() => setPageNum(4)} className='block text-white text-sm leading-5 font-bold'>다음</button>
-      </div>
+      {arrayIsNotEmpty(myPillList) &&
+        <div className='absolute mt-2 bottom-28 left-0 right-0  h-12 flex justify-center items-center bg-[#1C65D1] rounded-xl shadow-md'>
+          <button onClick={saveUserPillList} className='block text-white text-sm leading-5 font-bold'>다음</button>
+        </div>
+      }
       <div className='absolute mt-2 bottom-16 left-0 right-0  h-12 flex justify-center items-center'>
         <button onClick={() => setPageNum(4)} className='block text-gray-900 text-sm leading-5 font-normal'>건너뛰기</button>
       </div>
