@@ -40,7 +40,7 @@ const Details = ({ details }: Props) => {
   const { age, isMale } = useUserHealthDataStore()
   const [isWish, setIsWish] = useState<boolean>(false)
   const [isTaking, setIsTaking] = useState<boolean>(false)
-  const [isOpenEfficiency, setIsOpenEfficiency] = useState<boolean>(false)
+  const [isOpenSubEfficiency, setIsOpenSubEfficiency] = useState<boolean>(false)
   const [mergedNutrientData, setMergedNutrientData] = useState<MergedNutrientDataType[]>([])
   const [mainEfficacyList, setMainEfficacyList] = useState<string[]>([])
 
@@ -233,16 +233,16 @@ const Details = ({ details }: Props) => {
           {/*/!* 보조 효능 부분 *!/*/}
           {/*<button*/}
           {/*  className='mt-6 w-full flex items-center justify-between'*/}
-          {/*  onClick={() => setIsOpenEfficiency(!isOpenEfficiency)}*/}
+          {/*  onClick={() => setIsOpenSubEfficiency(!isOpenSubEfficiency)}*/}
           {/*>*/}
           {/*  <p className='text-base font-bold'>보조 효능</p>*/}
-          {/*  {isOpenEfficiency ? (*/}
+          {/*  {isOpenSubEfficiency ? (*/}
           {/*    <ExpandLess className='text-2xl' />*/}
           {/*  ) : (*/}
           {/*    <ExpandMore className='text-2xl' />*/}
           {/*  )}*/}
           {/*</button>*/}
-          {/*<div className={'mt-2 flex items-center flex-wrap gap-2' + (isOpenEfficiency ? ' visible' : ' hidden')}>*/}
+          {/*<div className={'mt-2 flex items-center flex-wrap gap-2' + (isOpenSubEfficiency ? ' visible' : ' hidden')}>*/}
           {/*  <EfficiencyTag tagName='노화&항산화' />*/}
           {/*  <EfficiencyTag tagName='면역 기능' />*/}
           {/*  <EfficiencyTag tagName='혈액 생성' />*/}

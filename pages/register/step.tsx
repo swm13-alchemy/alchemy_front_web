@@ -4,11 +4,12 @@ import Third from '../../components/login/Third'
 import { SupplementDetailsType } from '../../utils/types'
 import { useState } from 'react'
 import Finish from '../../components/login/Finish'
+import { Dayjs } from 'dayjs'
 
 const Sequence = () => {
   const [pageNum, setPageNum] = useState<number>(1) // 페이지 컴포넌트 변경 시키는 값
   const [nickName, setNickName] = useState<string>('')
-  const [birth, setBirth] = useState<string>('')
+  const [birth, setBirth] = useState<Dayjs | null>(null)
   const [isMale, setIsMale] = useState<boolean | undefined>(undefined)
   // const [interestTopics, setInterestTopics] = useState<number[]>([])
   const [userPillList, setUserPillList] = useState<SupplementDetailsType[]>([])

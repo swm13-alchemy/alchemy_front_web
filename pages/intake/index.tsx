@@ -26,6 +26,7 @@ import intakeIllust from '../../public/asset/image/intakeIllust.png'
 
 
 const Intake: NextPage = () => {
+  const router = useRouter()
   const userId = useUserInformation(state => state.userId)
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   const intakeServiceStartDate = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
@@ -42,19 +43,23 @@ const Intake: NextPage = () => {
 
     // 위에서 만든 요일 기준 영양제 시간표 데이터를 활용하여 '영양제 시간표 틀 데이터'를 만듦
     const temporaryIntakeTimeTableByDate: TimeTableByDateType = makeIntakeTimeTableByDate(timeTableByDay)
-
-    console.log(temporaryIntakeTimeTableByDate)
+    
     setIntakeTimeTableByDate(temporaryIntakeTimeTableByDate)
 
-    // // 과거 복용 기록을 서버에서 가져와 '영양제 시간표 틀 데이터'에 넣음
-    // processPastIntakeHistory(temporaryIntakeTimeTableByDate, "userId")
-    //   .then((finalIntakeTimeTableByDate) =>
-    //     setIntakeTimeTableByDate(finalIntakeTimeTableByDate)
-    //   )
+    // 과거 복용 기록을 서버에서 가져와 '영양제 시간표 틀 데이터'에 넣음
+    if (userId) {
+      processPastIntakeHistory(temporaryIntakeTimeTableByDate, userId)
+        .then((finalIntakeTimeTableByDate) =>
+          setIntakeTimeTableByDate(finalIntakeTimeTableByDate)
+        )
+    } else {  // 오류 처리
+      alert('오류 : 유저 아이디 없음!')
+      router.push('/initial')
+    }
+    
   }, [])
 
   if (!userId) {  // 로그인이 안되어 있는 경우 redirect
-    const router = useRouter()
     router.push('/initial')
   }
 

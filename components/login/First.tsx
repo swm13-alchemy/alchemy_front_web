@@ -1,18 +1,20 @@
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 import React, { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { userApi } from '../../utils/api'
 import { UserInformationTypes } from '../../utils/types'
 import { useUserInformation } from '../../stores/store'
 import { useRouter } from 'next/router'
+import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers'
+import TextField from '@mui/material/TextField'
+import { Dayjs } from 'dayjs'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 interface Props {
   setPageNum: (pageNum: number) => void
   nickName: string
   setNickName: (nickName: string) => void
-  birth: string
-  setBirth: (birth: string) => void
+  birth: Dayjs | null
+  setBirth: (birth: Dayjs | null) => void
   isMale: boolean | undefined
   setIsMale: (isMale: boolean) => void
 }
@@ -55,19 +57,37 @@ function First({ setPageNum, nickName, setNickName, birth, setBirth, isMale, set
               type='text'
               value={nickName}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNickName(e.target.value)}
+              placeholder='닉네임을 입력해주세요.'
             />
           </section>
 
           <section className='space-y-2'>
             <span className='text-sm text-black'>생년월일</span>
 
-            <DatePicker
-              className={'w-full px-4 py-3.5 bg-white rounded-xl shadow text-sm' + (birth ? ' text-black' : 'text-gray-400')}
-              dateFormat='yyyy/MM/dd'
-              selected={birth}
-              placeholderText='1900/00/00'
-              onChange={(date: string) => setBirth(date)}
-            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <MobileDatePicker
+                className={'w-full px-4 py-3.5 bg-white rounded-xl shadow text-sm' + (birth ? ' !text-black' : ' !text-gray-400')}
+                inputFormat="YYYY-MM-DD"
+                value={birth}
+                onChange={(birth: Dayjs | null) => setBirth(birth)}
+                disableFuture={true}
+                renderInput={(params) => <TextField
+                  variant='standard'
+                  InputProps={{
+                    disableUnderline: true  // TODO: 이거 안먹히는데 추후 다시 해보기
+                  }}
+                  {...params}
+                />}
+              />
+            </LocalizationProvider>
+
+            {/*<DatePicker*/}
+            {/*  className={'w-full px-4 py-3.5 bg-white rounded-xl shadow text-sm' + (birth ? ' text-black' : 'text-gray-400')}*/}
+            {/*  dateFormat='yyyy/MM/dd'*/}
+            {/*  selected={birth}*/}
+            {/*  placeholderText='1900/00/00'*/}
+            {/*  onChange={(date: string) => setBirth(date)}*/}
+            {/*/>*/}
           </section>
 
           <section className='space-y-2'>
@@ -95,7 +115,7 @@ function First({ setPageNum, nickName, setNickName, birth, setBirth, isMale, set
       {nickName && birth && !!isMale &&
         <button
           className='relative bottom-0 w-full py-3.5 bg-primary rounded-[0.625rem] text-gray-50 shadow-md'
-          onClick={() => setPageNum(3)}
+          onClick={() => setPageNum(2)}
         >
           다음
         </button>

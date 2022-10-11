@@ -126,6 +126,10 @@ export interface TimeTableByDateType {
 //   [date: string]: ServerSideIntakeHistoryDataType[]
 // }
 
+export interface TopicType {
+  id: number
+  name: string
+}
 export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 변경
   id: string
   oauthId: string
@@ -133,6 +137,7 @@ export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 �
   birth: string
   isMale: boolean
   email: string | null | undefined
-  refreshToken: string | null
+  // refreshToken: string | null
   oauthRefreshToken: string | null
+  topics: TopicType[]
 }
