@@ -19,6 +19,7 @@ import { userApi } from '../../utils/api'
 import { UserInformationTypes } from '../../utils/types'
 import LoadingCircular from '../../components/layout/LoadingCircular'
 import { getAgeRange } from '../../utils/functions/getAgeRange'
+import PersonOutline from '@mui/icons-material/PersonOutline'
 
 const MyPage = () => {
   const oauthId = useUserInformation(state => state.oauthId)
@@ -116,6 +117,9 @@ const MyPage = () => {
           </ListLinkBtn>
           <ListLinkBtn href='https://swm13-alchemists.notion.site/de276bcf42a74938a7d6bd1ee3353358' btnName='개인정보 처리 방침'>
             <Lock className='text-2xl text-gray-400' />
+          </ListLinkBtn>
+          <ListLinkBtn href='/mypage/account-management' btnName='계정 관리'>
+            <PersonOutline className='text-2xl text-gray-400' />
           </ListLinkBtn>
 
           <p className='mt-4 text-xs text-gray-400'>앱 버전 0.1.0</p>

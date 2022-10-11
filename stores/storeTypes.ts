@@ -10,9 +10,9 @@ import { Dayjs } from 'dayjs'
 
 export type userInformationState = {
   userId: string | null
-  setUserId: (userId: string) => void
+  setUserId: (userId: string | null) => void
   oauthId: string | null
-  setOauthId: (oauthId: string) => void
+  setOauthId: (oauthId: string | null) => void
 }
 export type userInformationPersist = (
   config: StateCreator<userInformationState>,

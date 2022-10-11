@@ -17,11 +17,11 @@ export const useUserInformation = create<userInformationState>(
   (persist as userInformationPersist)(
     (set) => ({
       userId: null,
-      setUserId: (userId: string) => {
+      setUserId: (userId: string | null) => {
         set((state) => ({...state, userId: userId}))
       },
       oauthId: null,
-      setOauthId: (oauthId: string) => {
+      setOauthId: (oauthId: string | null) => {
         set((state) => ({...state, oauthId: oauthId}))
       }
     }),
