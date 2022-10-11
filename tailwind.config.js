@@ -20,6 +20,10 @@ module.exports = {
         '08dp': '0px 8px 16px rgba(0, 0, 0, 0.1)',
         '04dp': '0px 4px 8px rgba(0, 0, 0, 0.1)',
         '02dp': '0px 2px 4px rgba(0, 0, 0, 0.1)'
+      },
+      backgroundImage: {
+        'google': "url('/asset/loginBtn/googleLogin.png')",
+        'kakao': "url('/asset/loginBtn/kakaoLogin.png')"
       }
     },
     screens: {

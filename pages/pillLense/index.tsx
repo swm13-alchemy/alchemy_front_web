@@ -8,6 +8,8 @@ import BackHeader from '../../components/layout/BackHeader'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import Compressor from 'compressorjs'
+import { isMobile } from '../../utils/functions/isMobile'
+import { requestCameraPermission } from '../../utils/functions/flutterBridgeFunc/intakeNotification'
 
 /*
   TODO :: Refactoring 필요 => Logic 코드 정리 필요함
@@ -122,6 +124,11 @@ const PillLense: NextPage = () => {
     }
 
     getBase64(rawImage)
+  }
+
+  // 만약 모바일이면 카메라 권한을 받음
+  if (isMobile()) {
+    requestCameraPermission()
   }
 
   return (

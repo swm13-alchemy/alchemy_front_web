@@ -1,14 +1,11 @@
-import { NextPage } from 'next'
-import { useState } from 'react'
+import { ClientSafeProvider, getProviders, LiteralUnion, signIn } from 'next-auth/react'
+import { BuiltInProviderType } from 'next-auth/providers'
 
-const RegisterPage: NextPage = (props) => {
-  const GOOGLE_LOGO_URL =
-    'https://media.discordapp.net/attachments/802076592825827332/1026366379273760828/Google_logo.png'
-  const APPLE_LOGO_URL =
-    'https://media.discordapp.net/attachments/802076592825827332/1026366378413924423/Apple_logo.png'
-  const EMAIL_LOGO_URL =
-    'https://media.discordapp.net/attachments/802076592825827332/1026366378908844082/Email.png'
+interface Props {
+  providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null
+}
 
+const RegisterPage = ({ providers }: Props) => {
   return (
     <div className='bg-[#F9FAFB] h-screen mx-8'>
       <div className='pt-28'>
@@ -23,38 +20,52 @@ const RegisterPage: NextPage = (props) => {
       </div>
 
       {/* TODO ::  Link 추가 */}
-      <div className='mt-12'>
-        <span className='text-xs leading-4 font-normal text-gray-900'>처음이신가요?</span>
-        <div className='mt-2 w-100 h-12 flex  justify-center items-center bg-[#1C65D1] rounded-xl shadow-md'>
-          <span className='block text-gray-50 text-sm leading-5 font-bold'>가입하기</span>
-        </div>
-      </div>
+      {/*<div className='mt-12'>*/}
+      {/*  <span className='text-xs leading-4 font-normal text-gray-900'>처음이신가요?</span>*/}
+      {/*  <div className='mt-2 w-100 h-12 flex  justify-center items-center bg-[#1C65D1] rounded-xl shadow-md'>*/}
+      {/*    <span className='block text-gray-50 text-sm leading-5 font-bold'>가입하기</span>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
-      <div className='mt-10'>
-        <span className='text-xs leading-4 font-normal text-gray-900'>
-          기존에 사용하신 분인가요?
-        </span>
+      <div className='mt-10 flex flex-col space-y-4 items-center'>
+        {/*<span className='text-xs leading-4 font-normal text-gray-900'>*/}
+        {/*  기존에 사용하신 분인가요?*/}
+        {/*</span>*/}
 
-        {/* TODO :: 로직별 Link 추가 */}
-        <div className='relative mt-2 w-100 h-12 flex  justify-center items-center bg-white rounded-xl shadow-md border border-gray-500'>
-          <img className='absolute left-6' src={GOOGLE_LOGO_URL} alt='google logo' />
-          <span className='block text-gray-900 text-sm leading-5 font-normal'>Google로 로그인</span>
-        </div>
-
-        <div className='relative mt-2 w-100 h-12 flex  justify-center items-center bg-white rounded-xl shadow-md border border-gray-500'>
-          <img className='absolute left-6' src={APPLE_LOGO_URL} alt='google logo' />
-          <span className='block text-gray-900 text-sm leading-5 font-normal'>
-            Apple ID로 로그인
-          </span>
-        </div>
-
-        <div className='relative mt-2 w-100 h-12 flex  justify-center items-center bg-white rounded-xl shadow-md border border-gray-500'>
-          <img className='absolute left-6' src={EMAIL_LOGO_URL} alt='google logo' />
-          <span className='block text-gray-900 text-sm leading-5 font-normal'>Email로 로그인</span>
-        </div>
+        {providers &&
+          Object.values(providers).map((provider) => {
+            switch (provider.name) {
+              case 'Google':
+                return (
+                  <button
+                    key={provider.name}
+                    className="bg-google bg-no-repeat bg-cover bg-center w-72 basis-[4.5rem]"
+                    onClick={() => signIn(provider.id, {callbackUrl: 'http://localhost:1234/register/step'})}
+                  />
+                )
+              case 'Kakao':
+                return (
+                  <button
+                    key={provider.name}
+                    className="bg-kakao bg-no-repeat bg-cover bg-center w-72 basis-[4.5rem]"
+                    onClick={() => signIn(provider.id, {callbackUrl: 'http://localhost:1234/register/step'})}
+                  />
+                )
+            }
+          })
+        }
       </div>
     </div>
   )
 }
 
 export default RegisterPage
+
+export async function getServerSideProps(context: any) {
+  const providers = await getProviders()
+  return {
+    props: {
+      providers
+    },
+  }
+}

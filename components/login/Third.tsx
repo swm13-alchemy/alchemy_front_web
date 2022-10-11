@@ -1,13 +1,20 @@
-import { NextPage } from 'next'
-import Link from 'next/link'
-import { useState } from 'react'
-import Modal from '../../../components/layout/Modal'
-import { pillApi, requestURLs } from '../../../utils/api'
-import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { pillApi, requestURLs } from '../../utils/api'
+import { NextPage } from 'next'
+import { useEffect, useState } from 'react'
+import Modal from '../layout/Modal'
+import Image from 'next/image'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { SearchResultsItemType, SupplementDetailsType } from '../../utils/types'
 
-const _3: NextPage = (props) => {
+interface Props {
+  setPageNum: (pageNum: number) => void
+  userPillList: SupplementDetailsType[]
+  setUserPillList: (userPillList: SupplementDetailsType[]) => void
+}
+
+// TODO: 이 페이지 리팩토링 필요
+function Third({ setPageNum, userPillList, setUserPillList }: Props) {
   const [searchModalVisible, setSearchModalVisible] = useState(false)
   const [searchText, setText] = useState('')
   const [prev, setPrev] = useState(null)
@@ -17,7 +24,12 @@ const _3: NextPage = (props) => {
 
   const [searchResult, setSearchResult] = useState([])
 
-  const [myPillList, setMyPillList] = useState([])
+  const [myPillList, setMyPillList] = useState<SearchResultsItemType[]>([])
+
+  useEffect(() => {
+    console.log("myPillList : ", myPillList)
+    console.log("type : ", typeof myPillList)
+  }, [myPillList])
 
   const handleSearch = async (e) => {
     e.preventDefault()
@@ -116,6 +128,8 @@ const _3: NextPage = (props) => {
 
             <SearchResult result={searchResult} onClick={handlePillClick} />
 
+            <button className='absolute'></button>
+
             <Modal
               onClose={handleSelectModalClose}
               closeOnOverlayClick
@@ -150,10 +164,10 @@ const _3: NextPage = (props) => {
 
       {/* TODO :: Link + State 전달 + 마지막 요소에는 Padding 값을 넣어야함. (버튼이 fixed Content이므로 화면 가림 방지)*/}
       <div className='absolute mt-2 bottom-28 left-0 right-0  h-12 flex justify-center items-center bg-[#1C65D1] rounded-xl shadow-md'>
-        <span className='block text-white text-sm leading-5 font-bold'>다음</span>
+        <button onClick={() => setPageNum(4)} className='block text-white text-sm leading-5 font-bold'>다음</button>
       </div>
       <div className='absolute mt-2 bottom-16 left-0 right-0  h-12 flex justify-center items-center'>
-        <span className='block text-gray-900 text-sm leading-5 font-normal'>건너뛰기</span>
+        <button onClick={() => setPageNum(4)} className='block text-gray-900 text-sm leading-5 font-normal'>건너뛰기</button>
       </div>
     </div>
   )
@@ -249,7 +263,7 @@ const ConfirmModalContent = ({ data: supplement, onClick, onClose }) => {
           onClick={() => onClick(supplement)}
           className='absolute mt-2 bottom-28 bottom left-8 right-8  h-12 flex justify-center items-center bg-[#1C65D1] rounded-xl shadow-md'
         >
-          <span className='block text-white text-sm leading-5 font-bold'>다음</span>
+          <span className='block text-white text-sm leading-5 font-bold'>네, 맞아요!</span>
         </div>
 
         <div
@@ -293,4 +307,4 @@ const MyPill = ({ data: supplement, handleDelete }) => {
   )
 }
 
-export default _3
+export default Third

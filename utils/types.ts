@@ -4,14 +4,13 @@ export interface SearchResultsItemType {
   id: number
   name: string
   // imageUrl: string | null
-  information: string
   maker: string
 }
 
 export interface NutrientType {
   name: string
   tips: string
-  efficacy: string
+  efficacy: string[]
 }
 
 export interface IngredientType {
@@ -29,7 +28,7 @@ export interface SupplementDetailsType {
   // imageUrl: string | null
   information: string
   intakeCount: number
-  intakeTiming: string
+  intakeTimings: string
   maker: string
   ingredients: IngredientType[]
 }
@@ -126,3 +125,14 @@ export interface TimeTableByDateType {
 // export interface ServerSideIntakeHistoryByDateType {
 //   [date: string]: ServerSideIntakeHistoryDataType[]
 // }
+
+export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 변경
+  id: string
+  oauthId: string
+  nickname: string
+  birth: string
+  isMale: boolean
+  email: string | null | undefined
+  refreshToken: string | null
+  oauthRefreshToken: string | null
+}

@@ -6,7 +6,6 @@ import { pillApi } from '../utils/api'
 import SearchBar from '../components/common/search/SearchBar'
 import BackHeader from '../components/layout/BackHeader'
 import { NextPage } from 'next'
-import ContainerWithBottomNav from '../components/layout/ContainerWithBottomNav'
 import { arrayIsNotEmpty } from '../utils/functions/arrayIsNotEmpty'
 import Image from 'next/image'
 import noSearchResult from '../public/asset/image/noSearchResult.png'
@@ -34,12 +33,8 @@ const Search: NextPage = () => {
         }
       })()
 
-      /**
-       *  2022-09-23 표지원 추가
-       *
-       *  QueryString으로 /search에 name을 넘겨주는 경우, 검색어 State 변경
-       */
-      setSearchTerm(router.query.name)
+      // QueryString으로 /search에 name을 넘겨주는 경우, 검색어 State 변경
+      setSearchTerm(router.query.name as string)
     }
   }, [router.query.name])
 
