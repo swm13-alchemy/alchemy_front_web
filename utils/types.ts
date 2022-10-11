@@ -127,12 +127,12 @@ export interface TimeTableByDateType {
 // }
 
 export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 변경
-  userId: string
+  id: string
   oauthId: string
   nickname: string
   birth: string
   isMale: boolean
-  email: string | null
+  email: string | null | undefined
   refreshToken: string | null
   oauthRefreshToken: string | null
 }

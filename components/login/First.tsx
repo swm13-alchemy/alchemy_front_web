@@ -24,11 +24,11 @@ function First({ setPageNum, nickName, setNickName, birth, setBirth, isMale, set
   useEffect(() => {
     if (session) {
       ;(async () => {
-        const { data: response } = await userApi.checkExistingRegisteredUser(session.user.oauthId)
+        const { data: response } = await userApi.getUserInformationByOauthId(session.user.oauthId)
         const userInfo: UserInformationTypes = response.data
         // 만약 이전에 가입한 정보가 있다면 로컬 스토리지에 id들을 저장하고 메인페이지로 Redirect
         if (userInfo) {
-          setUserId(userInfo.userId)
+          setUserId(userInfo.id)
           setOauthId(session.user.oauthId)
 
           const router = useRouter()

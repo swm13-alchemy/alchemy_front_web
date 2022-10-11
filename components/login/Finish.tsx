@@ -26,7 +26,7 @@ function Finish({ nickName, birth, isMale, userPillList }: Props) {
     // TODO: 되는지 Test 필요
     if (nickName && birth && isMale !== undefined && session) {
       ;(async () => {
-        await userApi.postUserInformation(session.user.oauthId, nickName, birth, isMale, session.refreshToken)
+        await userApi.postUserInformation(session.user.oauthId, nickName, session.user.email, birth, isMale, session.refreshToken)
           .then((response) => {
             setUserId(response.data.data)
             setOauthId(session.user.oauthId)

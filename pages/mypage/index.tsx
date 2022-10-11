@@ -6,7 +6,7 @@ import Edit from '@mui/icons-material/Edit'
 import ChatBubbleOutline from '@mui/icons-material/ChatBubbleOutline'
 import MyPillList from '../../components/common/MyPillList'
 import EfficiencyTag from '../../components/tag/EfficiencyTag'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ListAlt from '@mui/icons-material/ListAlt'
 import ChevronRight from '@mui/icons-material/ChevronRight'
 import Link from 'next/link'
@@ -14,8 +14,35 @@ import Filter1 from '@mui/icons-material/Filter1'
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline'
 import Lock from '@mui/icons-material/Lock'
 import LiveHelpOutlined from '@mui/icons-material/LiveHelpOutlined'
+import { useUserInformation } from '../../stores/store'
+import { userApi } from '../../utils/api'
+import { UserInformationTypes } from '../../utils/types'
+import LoadingCircular from '../../components/layout/LoadingCircular'
+import { getAgeRange } from '../../utils/functions/getAgeRange'
 
 const MyPage = () => {
+  const oauthId = useUserInformation(state => state.oauthId)
+  const [nickname, setNickname] = useState<string>('')
+  const [ageRange, setAgeRange] = useState<string>('')
+  const [isMale, setIsMale] = useState<boolean | null>(null)
+
+  // 유저 정보를 서버에서 가져옴
+  useEffect(() => {
+    if (oauthId) {
+      (async () => {
+        const { data: response } = await userApi.getUserInformationByOauthId(oauthId)
+        const userInfo: UserInformationTypes = response.data
+        if (userInfo) {
+          setNickname(userInfo.nickname)
+          setAgeRange(getAgeRange(userInfo.birth))
+          setIsMale(userInfo.isMale)
+        }
+      })()
+    }
+  }, [oauthId])
+
+  if (!(nickname && ageRange && isMale)) return <LoadingCircular />
+
   return (
     <ContainerWithBottomNav>
       {/* 헤더 부분 */}
@@ -27,11 +54,11 @@ const MyPage = () => {
       </header>
 
       {/* 프로필 정보 부분 */}
-      <section className='bg-white p-4 flex items-center space-x-4'>
+      <section className='bg-white px-6 py-4 flex items-center space-x-4'>
         {/*<ProfileImgView imgUrl={test} />*/}
         <div className='flex flex-col space-y-1'>
-          <p className='text-lg font-bold text-gray-900'>홍길동전주인공</p>
-          <p className='text-xs text-gray-400'>30대 / 남성</p>
+          <p className='text-lg font-bold text-gray-900'>{nickname}</p>
+          <p className='text-xs text-gray-400'>{ageRange} / {isMale ? '남성' : '여성'}</p>
         </div>
       </section>
 

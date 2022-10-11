@@ -51,10 +51,11 @@ export const intakeApi = {
 }
 
 export const userApi = {
-  checkExistingRegisteredUser: (oauthId: string) => nest.get(`/user/oauth/${oauthId}`),
-  postUserInformation: (oauthId: string, nickName: string, birth: string, isMale: boolean, oauthRefreshToken: string) => nest.post('/user', {
+  getUserInformationByOauthId: (oauthId: string) => nest.get(`/user/oauth/${oauthId}`),
+  postUserInformation: (oauthId: string, nickName: string, email: string | null | undefined, birth: string, isMale: boolean, oauthRefreshToken: string) => nest.post('/user', {
     oauthId: oauthId,
     nickname: nickName,
+    email: email,
     birth: birth,
     isMale: isMale,
     oauthRefreshToken: oauthRefreshToken
