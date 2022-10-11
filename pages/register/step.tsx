@@ -1,15 +1,19 @@
 import First from '../../components/login/First'
 import Second from '../../components/login/Second'
 import Third from '../../components/login/Third'
-import { SupplementDetailsType } from '../../utils/types'
+import { SupplementDetailsType, UserInformationTypes } from '../../utils/types'
 import { useState } from 'react'
 import Finish from '../../components/login/Finish'
 import { Dayjs } from 'dayjs'
 import { useUserInformation } from '../../stores/store'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+import { userApi } from '../../utils/api'
 
 const Step = () => {
-  const { userId, oauthId } = useUserInformation()
+  const router = useRouter()
+  const { userId, setUserId, oauthId, setOauthId } = useUserInformation()
+  const { data: session } = useSession()
   const [pageNum, setPageNum] = useState<number>(1) // 페이지 컴포넌트 변경 시키는 값
   const [nickName, setNickName] = useState<string>('')
   const [birth, setBirth] = useState<Dayjs | null>(null)
@@ -19,8 +23,20 @@ const Step = () => {
 
   // 이미 로그인을 한 사람의 경우 Redirect
   if (userId || oauthId) {
-    const router = useRouter()
     router.push('/')
+  }
+
+  // 기존에 가입했던 유저인 경우 로그인 처리
+  if (session?.user.oauthId) {
+    (async () => {
+      const { data: response } = await userApi.getUserInformationByOauthId(session.user.oauthId)
+      const userInfo: UserInformationTypes = response.data
+      if (userInfo?.id) {
+        setUserId(userInfo.id)
+        setOauthId(userInfo.oauthId)
+        window.location.replace('/')
+      }
+    })()
   }
 
   switch (pageNum) {
