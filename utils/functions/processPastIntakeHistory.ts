@@ -3,7 +3,7 @@ import { intakeApi } from '../api'
 import { arrayIsNotEmpty } from './arrayIsNotEmpty'
 import dayjs, { Dayjs } from 'dayjs'
 
-export async function processPastIntakeHistory(temporaryIntakeTimeTableByDate: TimeTableByDateType, userId: string): Promise<TimeTableByDateType> {
+export async function processPastIntakeHistory(temporaryIntakeTimeTableByDate: TimeTableByDateType, userId: string, intakeServiceStartDate: Dayjs): Promise<TimeTableByDateType> {
   const today: Dayjs = dayjs()
   const dateList: string[] = Object.keys(temporaryIntakeTimeTableByDate).sort() // 영양제 시간표 틀 데이터에서 날짜(key)들을 순서대로 나열함
 
@@ -20,6 +20,8 @@ export async function processPastIntakeHistory(temporaryIntakeTimeTableByDate: T
   const { data: result } = await intakeApi.getIntakeHistory(userId, startDate, endDate)
   const intakeHistoryByDate: TimeTableByDateType = result.data
 
+  console.log("intakeHistoryByDate : ", intakeHistoryByDate)
+
   // 서버에서 받아온 복용 기록 객체가 비어있지 않다면,
   if (!!intakeHistoryByDate && arrayIsNotEmpty(Object.keys(intakeHistoryByDate))) {
     // 복용 기록 객체의 key값을 순회
@@ -27,18 +29,30 @@ export async function processPastIntakeHistory(temporaryIntakeTimeTableByDate: T
       // 서버에서 받은 복용 기록을 같은 날짜에 넣음
       temporaryIntakeTimeTableByDate[date] = intakeHistoryByDate[date]
     })
-  } else {  // 서버에서 받아온 복용 기록이 없다면
-    // 기존에 만든 '영양제 시간표 틀 데이터'의 key값을 순회
-    Object.keys(temporaryIntakeTimeTableByDate).forEach((date: string) => {
-      // 오늘보다 이전 날짜의 데이터들 데이터 없음으로 처리
-      // TODO: 이거 나중에 더 직관적으로 수정 (아마 UI 수정도 필요)
-      if (!dayjs(date).isToday() && dayjs(date).isBefore(today)) {
-        temporaryIntakeTimeTableByDate[date].remainIntakePillCnt = 0
-        temporaryIntakeTimeTableByDate[date].totalIntakePillCnt = 0
-        temporaryIntakeTimeTableByDate[date].intakeHistory = {}
-      }
-    })
   }
+
+  // temporaryIntakeTimeTableByDate에서 복용 관리 서비스를 시작한 날짜보다 이전 날짜가 있다면 영양제 시간표 틀 값들 삭제(초기화)
+  Object.keys(temporaryIntakeTimeTableByDate).forEach((date: string) => {
+    if (intakeHistoryByDate && dayjs(date).isBefore(intakeServiceStartDate.subtract(1, 'day'))) {
+      temporaryIntakeTimeTableByDate[date].remainIntakePillCnt = 0
+      temporaryIntakeTimeTableByDate[date].totalIntakePillCnt = 0
+      temporaryIntakeTimeTableByDate[date].intakeHistory = {}
+    }
+  })
+
+  // else {  // 서버에서 받아온 복용 기록이 없다면
+  //   // 기존에 만든 '영양제 시간표 틀 데이터'의 key값을 순회
+  //   Object.keys(temporaryIntakeTimeTableByDate).forEach((date: string) => {
+  //     // 오늘보다 이전 날짜의 데이터들 데이터 없음으로 처리
+  //     // TODO: 이거 나중에 더 직관적으로 수정 (아마 UI 수정도 필요)
+  //     console.log("여기")
+  //     if (!dayjs(date).isToday() && dayjs(date).isBefore(today)) {
+  //       temporaryIntakeTimeTableByDate[date].remainIntakePillCnt = 0
+  //       temporaryIntakeTimeTableByDate[date].totalIntakePillCnt = 0
+  //       temporaryIntakeTimeTableByDate[date].intakeHistory = {}
+  //     }
+  //   })
+  // }
 
   return temporaryIntakeTimeTableByDate
 }

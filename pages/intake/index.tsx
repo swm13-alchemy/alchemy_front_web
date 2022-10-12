@@ -31,7 +31,6 @@ const Intake: NextPage = () => {
   const userId = useUserInformation(state => state.userId)
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   const intakeServiceStartDate = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
-  const setIntakeServiceStartDate = useUserIntakeManagementStore(state => state.setIntakeServiceStartDate)
   const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
   const setIntakePillList = useUserIntakeManagementStore(state => state.setIntakePillList)
   const { intakeTimeTableByDate, setIntakeTimeTableByDate } = useIntakeTimeTableByDate()
@@ -44,13 +43,17 @@ const Intake: NextPage = () => {
 
     // 위에서 만든 요일 기준 영양제 시간표 데이터를 활용하여 '영양제 시간표 틀 데이터'를 만듦
     const temporaryIntakeTimeTableByDate: TimeTableByDateType = makeIntakeTimeTableByDate(timeTableByDay)
-    
+    console.log("timeTableByDay : ", timeTableByDay)
+    console.log("temporaryIntakeTimeTableByDate : ", temporaryIntakeTimeTableByDate)
+
+
     // setIntakeTimeTableByDate(temporaryIntakeTimeTableByDate)  // 없어도 되는 부분이지만 안정성을 위해 추가 -> 는 주석처리
 
     // 과거 복용 기록을 서버에서 가져와 '영양제 시간표 틀 데이터'에 넣음
     if (userId) {
-      processPastIntakeHistory(temporaryIntakeTimeTableByDate, userId)
+      processPastIntakeHistory(temporaryIntakeTimeTableByDate, userId, dayjs(intakeServiceStartDate))
         .then((finalIntakeTimeTableByDate) => {
+          console.log("finalIntakeTimeTableByDate : ", finalIntakeTimeTableByDate)
           setIntakeTimeTableByDate(finalIntakeTimeTableByDate)
         })
     } else {  // 오류 처리
@@ -132,7 +135,9 @@ const Intake: NextPage = () => {
 
         {/* 연속 섭취중 일수 + 편집 버튼 */}
         <div className='bg-surface px-6 py-4 text-xs flex items-center justify-between'>
-          <p className='text-gray-900'>🔥 <strong className='font-bold text-red-500'>1일째</strong> 연속 섭취중</p>
+          {/* TODO: 나중에 연속 섭취 중 일수도 추가 */}
+          {/*<p className='text-gray-900'>🔥 <strong className='font-bold text-red-500'>1일째</strong> 연속 섭취중</p>*/}
+          <p className='text-base text-gray-900 font-bold'>{dayjs(selectedDate).format('M월 D일의 복용 기록')}</p>
           <Link href='/intake/edit-schedule'>
             <a className='text-primary'>
               시간표 편집
