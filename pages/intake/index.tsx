@@ -22,6 +22,7 @@ import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 import Image from 'next/image'
 import balanceIllust from '../../public/asset/image/balanceIllust.png'
 import intakeIllust from '../../public/asset/image/intakeIllust.png'
+import emptyPillIllust from '../../public/asset/image/emptyPillIllust.jpg'
 
 
 
@@ -44,14 +45,14 @@ const Intake: NextPage = () => {
     // 위에서 만든 요일 기준 영양제 시간표 데이터를 활용하여 '영양제 시간표 틀 데이터'를 만듦
     const temporaryIntakeTimeTableByDate: TimeTableByDateType = makeIntakeTimeTableByDate(timeTableByDay)
     
-    setIntakeTimeTableByDate(temporaryIntakeTimeTableByDate)
+    // setIntakeTimeTableByDate(temporaryIntakeTimeTableByDate)  // 없어도 되는 부분이지만 안정성을 위해 추가 -> 는 주석처리
 
     // 과거 복용 기록을 서버에서 가져와 '영양제 시간표 틀 데이터'에 넣음
     if (userId) {
       processPastIntakeHistory(temporaryIntakeTimeTableByDate, userId)
-        .then((finalIntakeTimeTableByDate) =>
+        .then((finalIntakeTimeTableByDate) => {
           setIntakeTimeTableByDate(finalIntakeTimeTableByDate)
-        )
+        })
     } else {  // 오류 처리
       alert('오류 : 유저 아이디 없음!')
       router.push('/initial')
@@ -104,12 +105,12 @@ const Intake: NextPage = () => {
             />
           </div>
           <h1 className='mt-[1.5625rem] text-xl'>영양제 복용 관리 시작하기</h1>
-          <p className='mt-[1.25rem] text-base'>섭취중인 영양제를 먼저 등록해주세요</p>
+          <p className='mt-[1.25rem] text-base'>섭취중인 영양제 바탕으로 추천 시간 알림 수신</p>
           <Link
-            href='/search'
+            href='/intake/edit-schedule/add'
           >
             <a className='mt-[2.1875rem] w-11/12 h-10 bg-primary rounded-[0.625rem] text-base text-white flex items-center justify-center'>
-              섭취중인 영양제 등록하러 가기
+              영양제 복용 알림 받기
             </a>
           </Link>
         </div>
@@ -125,7 +126,6 @@ const Intake: NextPage = () => {
       <div className='mt-2 space-y-2'>
         {/* 복용 기록 캘린더 */}
         <IntakeCalendar
-          calendarMode='Week'
           intakeTimeTableByDate={intakeTimeTableByDate}
           setSelectedDate={setSelectedDate}
         />
@@ -141,8 +141,7 @@ const Intake: NextPage = () => {
         </div>
 
         {/* 영양제 시간표 부분 */}
-        {
-          intakeTimeTableByDate[selectedDate] &&
+        {intakeTimeTableByDate[selectedDate] && intakeTimeTableByDate[selectedDate].totalIntakePillCnt !== 0 ? (
           Object.keys(intakeTimeTableByDate[selectedDate].intakeHistory).sort().map((intakeTime) =>
             <ScheduleBox
               key={intakeTime}
@@ -150,7 +149,18 @@ const Intake: NextPage = () => {
               timeTableDataList={intakeTimeTableByDate[selectedDate].intakeHistory[intakeTime]}
             />
           )
-        }
+        ) : (
+          <div className='bg-white pb-16 flex flex-col items-center'>
+            <div className='relative w-[15.625rem] h-[15.625rem]'>
+              <Image
+                src={emptyPillIllust}
+                className='object-cover'
+                layout='fill'
+              />
+            </div>
+            <p className='text-base text-gray-900'>먹어야 할 영양제가 없어요!</p>
+          </div>
+        )}
       </div>
     </ContainerWithBottomNav>
   )

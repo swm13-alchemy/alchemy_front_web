@@ -27,6 +27,17 @@ export async function processPastIntakeHistory(temporaryIntakeTimeTableByDate: T
       // 서버에서 받은 복용 기록을 같은 날짜에 넣음
       temporaryIntakeTimeTableByDate[date] = intakeHistoryByDate[date]
     })
+  } else {  // 서버에서 받아온 복용 기록이 없다면
+    // 기존에 만든 '영양제 시간표 틀 데이터'의 key값을 순회
+    Object.keys(temporaryIntakeTimeTableByDate).forEach((date: string) => {
+      // 오늘보다 이전 날짜의 데이터들 데이터 없음으로 처리
+      // TODO: 이거 나중에 더 직관적으로 수정 (아마 UI 수정도 필요)
+      if (!dayjs(date).isToday() && dayjs(date).isBefore(today)) {
+        temporaryIntakeTimeTableByDate[date].remainIntakePillCnt = 0
+        temporaryIntakeTimeTableByDate[date].totalIntakePillCnt = 0
+        temporaryIntakeTimeTableByDate[date].intakeHistory = {}
+      }
+    })
   }
 
   return temporaryIntakeTimeTableByDate

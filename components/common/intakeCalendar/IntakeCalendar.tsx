@@ -8,16 +8,16 @@ import { getTodayDate } from '../../../utils/functions/getTodayDate'
 
 export type CalendarModeType = 'Month' | 'Week'
 interface Props {
-  calendarMode: CalendarModeType
   intakeTimeTableByDate: TimeTableByDateType
   setSelectedDate: (selectedDate: string) => void
 }
 
-function IntakeCalendar({ calendarMode, intakeTimeTableByDate, setSelectedDate }: Props) {
+function IntakeCalendar({ intakeTimeTableByDate, setSelectedDate }: Props) {
   const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false)
   const [today, setToday] = useState<Dayjs>(dayjs())
   const [datesOfThisWeek, setDatesOfThisWeek] = useState<string[]>([])
 
+  // 일주일의 날짜를 string 형태의 배열로 만들어서 state에 저장
   useEffect(() => {
     setToday(dayjs())
     let firstDateOfTheWeek = dayjs().day(0)
@@ -72,6 +72,7 @@ function WeekDateBoxContainer({ datesOfThisWeek, intakeTimeTableByDate, setSelec
           calendarMode='Week'
           date={date}
           remainNum={intakeTimeTableByDate[date].remainIntakePillCnt}
+          totalNum={intakeTimeTableByDate[date].totalIntakePillCnt}
           setSelectedDate={setSelectedDate}
         />
       )}
@@ -92,6 +93,7 @@ function MonthDateBoxContainer({ intakeTimeTableByDate, setSelectedDate }: Month
           calendarMode='Month'
           date={date}
           remainNum={intakeTimeTableByDate[date].remainIntakePillCnt}
+          totalNum={intakeTimeTableByDate[date].totalIntakePillCnt}
           setSelectedDate={setSelectedDate}
         />
       )}
