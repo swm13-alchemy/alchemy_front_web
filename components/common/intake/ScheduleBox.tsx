@@ -6,20 +6,19 @@ import { convert12hourTo24hour } from '../../../utils/functions/timeFormatFunc/c
 import LoadingCircular from '../../layout/LoadingCircular'
 
 interface Props {
+  selectedDate: string
   intakeTime: string
   timeTableDataList: TimeTableDataType[]
 }
 
-function ScheduleBox({ intakeTime, timeTableDataList }: Props) {
+function ScheduleBox({ selectedDate, intakeTime, timeTableDataList }: Props) {
   const [isSwitchOn, setIsSwitchOn] = useState<boolean>(true)
 
   const checkAll = () => {
 
   }
 
-  if (!timeTableDataList) return (
-    <LoadingCircular />
-  )
+  if (!timeTableDataList) return <LoadingCircular />
 
   return (
     <div className='bg-white px-6 py-4'>
@@ -64,8 +63,9 @@ function ScheduleBox({ intakeTime, timeTableDataList }: Props) {
             <PillIntakeBtn
               key={timeTableData.pillId}
               pillId={timeTableData.pillId}
+              selectedDate={selectedDate}
               intakeTime={intakeTime}
-              isPillIntake={timeTableData.isTake}
+              isPillIntake={timeTableData.isIntake}
             />
           )}
         </div>

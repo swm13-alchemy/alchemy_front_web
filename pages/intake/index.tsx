@@ -43,8 +43,6 @@ const Intake: NextPage = () => {
 
     // 위에서 만든 요일 기준 영양제 시간표 데이터를 활용하여 '영양제 시간표 틀 데이터'를 만듦
     const temporaryIntakeTimeTableByDate: TimeTableByDateType = makeIntakeTimeTableByDate(timeTableByDay)
-    console.log("timeTableByDay : ", timeTableByDay)
-    console.log("temporaryIntakeTimeTableByDate : ", temporaryIntakeTimeTableByDate)
 
 
     // setIntakeTimeTableByDate(temporaryIntakeTimeTableByDate)  // 없어도 되는 부분이지만 안정성을 위해 추가 -> 는 주석처리
@@ -150,6 +148,7 @@ const Intake: NextPage = () => {
           Object.keys(intakeTimeTableByDate[selectedDate].intakeHistory).sort().map((intakeTime) =>
             <ScheduleBox
               key={intakeTime}
+              selectedDate={selectedDate}
               intakeTime={intakeTime}
               timeTableDataList={intakeTimeTableByDate[selectedDate].intakeHistory[intakeTime]}
             />

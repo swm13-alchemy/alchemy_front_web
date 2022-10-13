@@ -21,6 +21,7 @@ import { InputAdornment, MenuItem } from '@mui/material'
 import { useRouter } from 'next/router'
 
 const Balance: NextPage = () => {
+  const router = useRouter()
   const userId = useUserInformation(state => state.userId)
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   // const pillListVersion = useUserPillListStore(state => state.pillListVersion)
@@ -110,7 +111,6 @@ const Balance: NextPage = () => {
   }, [properNutrients, minimumNutrients])
 
   if (!userId) {  // 로그인이 안되어 있는 경우 redirect
-    const router = useRouter()
     router.push('/initial')
   }
 
