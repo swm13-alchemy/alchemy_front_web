@@ -6,6 +6,7 @@ import { useUserInformation, useUserIntakeManagementStore } from '../../../store
 import { useIntakeTimeTableByDate } from '../../../stores/nonLocalStorageStore'
 import dayjs from 'dayjs'
 import { TimeTableByDateType } from '../../../utils/types'
+import { changeLocalStorageIntakeData } from '../../../utils/functions/changeLocalStorageIntakeData'
 
 interface Props {
   pillId: number
@@ -17,8 +18,7 @@ interface Props {
 function PillIntakeBtn({ pillId, selectedDate, intakeTime, isPillIntake }: Props) {
   const userId = useUserInformation(state => state.userId)
   const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
-  const intakeTimeTableByDate = useIntakeTimeTableByDate(state => state.intakeTimeTableByDate)
-  const setIntakeTimeTableByDate = useIntakeTimeTableByDate(state => state.setIntakeTimeTableByDate)
+  const { intakeTimeTableByDate, setIntakeTimeTableByDate } = useIntakeTimeTableByDate()
   const [pillNickName, setPillNickName] = useState<string>('')
 
   // 닉네임 가져오는 부분
@@ -71,8 +71,15 @@ function PillIntakeBtn({ pillId, selectedDate, intakeTime, isPillIntake }: Props
           // 완료된 기록을 서버에 보냄
           putIntakeHistoryFunc(tempPutHistoryJSONList)
             .then(() => {
-              changeLocalStorageIntakeData(intakeTimeTableByDate, todayDateStr, true)
-              // setIsIntake(true)
+              changeLocalStorageIntakeData(
+                false,
+                todayDateStr,
+                intakeTime,
+                intakeTimeTableByDate,
+                setIntakeTimeTableByDate,
+                pillId,
+                true
+              )
             })
         } else { // 이미 먹었던 경우
           const tempPutHistoryJSONList: PutIntakeHistoryType[] = [{ // put api로 보낼 json 배열 초기화
@@ -84,8 +91,15 @@ function PillIntakeBtn({ pillId, selectedDate, intakeTime, isPillIntake }: Props
           }]
           putIntakeHistoryFunc(tempPutHistoryJSONList)
             .then(() => {
-              changeLocalStorageIntakeData(intakeTimeTableByDate, todayDateStr, false)
-              // setIsIntake(false)
+              changeLocalStorageIntakeData(
+                false,
+                todayDateStr,
+                intakeTime,
+                intakeTimeTableByDate,
+                setIntakeTimeTableByDate,
+                pillId,
+                false
+              )
             })
         }
       }
@@ -96,28 +110,6 @@ function PillIntakeBtn({ pillId, selectedDate, intakeTime, isPillIntake }: Props
   /** 서버에 섭취기록을 넣는 함수 (clickIntakeBtn 함수에서 호출) */
   const putIntakeHistoryFunc = async (intakeHistoryJSONList: PutIntakeHistoryType[]) => {
     await intakeApi.putIntakeHistory(intakeHistoryJSONList)
-  }
-
-  /** 복용 체크 버튼을 누름에 따라 로컬 스토리지 데이터도 수정하는 함수 (clickIntakeBtn 함수에서 호출) */
-  const changeLocalStorageIntakeData = (intakeTimeTableByDate: TimeTableByDateType, todayDateStr: string, isIntakeCheck: boolean) => {
-    const tempIntakeTimeTableByDate: TimeTableByDateType = JSON.parse(JSON.stringify(intakeTimeTableByDate)) // 객체 깊은 복사
-
-    // 현재의 '영양제 시간표 틀 데이터'의 오늘 복용 기록, Props로 들어온 intakeTime에서, isTake의 값을 변경함 (복용 체크면 true로, 복용 체크 해제면 false로)
-    tempIntakeTimeTableByDate[todayDateStr].intakeHistory[intakeTime].forEach((pillIntakeData, idx) => {
-      if (pillIntakeData.pillId === pillId) {
-        tempIntakeTimeTableByDate[todayDateStr].intakeHistory[intakeTime][idx].isIntake = isIntakeCheck
-      }
-    })
-
-    // 복용 체크 했으면 남은 영양제 개수를 하나 줄이고, 복용 체크를 해제 했으면 남은 영양제 개수를 하나 늘림
-    if (isIntakeCheck) {
-      tempIntakeTimeTableByDate[todayDateStr].remainIntakePillCnt -= 1
-    } else {
-      tempIntakeTimeTableByDate[todayDateStr].remainIntakePillCnt += 1
-    }
-
-    // 다 만들어진 데이터를 로컬 스토리지에 다시 넣음
-    setIntakeTimeTableByDate(tempIntakeTimeTableByDate)
   }
 
   return (

@@ -32,9 +32,7 @@ const Intake: NextPage = () => {
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   const intakeServiceStartDate = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
   const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
-  const setIntakePillList = useUserIntakeManagementStore(state => state.setIntakePillList)
   const { intakeTimeTableByDate, setIntakeTimeTableByDate } = useIntakeTimeTableByDate()
-  // const [intakeTimeTableByDate, setIntakeTimeTableByDate] = useState<TimeTableByDateType | null>(null)
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().format('YYYY-MM-DD'))  // 오늘 날짜로 초기 설정
 
   useEffect(() => {
