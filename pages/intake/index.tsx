@@ -126,6 +126,7 @@ const Intake: NextPage = () => {
         {/* 복용 기록 캘린더 */}
         <IntakeCalendar
           intakeTimeTableByDate={intakeTimeTableByDate}
+          selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
         />
 

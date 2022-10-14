@@ -5,8 +5,8 @@ import { intakeApi, PutIntakeHistoryType, requestURLs } from '../../../utils/api
 import { useUserInformation, useUserIntakeManagementStore } from '../../../stores/store'
 import { useIntakeTimeTableByDate } from '../../../stores/nonLocalStorageStore'
 import dayjs from 'dayjs'
-import { TimeTableByDateType } from '../../../utils/types'
 import { changeLocalStorageIntakeData } from '../../../utils/functions/changeLocalStorageIntakeData'
+import TopCenterSnackBar from '../TopCenterSnackBar'
 
 interface Props {
   pillId: number
@@ -20,6 +20,7 @@ function PillIntakeBtn({ pillId, selectedDate, intakeTime, isPillIntake }: Props
   const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
   const { intakeTimeTableByDate, setIntakeTimeTableByDate } = useIntakeTimeTableByDate()
   const [pillNickName, setPillNickName] = useState<string>('')
+  const [isErrorSnackBarOpen, setIsErrorSnackBarOpen] = useState<boolean>(false)
 
   // 닉네임 가져오는 부분
   useEffect(() => {
@@ -103,6 +104,8 @@ function PillIntakeBtn({ pillId, selectedDate, intakeTime, isPillIntake }: Props
             })
         }
       }
+    } else {
+      setIsErrorSnackBarOpen(true)
     }
   }
 
@@ -113,24 +116,33 @@ function PillIntakeBtn({ pillId, selectedDate, intakeTime, isPillIntake }: Props
   }
 
   return (
-    <button
-      className='w-full flex flex-col items-center space-y-1'
-      onClick={clickIntakeBtn}
-    >
-      <div className='relative w-16 h-16 rounded-full overflow-hidden'>
-        <Image
-          src={requestURLs.getSupplementThumbnailURL(pillId.toString())}
-          className='object-cover'
-          layout='fill'
-        />
-        {isPillIntake &&
-          <div className='absolute bg-[rgba(0,0,0,0.6)] left-0 top-0 bottom-0 right-0 flex items-center justify-center'>
-            <CheckCircle className='text-white text-2xl' />
-          </div>
-        }
-      </div>
-      <p className='w-full text-xs text-gray-900 truncate'>{pillNickName}</p>
-    </button>
+    <>
+      <button
+        className='w-full flex flex-col items-center space-y-1'
+        onClick={clickIntakeBtn}
+      >
+        <div className='relative w-16 h-16 rounded-full overflow-hidden'>
+          <Image
+            src={requestURLs.getSupplementThumbnailURL(pillId.toString())}
+            className='object-cover'
+            layout='fill'
+          />
+          {isPillIntake &&
+            <div className='absolute bg-[rgba(0,0,0,0.6)] left-0 top-0 bottom-0 right-0 flex items-center justify-center'>
+              <CheckCircle className='text-white text-2xl' />
+            </div>
+          }
+        </div>
+        <p className='w-full text-xs text-gray-900 truncate'>{pillNickName}</p>
+      </button>
+
+      <TopCenterSnackBar
+        isSnackBarOpen={isErrorSnackBarOpen}
+        setIsSnackBarOpen={setIsErrorSnackBarOpen}
+        severity='error'
+        content='오늘 날짜에 해당하는 복용 기록만 체크할 수 있습니다!'
+      />
+    </>
   )
 }
 
