@@ -14,7 +14,7 @@ import {
 import { makeIntakeTimeTableByDay } from '../../utils/functions/makeIntakeTimeTableByDay'
 import { makeIntakeTimeTableByDate } from '../../utils/functions/makeIntakeTimeTableByDate'
 import LoadingCircular from '../../components/layout/LoadingCircular'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { useIntakeTimeTableByDate } from '../../stores/nonLocalStorageStore'
 import { processPastIntakeHistory } from '../../utils/functions/processPastIntakeHistory'
 import { useRouter } from 'next/router'
@@ -33,6 +33,7 @@ const Intake: NextPage = () => {
   const intakeServiceStartDate = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
   const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
   const { intakeTimeTableByDate, setIntakeTimeTableByDate } = useIntakeTimeTableByDate()
+  const [selectedYearANDMonth, setSelectedYearANDMonth] = useState<Dayjs>(dayjs())
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().format('YYYY-MM-DD'))  // 오늘 날짜로 초기 설정
 
   useEffect(() => {
@@ -40,10 +41,7 @@ const Intake: NextPage = () => {
     const timeTableByDay: TimeTableByDayType = makeIntakeTimeTableByDay(intakePillList)
 
     // 위에서 만든 요일 기준 영양제 시간표 데이터를 활용하여 '영양제 시간표 틀 데이터'를 만듦
-    const temporaryIntakeTimeTableByDate: TimeTableByDateType = makeIntakeTimeTableByDate(timeTableByDay)
-
-
-    // setIntakeTimeTableByDate(temporaryIntakeTimeTableByDate)  // 없어도 되는 부분이지만 안정성을 위해 추가 -> 는 주석처리
+    const temporaryIntakeTimeTableByDate: TimeTableByDateType = makeIntakeTimeTableByDate(timeTableByDay, selectedYearANDMonth)
 
     // 과거 복용 기록을 서버에서 가져와 '영양제 시간표 틀 데이터'에 넣음
     if (userId) {
@@ -52,12 +50,15 @@ const Intake: NextPage = () => {
           console.log("finalIntakeTimeTableByDate : ", finalIntakeTimeTableByDate)
           setIntakeTimeTableByDate(finalIntakeTimeTableByDate)
         })
+        .catch((error) => {
+          setIntakeTimeTableByDate(temporaryIntakeTimeTableByDate)  // 안정성을 위해 추가
+          alert(`ERROR : ${error}. 복용 기록 불러오기 오류!`)
+        })
     } else {  // 오류 처리
       alert('오류 : 유저 아이디 없음!')
       router.push('/initial')
     }
-    
-  }, [])
+  }, [selectedYearANDMonth])
 
   if (!userId) {  // 로그인이 안되어 있는 경우 redirect
     router.push('/initial')
@@ -128,6 +129,9 @@ const Intake: NextPage = () => {
           intakeTimeTableByDate={intakeTimeTableByDate}
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
+          selectedYearANDMonth={selectedYearANDMonth}
+          setSelectedYearANDMonth={setSelectedYearANDMonth}
+          intakeServiceStartDate={dayjs(intakeServiceStartDate)}
         />
 
         {/* 연속 섭취중 일수 + 편집 버튼 */}
