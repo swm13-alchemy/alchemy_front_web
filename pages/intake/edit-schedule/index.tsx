@@ -7,17 +7,16 @@ import Link from 'next/link'
 import { useIntakeTimeTableByDate } from '../../../stores/nonLocalStorageStore'
 import dayjs from 'dayjs'
 import LoadingCircular from '../../../components/layout/LoadingCircular'
+import { useUserIntakeManagementStore } from '../../../stores/store'
+import PillListItem from '../../../components/common/PillListItem'
 
 const EditSchedule = () => {
   const router = useRouter()
-  const todayDate: string = dayjs().format('YYYY-MM-DD')
-  const intakeTimeTableByDate = useIntakeTimeTableByDate(state => state.intakeTimeTableByDate)
+  // const todayDate: string = dayjs().format('YYYY-MM-DD')
+  // const intakeTimeTableByDate = useIntakeTimeTableByDate(state => state.intakeTimeTableByDate)
+  const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
 
-  const addNewSchedule = () => {
-
-  }
-
-  if (!intakeTimeTableByDate) return <LoadingCircular />
+  if (!intakePillList) return <LoadingCircular />
 
   return (
     <ContainerWithBottomNav>
@@ -25,7 +24,7 @@ const EditSchedule = () => {
 
       {/* 상단 + 새로운 복용 관리 영양제 추가 버튼 */}
       <div className='w-full flex items-center justify-between text-gray-900 px-6 py-4'>
-        <h1 className='text-base'>길동님의 복용 스케쥴</h1>
+        <h1 className='text-base'>복용 관리 영양제 목록</h1>
         <Link href={`/intake/edit-schedule/add`}>
           <a className='flex items-center justify-center'>
             <Add className='text-2xl' />
@@ -33,18 +32,27 @@ const EditSchedule = () => {
         </Link>
       </div>
 
-      {/* 시간별 복용 스케쥴 */}
-      <div className='space-y-2 pb-5'>
-        {
-          intakeTimeTableByDate[todayDate] &&
-          Object.keys(intakeTimeTableByDate[todayDate].intakeHistory).sort().map((intakeTime) =>
-            <EditScheduleBox
-              key={intakeTime}
-              intakeTime={intakeTime}
-              timeTableDataList={intakeTimeTableByDate[todayDate].intakeHistory[intakeTime]}
-            />
-          )
-        }
+      {/* 복용 관리 영양제 목록 */}
+      <div className='px-6 pb-5 flex flex-col space-y-2'>
+        {intakePillList.map((intakePill) =>
+          <PillListItem
+            key={intakePill.pillId}
+            id={intakePill.pillId}
+            name={intakePill.pillNickName}
+            maker={intakePill.pillMaker}
+            prefixDomain='/intake/edit-schedule/edit'
+          />
+        )}
+
+        {/*{intakeTimeTableByDate[todayDate] &&*/}
+        {/*  Object.keys(intakeTimeTableByDate[todayDate].intakeHistory).sort().map((intakeTime) =>*/}
+        {/*    <EditScheduleBox*/}
+        {/*      key={intakeTime}*/}
+        {/*      intakeTime={intakeTime}*/}
+        {/*      timeTableDataList={intakeTimeTableByDate[todayDate].intakeHistory[intakeTime]}*/}
+        {/*    />*/}
+        {/*  )*/}
+        {/*}*/}
 
         {/*<button*/}
         {/*  className='bg-white w-full py-4'*/}
