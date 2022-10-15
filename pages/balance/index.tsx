@@ -42,7 +42,7 @@ const Balance: NextPage = () => {
   })
 
   // 섭취중인 영양분 데이터 가져오기 (커스텀 훅)
-  const { totalIntakeNutrients, excessNutrients, properNutrients, minimumNutrients, lackNutrients } = useUserNutrientsBalanceData()
+  const { totalIntakeNutrients, excessNutrients, properNutrients, minimumNutrients, lackNutrients, wellIntakePercent } = useUserNutrientsBalanceData()
 
   // 필수 영양분 14가지 잘 먹고 있는지 보여주는 부분
   useEffect(() => {
@@ -103,16 +103,25 @@ const Balance: NextPage = () => {
         {/* 머리 부분 */}
         <div className='w-full bg-white px-6 py-4 flex items-center justify-between'>
           <div className='flex flex-col'>
-            <p className='text-sm text-gray-500'>{dayjs().format('YY.MM.DD') + convertEnDayToKoDay(dayjs().format('ddd'))}</p>
-            <h1 className='text-lg font-bold text-gray-900'>영양제 분석 리포트 💊</h1>
+            <p className='text-sm text-gray-500'>{dayjs().format('YY.MM.DD')} ({convertEnDayToKoDay(dayjs().format('ddd'))})</p>
+            <h1 className='text-lg font-bold text-gray-900'>영양제 분석 리포트 📋</h1>
           </div>
-          <div className='relative w-[3.25rem] h-[3.25rem]'>
-            <Image
-              src={balanceIcon}
-              className='object-cover'
-              layout='fill'
-            />
+          {/* 원형 그래프 */}
+          <div
+            className='inline-block relative w-[3.25rem] h-[3.25rem] rounded-full flex items-center justify-center'
+            style={{ background: `conic-gradient(#3B82F6 0% ${wellIntakePercent}%, #BFDBFE ${wellIntakePercent}% 100%)` }}
+          >
+            <span className='w-[2.375rem] h-[2.375rem] bg-white rounded-full flex items-center justify-center'>
+              <p className='text-xs font-bold'>{wellIntakePercent}%</p>
+            </span>
           </div>
+          {/*<div className='relative w-[3.25rem] h-[3.25rem]'>*/}
+          {/*  <Image*/}
+          {/*    src={balanceIcon}*/}
+          {/*    className='object-cover'*/}
+          {/*    layout='fill'*/}
+          {/*  />*/}
+          {/*</div>*/}
         </div>
 
         {/* 요약 리포트 부분 */}
