@@ -108,7 +108,6 @@ const EditingPillNotification = () => {
         startIntakeDate: editingPillManagementData.startIntakeDate
       }))
 
-      // TODO: 현재 오늘 날짜 시간표에 대한 시간표 편집만 가능함 (나중에 아예 UI 변경 자체가 필요함 -> 수정 누르면 오늘 시간표 편집이 아니라 그냥 전체 시간표 등록 영양제들 목록이 나오도록)
       // 서버에 저장된 기존 복용 기록 삭제
       if (!intakeDays.includes(dayjs().format('ddd') as Days)) {  // 수정한 복용 요일에 오늘 요일이 제거됐다면,
         // 오늘 저장된 해당 영양제의 모든 복용 기록들을 삭제함

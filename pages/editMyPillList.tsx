@@ -45,7 +45,7 @@ const EditMyPillList: NextPage = () => {
       {/* 안내 문구 부분 */}
       <div className='bg-white p-6 text-sm space-y-2'>
         <p className='font-bold text-gray-900'>섭취중인 영양제를 편집할 수 있습니다.</p>
-        <p className='text-red-500'>복용 관리 중인 영양제 삭제 시, 복용 관리 내용도 함께 삭제됩니다.</p>
+        <p className='text-red-500'><strong>주의!</strong> 복용 관리 중인 영양제 삭제 시, 복용 관리 내용도 함께 삭제됩니다.</p>
       </div>
 
       {/* 섭취 중인 영양제 표시 부분 */}

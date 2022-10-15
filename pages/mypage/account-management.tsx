@@ -3,19 +3,38 @@ import BackHeader from '../../components/layout/BackHeader'
 import { useRouter } from 'next/router'
 import ChevronRight from '@mui/icons-material/ChevronRight'
 import { useUserInformationStore } from '../../stores/store'
+import TopCenterSnackBar from '../../components/common/TopCenterSnackBar'
+import { useState } from 'react'
+import MuiDialog from '../../components/common/MuiDialog'
+import { userApi } from '../../utils/api'
 
 const AccountManagement = () => {
   const router = useRouter()
-  const { setUserId, setOauthId } = useUserInformationStore()
+  const { userId, setUserId, setOauthId } = useUserInformationStore()
+  const [isDeleteAccountSuccess, setIsDeleteAccountSuccess] = useState<boolean>(false)
+  const [snackBarText, setSnackBarText] = useState<string>('')
+  const [isSnackBarOpen, setIsSnackBarOpen] = useState<boolean>(false)
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+
 
   const logOut = () => {
+    setSnackBarText('로그아웃이 완료되었습니다!')
     setUserId(null)
     setOauthId(null)
     window.location.replace('/initial')
   }
 
-  const deleteAccount = () => {
-
+  const deleteAccount = async () => {
+    if (userId) {
+      await userApi.deleteUserAccount(userId)
+        .then(() => {
+          setUserId(null)
+          setOauthId(null)
+          setSnackBarText('탈퇴가 완료되었습니다. 더 노력하는 비힐러가 되겠습니다 😥')
+          setTimeout(() => window.location.replace('/initial'), 1500)
+        })
+        .catch((error) => alert(`오류 : ${error}. 개발자에게 문의해주세요`))
+    }
   }
 
   return (
@@ -38,6 +57,24 @@ const AccountManagement = () => {
           <ChevronRight className='text-2xl' />
         </button>
       </div>
+
+      {/* 탈퇴 확인 다이얼로그 */}
+      <MuiDialog
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        dialogTitle='회원 탈퇴'
+        dialogContent='회원 탈퇴 시 회원 정보 및 복용 기록이 모두 삭제됩니다. 탈퇴하시겠습니까?'
+        executedBtnName='예'
+        funcToBeExecuted={deleteAccount}
+        funcParameter={null}
+      />
+
+      <TopCenterSnackBar
+        isSnackBarOpen={isSnackBarOpen}
+        setIsSnackBarOpen={setIsSnackBarOpen}
+        severity='success'
+        content={snackBarText}
+      />
     </ContainerWithBottomNav>
   )
 }

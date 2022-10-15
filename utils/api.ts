@@ -62,5 +62,10 @@ export const userApi = {
       oauthRefreshToken: oauthRefreshToken
     },
     topicIds: interestTopicIds
+  }),
+  deleteUserAccount: (userId: string) => nest.delete('/user', {
+    data: {
+      userId: userId
+    }
   })
 }
