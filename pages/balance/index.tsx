@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { NextPage } from 'next'
-import { useUserHealthDataStore, useUserInformation, useUserPillListStore } from '../../stores/store'
-import { pillApi } from '../../utils/api'
+import { useUserInformationStore, useUserPillListStore } from '../../stores/store'
 import { UserIntakeNutrientType } from '../../utils/types'
 import { Essential14Nutrients, ESSENTIAL_NUTRIENTS_LIST, EssentialNutrientsTakeCheckType } from '../../utils/constants'
 import BalanceSummary from '../../components/common/balance/BalanceSummary'
@@ -12,26 +11,19 @@ import balanceIcon from '../../public/asset/image/balanceIcon.png'
 import balanceIllust from '../../public/asset/image/balanceIllust.png'
 import MuiCarousel from '../../components/common/MuiCarousel'
 import MainHeader from '../../components/layout/MainHeader'
-import { CompareContent } from '../../utils/functions/CompareContent'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
-import { getTodayDate } from '../../utils/functions/getTodayDate'
 import Link from 'next/link'
-import TextField from '@mui/material/TextField'
-import { InputAdornment, MenuItem } from '@mui/material'
 import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
+import { convertEnDayToKoDay } from '../../utils/functions/timeFormatFunc/convertEnDayToKoDay'
+import useUserNutrientsBalanceData from '../../hooks/useUserNutrientsBalanceData'
 
 const Balance: NextPage = () => {
   const router = useRouter()
-  const userId = useUserInformation(state => state.userId)
+  const userId = useUserInformationStore(state => state.userId)
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   // const pillListVersion = useUserPillListStore(state => state.pillListVersion)
   // const addPillListVersion = useUserPillListStore(state => state.addPillListVersion)
-  const { age, isMale } = useUserHealthDataStore()
-  const [totalIntakeNutrients, setTotalIntakeNutrients] = useState<UserIntakeNutrientType[]>([])
-  const [excessNutrients, setExcessNutrients] = useState<UserIntakeNutrientType[]>([])
-  const [properNutrients, setProperNutrients] = useState<UserIntakeNutrientType[]>([])
-  const [minimumNutrients, setMinimumNutrients] = useState<UserIntakeNutrientType[]>([])
-  const [lackNutrients, setLackNutrients] = useState<UserIntakeNutrientType[]>([])
   const [isTakeEssentialNutrients, setIsTakeEssentialNutrients] = useState<EssentialNutrientsTakeCheckType>({
     '비타민C': false,
     '비타민D': false,
@@ -48,49 +40,9 @@ const Balance: NextPage = () => {
     '칼슘': false,
     '프로바이오틱스(유산균)': false,
   })
-  const [todayDateStr, setTodayDateStr] = useState<string>('')
 
-  // 섭취중인 영양분 데이터 가져오기
-  useEffect(() => {
-    if (age !== null && isMale !== null) {
-      (async () => {
-        // 현재 섭취중인 영양분 데이터 불러와 저장하기
-        const { data: { data: result } } = await pillApi.getTotalBalance(age, isMale, userTakingPillList.map(x => x.id))
-        setTotalIntakeNutrients(result)
-
-        // 초과, 최적, 최소, 부족 영양분 분류하여 저장하기
-        const excessNutrientsList: UserIntakeNutrientType[] = []
-        const properNutrientsList: UserIntakeNutrientType[] = []
-        const minimumNutrientsList: UserIntakeNutrientType[] = []
-        const lackNutrientsList: UserIntakeNutrientType[] = []
-        for (const nutrient of result) {
-          // reqMin, reqAvg, reqLimit 기준과 비교하는 클래스
-          // 해당 클래스에 값을 넣고 클래스의 메서드를 사용해서 비교하면 됨.
-          const compare = new CompareContent(nutrient.content, nutrient.reqMin, nutrient.reqAvg, nutrient.reqLimit)
-          if (compare.compareWithLimit()) {
-            excessNutrientsList.push(nutrient)
-          } else if (compare.compareWithAvgAndLimit()) {
-            properNutrientsList.push(nutrient)
-          } else if (compare.compareWithMinAndAvg()) {
-            minimumNutrientsList.push(nutrient)
-          } else {
-            lackNutrientsList.push(nutrient)
-          }
-        }
-        setExcessNutrients(excessNutrientsList)
-        setProperNutrients(properNutrientsList)
-        setMinimumNutrients(minimumNutrientsList)
-        setLackNutrients(lackNutrientsList)
-      })()
-    }
-  }, [userTakingPillList, age, isMale])
-
-  // 날짜 불러오기
-  useEffect(() => {
-    const todayDate = getTodayDate()
-
-    setTodayDateStr(todayDate.year + '.' + todayDate.month + '.' + todayDate.date + ` ${todayDate.day}`)
-  }, [userTakingPillList, age, isMale])
+  // 섭취중인 영양분 데이터 가져오기 (커스텀 훅)
+  const { totalIntakeNutrients, excessNutrients, properNutrients, minimumNutrients, lackNutrients } = useUserNutrientsBalanceData()
 
   // 필수 영양분 14가지 잘 먹고 있는지 보여주는 부분
   useEffect(() => {
@@ -151,7 +103,7 @@ const Balance: NextPage = () => {
         {/* 머리 부분 */}
         <div className='w-full bg-white px-6 py-4 flex items-center justify-between'>
           <div className='flex flex-col'>
-            <p className='text-sm text-gray-500'>{todayDateStr}</p>
+            <p className='text-sm text-gray-500'>{dayjs().format('YY.MM.DD') + convertEnDayToKoDay(dayjs().format('ddd'))}</p>
             <h1 className='text-lg font-bold text-gray-900'>영양제 분석 리포트 💊</h1>
           </div>
           <div className='relative w-[3.25rem] h-[3.25rem]'>

@@ -8,7 +8,7 @@ import ContainerWithBottomNav from '../../../../components/layout/ContainerWithB
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Days, IntakeManagementType } from '../../../../utils/types'
-import { useUserInformation, useUserIntakeManagementStore } from '../../../../stores/store'
+import { useUserInformationStore, useUserIntakeManagementStore } from '../../../../stores/store'
 import { replaceValueInArray } from '../../../../utils/functions/replaceValueInArray'
 import dayjs, { Dayjs } from 'dayjs'
 import TimePickerModal from '../../../../components/common/intake/TimePickerModal'
@@ -22,7 +22,7 @@ import { intakeApi, PutIntakeHistoryType } from '../../../../utils/api'
 
 const EditingPillNotification = () => {
   const router = useRouter()
-  const userId = useUserInformation(state => state.userId)
+  const userId = useUserInformationStore(state => state.userId)
   const pillId: number = parseInt(router.query.id as string)
   const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
   const setIntakePillList = useUserIntakeManagementStore(state => state.setIntakePillList)

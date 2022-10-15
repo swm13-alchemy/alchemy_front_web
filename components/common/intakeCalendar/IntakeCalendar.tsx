@@ -122,7 +122,7 @@ interface WeekDateBoxContainerProps {
   selectedDate: string
   setSelectedDate: (selectedDate: string) => void
 }
-function WeekDateBoxContainer({ datesOfThisWeek, intakeTimeTableByDate, selectedDate, setSelectedDate }: WeekDateBoxContainerProps) {
+export function WeekDateBoxContainer({ datesOfThisWeek, intakeTimeTableByDate, selectedDate, setSelectedDate }: WeekDateBoxContainerProps) {
   return (
     <div className='flex items-center justify-between'>
       {datesOfThisWeek.map((date) => {

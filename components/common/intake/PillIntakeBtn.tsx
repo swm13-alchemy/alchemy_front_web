@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import CheckCircle from '@mui/icons-material/CheckCircle'
 import { intakeApi, PutIntakeHistoryType, requestURLs } from '../../../utils/api'
-import { useUserInformation, useUserIntakeManagementStore } from '../../../stores/store'
+import { useUserInformationStore, useUserIntakeManagementStore } from '../../../stores/store'
 import { useIntakeTimeTableByDate } from '../../../stores/nonLocalStorageStore'
 import dayjs from 'dayjs'
 import { changeLocalStorageIntakeData } from '../../../utils/functions/changeLocalStorageIntakeData'
@@ -16,7 +16,7 @@ interface Props {
 }
 
 function PillIntakeBtn({ pillId, selectedDate, intakeTime, isPillIntake }: Props) {
-  const userId = useUserInformation(state => state.userId)
+  const userId = useUserInformationStore(state => state.userId)
   const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
   const { intakeTimeTableByDate, setIntakeTimeTableByDate } = useIntakeTimeTableByDate()
   const [pillNickName, setPillNickName] = useState<string>('')

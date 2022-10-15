@@ -3,10 +3,10 @@ import bigLogo from '../public/asset/image/bigLogo.png'
 import React from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useUserInformation } from '../stores/store'
+import { useUserInformationStore } from '../stores/store'
 
 const Initial = () => {
-  const { userId, oauthId } = useUserInformation()
+  const { userId, oauthId } = useUserInformationStore()
 
   // 이미 로그인을 한 사람의 경우 Redirect
   if (userId || oauthId) {

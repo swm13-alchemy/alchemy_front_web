@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { SupplementDetailsType } from '../../utils/types'
 import { useSession } from 'next-auth/react'
 import LoadingCircular from '../layout/LoadingCircular'
-import { useUserHealthDataStore, useUserInformation, useUserPillListStore } from '../../stores/store'
+import { useUserHealthDataStore, useUserInformationStore, useUserPillListStore } from '../../stores/store'
 import dayjs, { Dayjs } from 'dayjs'
 import { userApi } from '../../utils/api'
 
@@ -19,7 +19,7 @@ interface Props {
 function Finish({ nickName, birth, isMale, interestTopicIds, userPillList }: Props) {
   const router = useRouter()
   const {data: session} = useSession()
-  const { setUserId, setOauthId } = useUserInformation()
+  const { setUserId, setOauthId } = useUserInformationStore()
   const { setAge, setIsMale } = useUserHealthDataStore()
   // const setUserTakingPillList = useUserPillListStore(state => state.setUserTakingPillList)
 

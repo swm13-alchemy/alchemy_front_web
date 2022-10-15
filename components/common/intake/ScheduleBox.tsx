@@ -4,7 +4,7 @@ import PillIntakeBtn from './PillIntakeBtn'
 import { TimeTableDataType } from '../../../utils/types'
 import { convert12hourTo24hour } from '../../../utils/functions/timeFormatFunc/convert12hourTo24hour'
 import LoadingCircular from '../../layout/LoadingCircular'
-import { useUserInformation } from '../../../stores/store'
+import { useUserInformationStore } from '../../../stores/store'
 import dayjs from 'dayjs'
 import { intakeApi, PutIntakeHistoryType } from '../../../utils/api'
 import { changeLocalStorageIntakeData } from '../../../utils/functions/changeLocalStorageIntakeData'
@@ -17,7 +17,7 @@ interface Props {
 }
 
 function ScheduleBox({ selectedDate, intakeTime, timeTableDataList }: Props) {
-  const userId = useUserInformation(state => state.userId)
+  const userId = useUserInformationStore(state => state.userId)
   const [isAllCheckBtnOn, setIsAllCheckBtnOn] = useState<boolean>(false)
   const [isSwitchOn, setIsSwitchOn] = useState<boolean>(true)
   const { intakeTimeTableByDate, setIntakeTimeTableByDate } = useIntakeTimeTableByDate()

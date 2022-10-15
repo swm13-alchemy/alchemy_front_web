@@ -13,6 +13,8 @@ export type userInformationState = {
   setUserId: (userId: string | null) => void
   oauthId: string | null
   setOauthId: (oauthId: string | null) => void
+  // wellIntakePercent: number | null
+  // setWellIntakePercent: (wellIntakePercent: number) => void
 }
 export type userInformationPersist = (
   config: StateCreator<userInformationState>,

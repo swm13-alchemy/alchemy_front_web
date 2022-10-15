@@ -14,7 +14,7 @@ import Filter1 from '@mui/icons-material/Filter1'
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline'
 import Lock from '@mui/icons-material/Lock'
 import LiveHelpOutlined from '@mui/icons-material/LiveHelpOutlined'
-import { useUserInformation } from '../../stores/store'
+import { useUserInformationStore } from '../../stores/store'
 import { userApi } from '../../utils/api'
 import { UserInformationTypes } from '../../utils/types'
 import LoadingCircular from '../../components/layout/LoadingCircular'
@@ -22,7 +22,7 @@ import { getAgeRange } from '../../utils/functions/getAgeRange'
 import PersonOutline from '@mui/icons-material/PersonOutline'
 
 const MyPage = () => {
-  const oauthId = useUserInformation(state => state.oauthId)
+  const oauthId = useUserInformationStore(state => state.oauthId)
   const [nickname, setNickname] = useState<string>('')
   const [ageRange, setAgeRange] = useState<string>('')
   const [isMale, setIsMale] = useState<boolean | null>(null)

@@ -2,11 +2,11 @@ import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomN
 import BackHeader from '../../components/layout/BackHeader'
 import { useRouter } from 'next/router'
 import ChevronRight from '@mui/icons-material/ChevronRight'
-import { useUserInformation } from '../../stores/store'
+import { useUserInformationStore } from '../../stores/store'
 
 const AccountManagement = () => {
   const router = useRouter()
-  const { setUserId, setOauthId } = useUserInformation()
+  const { setUserId, setOauthId } = useUserInformationStore()
 
   const logOut = () => {
     setUserId(null)

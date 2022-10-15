@@ -8,7 +8,7 @@ import {
   MergedNutrientDataType,
   SupplementDetailsType
 } from '../../utils/types'
-import { useUserHealthDataStore, useUserInformation, useUserPillListStore } from '../../stores/store'
+import { useUserHealthDataStore, useUserInformationStore, useUserPillListStore } from '../../stores/store'
 import { pillApi, requestURLs } from '../../utils/api'
 import PlaylistAdd from '@mui/icons-material/PlaylistAdd'
 import DeleteForever from '@mui/icons-material/DeleteForever'
@@ -33,7 +33,7 @@ interface Props {
 }
 
 const Details = ({ details }: Props) => {
-  const userId = useUserInformation(state => state.userId)
+  const userId = useUserInformationStore(state => state.userId)
   const { id, name, dailyDose, information, intakeCount, intakeTimings, maker, ingredients }: SupplementDetailsType = details
   const router = useRouter()
   const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()

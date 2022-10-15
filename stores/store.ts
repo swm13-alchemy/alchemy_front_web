@@ -12,7 +12,7 @@ import {
 import { Dayjs } from 'dayjs'
 
 /** 유저아이디와 OAuth에서 받은 id를 저장하는 Store */
-export const useUserInformation = create<userInformationState>(
+export const useUserInformationStore = create<userInformationState>(
   // @ts-ignore
   (persist as userInformationPersist)(
     (set) => ({
@@ -23,7 +23,11 @@ export const useUserInformation = create<userInformationState>(
       oauthId: null,
       setOauthId: (oauthId: string | null) => {
         set((state) => ({...state, oauthId: oauthId}))
-      }
+      },
+      // wellIntakePercent: null,  // TODO: 메인 화면에 보여주기 위해 임시로 둔 값 추후 다른 방법 고민
+      // setWellIntakePercent: (wellIntakePercent: number) => {
+      //   set((state) => ({...state, wellIntakePercent: wellIntakePercent}))
+      // }
     }),
     {
       name: 'userInformation'

@@ -6,11 +6,11 @@ import { useState } from 'react'
 import { postAirTable } from '../../utils/airtable'
 import TopCenterSnackBar from '../../components/common/TopCenterSnackBar'
 import LoadingCircular from '../../components/layout/LoadingCircular'
-import { useUserInformation } from '../../stores/store'
+import { useUserInformationStore } from '../../stores/store'
 
 const CustomerService = () => {
   const router = useRouter()
-  const userId = useUserInformation(state => state.userId)
+  const userId = useUserInformationStore(state => state.userId)
   const [customerText, setCustomerText] = useState<string>('')
   const [isSnackBarOpen, setIsSnackBarOpen] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)

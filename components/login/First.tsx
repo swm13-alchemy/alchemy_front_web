@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { userApi } from '../../utils/api'
 import { UserInformationTypes } from '../../utils/types'
-import { useUserInformation } from '../../stores/store'
+import { useUserInformationStore } from '../../stores/store'
 import { useRouter } from 'next/router'
 import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers'
 import TextField from '@mui/material/TextField'
@@ -21,7 +21,7 @@ interface Props {
 
 function First({ setPageNum, nickName, setNickName, birth, setBirth, isMale, setIsMale }: Props) {
   const { data: session } = useSession()
-  const { setUserId, setOauthId } = useUserInformation()
+  const { setUserId, setOauthId } = useUserInformationStore()
 
   useEffect(() => {
     if (session) {

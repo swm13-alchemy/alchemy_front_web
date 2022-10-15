@@ -5,14 +5,14 @@ import { SupplementDetailsType, UserInformationTypes } from '../../utils/types'
 import { useState } from 'react'
 import Finish from '../../components/login/Finish'
 import { Dayjs } from 'dayjs'
-import { useUserInformation } from '../../stores/store'
+import { useUserInformationStore } from '../../stores/store'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import { userApi } from '../../utils/api'
 
 const Step = () => {
   const router = useRouter()
-  const { userId, setUserId, oauthId, setOauthId } = useUserInformation()
+  const { userId, setUserId, oauthId, setOauthId } = useUserInformationStore()
   const { data: session } = useSession()
   const [pageNum, setPageNum] = useState<number>(1) // 페이지 컴포넌트 변경 시키는 값
   const [nickName, setNickName] = useState<string>('')
