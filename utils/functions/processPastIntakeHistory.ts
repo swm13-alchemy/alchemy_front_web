@@ -62,5 +62,6 @@ export async function processPastIntakeHistory(temporaryIntakeTimeTableByDate: T
       setIntakeServiceStartDate(intakeServiceStartDate)
     }
   }
+  console.log("temporaryIntakeTimeTableByDate : ", temporaryIntakeTimeTableByDate)
   return temporaryIntakeTimeTableByDate
 }

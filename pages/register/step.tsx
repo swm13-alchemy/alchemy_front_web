@@ -32,8 +32,8 @@ const Step = () => {
   // 기존에 가입했던 유저인 경우 로그인 처리 후 Home 페이지로 보냄
   useEffect(() => {
     if (session?.user.oauthId) {
+      setIsLoading(true)
       ;(async () => {
-        setIsLoading(true)
         const { data: response } = await userApi.getUserInformationByOauthId(session.user.oauthId)
         const userInfo: UserInformationTypes = response.data
         if (userInfo && userInfo.id && userInfo.oauthId && userInfo.birth && userInfo.isMale) {
@@ -41,10 +41,7 @@ const Step = () => {
           setOauthId(userInfo.oauthId)
           setAge(dayjs().get('year') - dayjs(userInfo.birth).get('year') + 1)  // 나이 계산
           setIsMale(userInfo.isMale)
-          setIsLoading(false)
           window.location.replace('/')
-        } else {
-          setIsLoading(false)
         }
       })()
     }

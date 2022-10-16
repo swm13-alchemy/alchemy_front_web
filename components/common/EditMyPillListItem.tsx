@@ -1,13 +1,7 @@
 import PillListItem from './PillListItem'
 import DeleteForeverOutlined from '@mui/icons-material/DeleteForeverOutlined'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogActions from '@mui/material/DialogActions'
-import Button from '@mui/material/Button'
 import React, { useState } from 'react'
-import MuiDialog from './MuiDialog'
+import { MuiDialogWithParameters } from './MuiDialog'
 
 interface Props {
   id: number
@@ -37,7 +31,7 @@ function EditMyPillListItem({ maker, name, id, deletePillFunc }: Props) {
       </button>
 
       {/* 삭제 확인 Dialog */}
-      <MuiDialog
+      <MuiDialogWithParameters
         isDialogOpen={isDeleteDialogOpen}
         setIsDialogOpen={setIsDeleteDialogOpen}
         dialogTitle='내 영양제 목록에서 제거'
