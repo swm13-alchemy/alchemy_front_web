@@ -10,7 +10,6 @@ import { useIntakeTimeTableByDate } from '../stores/nonLocalStorageStore'
 /** 복용 관리 기록 데이터 가져오기 (커스텀 훅) */
 const useUserIntakeTimeTableByDate = (selectedYearANDMonth: Dayjs): TimeTableByDateType | null => {
   const userId = useUserInformationStore(state => state.userId)
-  const intakeServiceStartDate = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
   const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
   const { intakeTimeTableByDate, setIntakeTimeTableByDate } = useIntakeTimeTableByDate()
 
@@ -23,7 +22,7 @@ const useUserIntakeTimeTableByDate = (selectedYearANDMonth: Dayjs): TimeTableByD
 
     // 과거 복용 기록을 서버에서 가져와 '영양제 시간표 틀 데이터'에 넣음
     if (userId) {
-      processPastIntakeHistory(temporaryIntakeTimeTableByDate, userId, dayjs(intakeServiceStartDate))
+      processPastIntakeHistory(temporaryIntakeTimeTableByDate, userId)
         .then((finalIntakeTimeTableByDate) => {
           console.log("finalIntakeTimeTableByDate : ", finalIntakeTimeTableByDate)
           setIntakeTimeTableByDate(finalIntakeTimeTableByDate)

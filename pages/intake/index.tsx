@@ -22,7 +22,7 @@ const Intake: NextPage = () => {
   const userId = useUserInformationStore(state => state.userId)
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
-  const intakeServiceStartDate = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
+  const intakeServiceStartDate: Dayjs | null = useUserIntakeManagementStore(state => state.intakeServiceStartDate)
   const [selectedYearANDMonth, setSelectedYearANDMonth] = useState<Dayjs>(dayjs())
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().format('YYYY-MM-DD'))  // 오늘 날짜로 초기 설정
 
@@ -100,7 +100,7 @@ const Intake: NextPage = () => {
           setSelectedDate={setSelectedDate}
           selectedYearANDMonth={selectedYearANDMonth}
           setSelectedYearANDMonth={setSelectedYearANDMonth}
-          intakeServiceStartDate={dayjs(intakeServiceStartDate)}
+          intakeServiceStartDate={intakeServiceStartDate === null ? null : dayjs(intakeServiceStartDate)}
         />
 
         {/* 연속 섭취중 일수 + 편집 버튼 */}

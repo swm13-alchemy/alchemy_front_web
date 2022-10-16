@@ -63,11 +63,11 @@ export const useUserHealthDataStore = create<userHealthState>(
   (persist as userHealthPersist)(
     (set) => ({
       age: null,
-      setAge: (age: number) => {
+      setAge: (age: number | null) => {
         set((state) => ({...state, age: age}))
       },
       isMale: null,
-      setIsMale: (isMale: boolean) => {
+      setIsMale: (isMale: boolean | null) => {
         set((state) => ({...state, isMale: isMale}))
       }
     }),
@@ -83,7 +83,7 @@ export const useUserIntakeManagementStore = create<intakeManagementState>(
   (persist as intakeManagementPersist)(
     (set) => ({
       intakeServiceStartDate: null,
-      setIntakeServiceStartDate: (intakeServiceDate: Dayjs) => {
+      setIntakeServiceStartDate: (intakeServiceDate: Dayjs | null) => {
         set((state) => ({...state, intakeServiceStartDate: intakeServiceDate}))
       },
       intakePillList: [],

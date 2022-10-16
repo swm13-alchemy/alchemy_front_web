@@ -20,25 +20,24 @@ interface Props {
 }
 
 function First({ setPageNum, nickName, setNickName, birth, setBirth, isMale, setIsMale }: Props) {
-  const { data: session } = useSession()
-  const { setUserId, setOauthId } = useUserInformationStore()
-
-  useEffect(() => {
-    if (session) {
-      ;(async () => {
-        const { data: response } = await userApi.getUserInformationByOauthId(session.user.oauthId)
-        const userInfo: UserInformationTypes = response.data
-        // 만약 이전에 가입한 정보가 있다면 로컬 스토리지에 id들을 저장하고 메인페이지로 Redirect
-        if (userInfo) {
-          setUserId(userInfo.id)
-          setOauthId(session.user.oauthId)
-
-          const router = useRouter()
-          router.push('/')
-        }
-      })()
-    }
-  }, [session])
+  // const { data: session } = useSession()
+  // const { setUserId, setOauthId } = useUserInformationStore()
+  //
+  // useEffect(() => {
+  //   if (session) {
+  //     ;(async () => {
+  //       const { data: response } = await userApi.getUserInformationByOauthId(session.user.oauthId)
+  //       const userInfo: UserInformationTypes = response.data
+  //       // 만약 이전에 가입한 정보가 있다면 로컬 스토리지에 id들을 저장하고 메인페이지로 Redirect
+  //       if (userInfo) {
+  //         setUserId(userInfo.id)
+  //         setOauthId(session.user.oauthId)
+  //
+  //         window.location.replace('/')
+  //       }
+  //     })()
+  //   }
+  // }, [session])
 
   return (
     <div className='bg-gray-50 h-screen px-8 py-16 text-gray-900 flex flex-col items-center justify-between'>

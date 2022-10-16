@@ -15,7 +15,7 @@ interface Props {
   setSelectedDate: (selectedDate: string) => void
   selectedYearANDMonth: Dayjs
   setSelectedYearANDMonth: (selectedYearANDMonth: Dayjs) => void
-  intakeServiceStartDate: Dayjs
+  intakeServiceStartDate: Dayjs | null
 }
 
 function IntakeCalendar({ intakeTimeTableByDate, selectedDate, setSelectedDate, selectedYearANDMonth, setSelectedYearANDMonth, intakeServiceStartDate }: Props) {
@@ -43,7 +43,8 @@ function IntakeCalendar({ intakeTimeTableByDate, selectedDate, setSelectedDate, 
       setIsTheMonthIncludedToday(false)
     }
 
-    if (Object.keys(intakeTimeTableByDate).includes(intakeServiceStartDate.format('YYYY-MM-DD'))) {
+    if (intakeServiceStartDate === null ||  // intakeServiceStartDate가 null인 경우도 버튼 disable처리
+      Object.keys(intakeTimeTableByDate).includes(intakeServiceStartDate.format('YYYY-MM-DD'))) {
       setIsTheMonthIncludedIntakeServiceStartDate(true)
     } else {
       setIsTheMonthIncludedIntakeServiceStartDate(false)

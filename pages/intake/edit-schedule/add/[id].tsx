@@ -85,10 +85,10 @@ const AddingPillNotification = () => {
 
   // 저장 함수
   const saveNotification = () => {
-    // 지금 등록하는 영양제가 최초로 등록하는 영양제인 경우 서비스 시작 날짜를 저장
-    if (intakeServiceStartDate === null) {
-      setIntakeServiceStartDate(dayjs())
-    }
+    // // 지금 등록하는 영양제가 최초로 등록하는 영양제인 경우 서비스 시작 날짜를 저장
+    // if (intakeServiceStartDate === null) {
+    //   setIntakeServiceStartDate(dayjs())
+    // }
 
     if (pillNickName !== '' && arrayIsNotEmpty(intakeDays)) {
       // local storage에 저장

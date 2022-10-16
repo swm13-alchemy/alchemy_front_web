@@ -34,9 +34,9 @@ export type pillListPersist = (
 
 export type userHealthState = {
   age: number | null
-  setAge: (age: number) => void
+  setAge: (age: number | null) => void
   isMale: boolean | null
-  setIsMale: (isMale: boolean) => void
+  setIsMale: (isMale: boolean | null) => void
 }
 export type userHealthPersist = (
   config: StateCreator<userHealthState>,
@@ -45,7 +45,7 @@ export type userHealthPersist = (
 
 export type intakeManagementState = {
   intakeServiceStartDate: Dayjs | null,
-  setIntakeServiceStartDate: (date: Dayjs) => void
+  setIntakeServiceStartDate: (date: Dayjs | null) => void
   intakePillList: IntakeManagementType[]
   setIntakePillList: (pillList: IntakeManagementType[]) => void
 }
