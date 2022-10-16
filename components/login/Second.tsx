@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 import { TOPICS } from '../../utils/constants'
+import SelectableTopicBox from '../common/SelectableTopicBox'
 
 interface Props {
   setPageNum: (pageNum: number) => void
@@ -19,7 +19,7 @@ function Second({ setPageNum, interestTopicIds, setInterestTopicIds }: Props) {
 
       <div className='mt-12 w-full grid grid-cols-3 gap-6 pb-12'>
         {TOPICS.map((topic) =>
-          <TopicBox
+          <SelectableTopicBox
             key={topic.id}
             topicId={topic.id}
             topicName={topic.name}
@@ -43,40 +43,3 @@ function Second({ setPageNum, interestTopicIds, setInterestTopicIds }: Props) {
 }
 
 export default Second
-
-
-interface TopicBoxType {
-  topicId: number
-  topicName: string
-  interestTopicIds: number[]
-  setInterestTopicIds: (interestTopicIds: number[]) => void
-}
-function TopicBox({ topicId, topicName, interestTopicIds, setInterestTopicIds }: TopicBoxType) {
-  const [isSelected, setIsSelected] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (interestTopicIds.includes(topicId)) {
-      setIsSelected(true)
-    } else {
-      setIsSelected(false)
-    }
-  }, [interestTopicIds])
-
-  const clickTopicBtn = () => {
-    if (isSelected) {
-      setInterestTopicIds(interestTopicIds.filter(id => id !== topicId))
-    } else {
-      setInterestTopicIds(interestTopicIds.concat(topicId))
-    }
-  }
-
-  return (
-    <button
-      className={'w-full h-14 p-2 bg-white shadow-md rounded-lg text-sm' +  // TODO: 나중에 아이콘이나 이미지 넣고 h-14 바꿔야함
-        (isSelected ? ' border border-primary text-primary' : ' border-none text-gray-900')}
-      onClick={clickTopicBtn}
-    >
-      {topicName}
-    </button>
-  )
-}

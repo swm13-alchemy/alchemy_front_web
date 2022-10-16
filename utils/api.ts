@@ -69,3 +69,10 @@ export const userApi = {
     }
   })
 }
+
+export const topicApi = {
+  patchUserInterestTopics: (userId: string, topicIds: number[]) => nest.patch('/topic/user-topic', {
+    userId: userId,
+    topicIds: topicIds
+  })
+}
