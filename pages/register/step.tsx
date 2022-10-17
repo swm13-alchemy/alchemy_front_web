@@ -70,14 +70,14 @@ const Step = () => {
           setInterestTopicIds={setInterestTopicIds}
         />
       )
-    case 3:
-      return (
-        <Third
-          setPageNum={setPageNum}
-          userPillList={userPillList}
-          setUserPillList={setUserPillList}
-        />
-      )
+    // case 3:
+    //   return (
+    //     <Third
+    //       setPageNum={setPageNum}
+    //       userPillList={userPillList}
+    //       setUserPillList={setUserPillList}
+    //     />
+    //   )
     case 4:
       return (
         <Finish
