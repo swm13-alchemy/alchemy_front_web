@@ -27,5 +27,52 @@ export const pillApi = {
       isMale: isMale
     }
   }),
-  getTotalBalance: (age: number, isMale: boolean, pillsId: number[]) => nest.get(`/balance?age=${age}&is_male=${isMale}&${pillsId.map((id) => `pills_id=${id}`).join('&')}`)
+  getTotalBalance: (age: number, isMale: boolean, pillsId: number[]) => nest.get(`/balance?age=${age}&isMale=${isMale}&${pillsId.map((id) => `pillsId=${id}`).join('&')}`)
+}
+
+export interface PutIntakeHistoryType {
+  userId: string
+  pillId: number
+  intakeDate: string
+  intakeTime: string
+  isTake: boolean
+}
+export const intakeApi = {
+  getIntakeHistory: (userId: string, startDate: string, endDate: string) => nest.get(`/intake-log/${userId}?start=${startDate}&end=${endDate}`),
+  putIntakeHistory: (historyArray: PutIntakeHistoryType[]) => nest.put(`/intake-log`, {
+    intakeData: historyArray
+  }),
+  deleteIntakeHistory: (userId: string, pillId: number) => nest.delete('/user-pill', {
+    data: {
+      userId: userId,
+      pillId: pillId
+    }
+  })
+}
+
+export const userApi = {
+  getUserInformationByOauthId: (oauthId: string) => nest.get(`/user/oauth/${oauthId}`),
+  postUserInformation: (oauthId: string, nickName: string, email: string | null | undefined, birth: string, isMale: boolean, interestTopicIds: number[], oauthRefreshToken: string) => nest.post('/user', {
+    userData: {
+      oauthId: oauthId,
+      nickname: nickName,
+      email: email,
+      birth: birth,
+      isMale: isMale,
+      oauthRefreshToken: oauthRefreshToken
+    },
+    topicIds: interestTopicIds
+  }),
+  deleteUserAccount: (userId: string) => nest.delete('/user', {
+    data: {
+      userId: userId
+    }
+  })
+}
+
+export const topicApi = {
+  patchUserInterestTopics: (userId: string, topicIds: number[]) => nest.patch('/topic/user-topic', {
+    userId: userId,
+    topicIds: topicIds
+  })
 }

@@ -2,6 +2,7 @@ import { useUserPillListStore } from '../stores/store'
 import { useEffect, useState } from 'react'
 import { SupplementDetailsType } from '../utils/types'
 
+/** 유저가 등록한 '내 영양제' 목록을 불러오는 훅 (server-side에서 렌더링 안되는 문제를 해결하기 위해 만든 커스텀 훅) */
 const useUserPillList = (): SupplementDetailsType[] => {
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   const [pillList, setPillList] = useState<SupplementDetailsType[]>([])

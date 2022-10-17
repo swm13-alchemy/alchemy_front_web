@@ -4,7 +4,8 @@ import { useRouter } from 'next/router'
 import IntakeAdequateTag from '../../../components/tag/IntakeAdequateTag'
 import { CompareContent } from '../../../utils/functions/CompareContent'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import EfficiencyTag from '../../../components/tag/EfficiencyTag'
 
 // interface QueryProps extends UserIntakeNutrientType {
 //   // query로 왔기 때문에 string으로 온다.
@@ -22,8 +23,8 @@ const Report = () => {
   const reqAvg: number = parseInt(router.query.reqAvg as string)
   const reqLimit: number = parseInt(router.query.reqLimit as string)
   const unit: string = router.query.unit as string
-  const tips: string = router.query.tips as string
-  const efficacy: string = router.query.efficacy as string
+  const tips: string[] = router.query.tips as string[]
+  const efficacy: string[] = router.query.efficacy as string[]
   // 넘어올 때 null도 string으로 되기 때문에 아래와 같이 처리
   const strExcessOrLackContent: string = router.query.excessOrLackContent as string
   let excessOrLackContent: number | null = null
@@ -75,8 +76,14 @@ const Report = () => {
         <section className='p-6 bg-white text-gray-900'>
           <IntakeAdequateTag state={state} excessOrLackContent={null} unit={null} />
           <h1 className='text-2xl font-bold mt-2'>{name}</h1>
-
           <StateText state={state} excessOrLackContent={excessOrLackContent} unit={excessOrLackContent === null ? null : unit} />
+
+          <p className='mt-6 text-sm font-bold text-gray-400'>관련 건강 고민 토픽</p>
+          <div className='mt-1 flex items-center flex-wrap gap-2'>
+            {efficacy.map((efficacy) =>
+              <EfficiencyTag key={efficacy} tagName={efficacy} />
+            )}
+          </div>
         </section>
 
         {/* 현재 섭취량 비교 그래프 부분 */}
@@ -142,7 +149,6 @@ interface StateTextProps {
 }
 
 function StateText({ state, excessOrLackContent, unit }: StateTextProps) {
-  console.log(excessOrLackContent)
   switch (state) {
     case 0:
       return (

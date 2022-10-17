@@ -9,7 +9,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        notosansKR: ['Noto Sans KR', ...defaultTheme.fontFamily.sans]
+        notosansKR: ['Noto Sans KR', ...defaultTheme.fontFamily.sans],
+        roboto: ['Roboto', ...defaultTheme.fontFamily.sans]
       },
       colors: {
         'primary': '#1C65D1',
@@ -20,6 +21,10 @@ module.exports = {
         '08dp': '0px 8px 16px rgba(0, 0, 0, 0.1)',
         '04dp': '0px 4px 8px rgba(0, 0, 0, 0.1)',
         '02dp': '0px 2px 4px rgba(0, 0, 0, 0.1)'
+      },
+      backgroundImage: {
+        'google': "url('/asset/loginBtn/googleLogin.png')",
+        'kakao': "url('/asset/loginBtn/kakaoLogin.png')"
       }
     },
     screens: {

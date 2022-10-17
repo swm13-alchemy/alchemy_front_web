@@ -3,6 +3,10 @@ import { NextRouter, useRouter } from 'next/router'
 import Home from '@mui/icons-material/Home'
 import GraphicEq from '@mui/icons-material/GraphicEq'
 import { useEffect, useState } from 'react'
+import ListAlt from '@mui/icons-material/ListAlt'
+import PersonOutline from '@mui/icons-material/PersonOutline'
+import { useUserInformationStore } from '../../stores/store'
+import useUserId from '../../hooks/useUserId'
 
 // const menuList = [
 //   { id: '1', name: 'HOME', icon: Home, path: '/' },
@@ -12,15 +16,24 @@ import { useEffect, useState } from 'react'
 
 function BottomNavBar() {
   const router = useRouter()
+  const userId = useUserId()
 
   return (
     <nav className='h-12 flex items-center fixed bottom-0 left-0 right-0 bg-surface z-50'>
-      <Menu router={router} id={1} name='HOME' paths={['/', '/search', '/pill-details']}>
-        <Home className='text-2xl'/>
+      <Menu router={router} id={1} name='홈' paths={['/', '/search', '/pill-details']}>
+        <Home className='text-2xl' />
       </Menu>
-      <Menu router={router} id={2} name='Balance' paths={['/balance']}>
+      <Menu router={router} id={2} name='밸런스' paths={['/balance']}>
         <GraphicEq className='text-2xl'/>
       </Menu>
+      <Menu router={router} id={3} name='복용관리' paths={['/intake']}>
+        <ListAlt className='text-2xl'/>
+      </Menu>
+      {userId &&
+        <Menu router={router} id={4} name='마이페이지' paths={['/mypage']}>
+          <PersonOutline className='text-2xl' />
+        </Menu>
+      }
     </nav>
   )
 }
@@ -48,15 +61,14 @@ function Menu({ children, router, id, name, paths }: MenuProps) {
   }, [])
 
   return (
-    <Link
-      key={id}
-      href={paths[0]}
-    >
+    <Link key={id} href={paths[0]}>
       <a className='grow w-full'>
         <div
           className={
             'flex flex-col items-center justify-between' +
-            (isActive ? ' text-primary bg-indigo-50 border-t-2 border-t-primary' : ' text-gray-300 bg-surface border-none')
+            (isActive
+              ? ' text-primary bg-indigo-50 border-t-2 border-t-primary'
+              : ' text-gray-300 bg-surface border-none')
           }
         >
           {children}

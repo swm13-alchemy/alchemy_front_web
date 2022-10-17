@@ -1,15 +1,20 @@
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ContentGraph from '../../components/common/pillDetails/ContentGraph'
 import EfficiencyTag from '../../components/tag/EfficiencyTag'
 import {
-  IngredientWithIntakesType,
+  IngredientWithIntakesType, IntakeManagementType,
   MergedNutrientDataType,
-  SupplementDetailsType
+  SupplementDetailsType,
 } from '../../utils/types'
-import { useUserHealthDataStore, useUserPillListStore } from '../../stores/store'
-import { pillApi, requestURLs } from '../../utils/api'
+import {
+  useUserHealthDataStore,
+  useUserInformationStore,
+  useUserIntakeManagementStore,
+  useUserPillListStore,
+} from '../../stores/store'
+import { intakeApi, pillApi, requestURLs } from '../../utils/api'
 import PlaylistAdd from '@mui/icons-material/PlaylistAdd'
 import DeleteForever from '@mui/icons-material/DeleteForever'
 import Star from '@mui/icons-material/Star'
@@ -22,116 +27,35 @@ import LocalDining from '@mui/icons-material/LocalDining'
 import Filter1 from '@mui/icons-material/Filter1'
 import { useRouter } from 'next/router'
 import PillDetailsHeader from '../../components/layout/PillDetailsHeader'
-import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
 import { mergeNutrientsData } from '../../utils/functions/mergeNutrientsData'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
+import { CONTENT_GRAPH_DUMMY_DATA } from '../../utils/constants'
+import balanceIllust from '../../public/asset/image/balanceIllust.png'
+import Link from 'next/link'
+import TopCenterSnackBar from '../../components/common/TopCenterSnackBar'
+import { isMobile } from '../../utils/functions/isMobile'
+import { deleteWeeklyNotification } from '../../utils/functions/flutterBridgeFunc/intakeNotification'
 
 interface Props {
   details: SupplementDetailsType
 }
 
-const 임시: MergedNutrientDataType[] = [
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminD',
-    intakeContent: 100,
-    newContent: 300,
-    unit: 'mg',
-    reqMin: 200,
-    reqAvg: 500,
-    reqLimit: 700
-  },
-  {
-    name: 'Magnesium',
-    intakeContent: 1200,
-    newContent: 2800,
-    unit: 'mg',
-    reqMin: 200,
-    reqAvg: 600,
-    reqLimit: 1000
-  },
-  {
-    name: 'Probiotics',
-    intakeContent: 500,
-    newContent: 500,
-    unit: 'mg',
-    reqMin: 400,
-    reqAvg: 900,
-    reqLimit: 1200
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  },
-  {
-    name: 'VitaminC',
-    intakeContent: 0,
-    newContent: 200,
-    unit: 'mg',
-    reqMin: 1500,
-    reqAvg: 3000,
-    reqLimit: 4000
-  }
-]
-
 const Details = ({ details }: Props) => {
-  const { id, name, dailyDose, information, intakeCount, intakeTiming, maker, ingredients } = details
+  const userId = useUserInformationStore(state => state.userId)
+  const { id, name, dailyDose, information, intakeCount, intakeTimings, maker, ingredients }: SupplementDetailsType = details
   const router = useRouter()
   const { userTakingPillList, setUserTakingPillList } = useUserPillListStore()
+  const { intakePillList, setIntakePillList } = useUserIntakeManagementStore()
   const { age, isMale } = useUserHealthDataStore()
   const [isWish, setIsWish] = useState<boolean>(false)
   const [isTaking, setIsTaking] = useState<boolean>(false)
-  const [isOpenEfficiency, setIsOpenEfficiency] = useState<boolean>(false)
   const [mergedNutrientData, setMergedNutrientData] = useState<MergedNutrientDataType[]>([])
+  const [mainEfficacyList, setMainEfficacyList] = useState<string[]>([])
+  // const [subEfficacyList, setSubEfficacyList] = useState<string[]>([])
+  // const [isOpenSubEfficiency, setIsOpenSubEfficiency] = useState<boolean>(false)
+  const [isGetBalanceDataError, setIsGetBalanceDataError] = useState<boolean>(false)
+  const [isAddMyPillSuccess, setIsAddMyPillSuccess] = useState<boolean>(false)
+  const [isDeleteMyPillSuccess, setIsDeleteMyPillSuccess] = useState<boolean>(false)
 
   // 최초 페이지 진입 시 한 번 실행 후 종료
   // 해당 페이지 영양제가 등록되어 있는지 확인하고 있으면 섭취중인 영양제로 표시
@@ -151,8 +75,8 @@ const Details = ({ details }: Props) => {
 
   // 기존 섭취 영양분 대비 변화량 그래프 그리기 위한 데이터 처리 부분
   useEffect(() => {
-    // 나이와 성별을 등록하고 섭취중인 영양제로 등록한 것이 있는 경우만 데이터를 받아옴
-    if (age !== null && isMale !== null && arrayIsNotEmpty(userTakingPillList)) {
+    // 나이와 성별을 등록(회원 가입을 한 경우)하고 섭취중인 영양제로 등록한 것이 있는 경우만 데이터를 받아옴
+    if (userId && age !== null && isMale !== null) {
       // 섭취중인 영양제가 아닌 경우
       if (!isTaking) {
         (async () => {
@@ -163,9 +87,15 @@ const Details = ({ details }: Props) => {
            * 추후 수정
            */
           // 사용자의 나이와 성별을 가지고 권장량등의 기준을 포함한 영양제 상세 정보를 다시 불러옴
-          const { data: { data: thisPillBalanceResult } } = await pillApi.getSupplementDetailsWithBalance(age, isMale, id)
-          const newIngredients: IngredientWithIntakesType[] = thisPillBalanceResult[0].ingredients
-          setMergedNutrientData(mergeNutrientsData(totalBalanceResult, newIngredients))
+          await pillApi.getSupplementDetailsWithBalance(age, isMale, id)
+              .then(({ data: { data: thisPillBalanceResult } }) => {
+                const newIngredients: IngredientWithIntakesType[] = thisPillBalanceResult[0].ingredients
+                setMergedNutrientData(mergeNutrientsData(totalBalanceResult, newIngredients))
+              })
+              .catch((error) => {
+                console.log("Error : ", error)
+                setIsGetBalanceDataError(true)
+              })
         })()
       } else {  // 섭취중인 영양제인 경우
         (async () => {
@@ -176,20 +106,43 @@ const Details = ({ details }: Props) => {
            * 추후 수정
            */
           // 사용자의 나이와 성별을 가지고 권장량등의 기준을 포함한 영양제 상세 정보를 다시 불러옴
-          const { data: { data: thisPillBalanceResult } } = await pillApi.getSupplementDetailsWithBalance(age, isMale, id)
-          const newIngredients: IngredientWithIntakesType[] = thisPillBalanceResult[0].ingredients
-          setMergedNutrientData(mergeNutrientsData(result, newIngredients))
+          await pillApi.getSupplementDetailsWithBalance(age, isMale, id)
+            .then(({ data: { data: thisPillBalanceResult } }) => {
+              const newIngredients: IngredientWithIntakesType[] = thisPillBalanceResult[0].ingredients
+              setMergedNutrientData(mergeNutrientsData(result, newIngredients))
+            })
+            .catch((error) => {
+              console.log("Error : ", error)
+              setIsGetBalanceDataError(true)
+            })
         })()
       }
     }
   }, [userTakingPillList])
 
-  // 섭취중인 영양제 버튼 클릭 시
+  // 효능 태그 표시하기 위한 부분
+  useEffect(() => {
+    if (ingredients) {
+      const tempEfficacyList: string[] = []
+      ingredients.forEach((ingredient) => {
+        ingredient.nutrient.efficacy.forEach((efficacy) => {
+          if (!tempEfficacyList.includes(efficacy)) { // 중복되지 않은 효능이라면 리스트에 추가
+            tempEfficacyList.push(efficacy)
+          }
+        })
+      })
+      setMainEfficacyList(tempEfficacyList)
+    }
+  }, [ingredients])
+
+  // 내 영양제 추가/삭제 버튼 클릭 시
   const takingSubmit = (curIsTaking: boolean) => {
     // 현재 섭취중이 아니라면
     if (!curIsTaking) {
       // 기존 유저 섭취 영양제 리스트 배열에 현재 영양제 페이지의 영양제 객체 값 추가 (localStorage 에도 반영됨)
       setUserTakingPillList(userTakingPillList.concat(details))
+      // 스낵바에 성공했다고 알림
+      setIsAddMyPillSuccess(true)
       // 다 끝나면 섭취 체크
       setIsTaking(true)
     } else {  // 만약 섭취중이라면
@@ -197,6 +150,29 @@ const Details = ({ details }: Props) => {
       const removedList: SupplementDetailsType[] = userTakingPillList.filter(x => x.id !== id)
       // 기존 유저 섭취 영양제 리스트 배열 업데이트하기 (localStorage 에도 반영됨)
       setUserTakingPillList(removedList)
+
+      // 만약 유저 아이디가 있고 복용 관리 서비스를 하고 있다면 확인
+      if (userId && arrayIsNotEmpty(intakePillList)) {
+        const matchOne: IntakeManagementType | undefined = intakePillList.find(x => x.pillId === id)
+        // 만약 이 영양제를 복용 관리 하고 있었다면,
+        if (matchOne) {
+          // local storage에서 해당 영양제 제거
+          setIntakePillList(intakePillList.filter((pill) => pill.pillId !== id))
+
+          // flutter_local_notification 기존 알림 삭제
+          if (isMobile()) {
+            deleteWeeklyNotification(id)
+          }
+
+          // 오늘 저장된 서버에 있는 해당 영양제의 모든 복용 기록들을 삭제함
+          ;(async () => {
+            await intakeApi.deleteIntakeHistory(userId, id)
+          })()
+        }
+      }
+
+      // 스낵바에 성공했다고 알림
+      setIsDeleteMyPillSuccess(true)
       // 다 끝나면 섭취 해제 체크
       setIsTaking(false)
     }
@@ -229,7 +205,7 @@ const Details = ({ details }: Props) => {
           {/*</div>*/}
         </div>
         <div className='flex items-center space-x-2'>
-          {/* 영양제 리스트 추가 버튼 */}
+          {/* 내 영양제 추가 버튼 */}
           <button
             className={
               'py-2 rounded-[0.625rem] text-white duration-500 grow' +
@@ -260,90 +236,131 @@ const Details = ({ details }: Props) => {
 
       {/* 상세 정보 부분 */}
       <section className='mt-2 space-y-4'>
-        {/*/!* 변화량 그래프 부분 *!/*/}
-        {/*{arrayIsNotEmpty(mergedNutrientData) &&*/}
-        {/*  <article className='bg-white p-6 text-gray-900'>*/}
-        {/*    <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>*/}
-        {/*    <InfoOutlined className='text-base text-gray-400 ml-1' />*/}
-        {/*    <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>*/}
-
-        {/*    /!* 그래프 부분 *!/*/}
-        {/*    <ContentGraph mergedNutrientData={mergedNutrientData} />*/}
-        {/*  </article>*/}
-        {/*}*/}
         {/* 변화량 그래프 부분(임시) */}
-        {arrayIsNotEmpty(임시) &&
-          <article className='bg-white p-6 text-gray-900'>
-            <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>
-            <InfoOutlined className='text-base text-gray-400 ml-1' />
-            <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>
+        <article className='bg-white p-6 text-gray-900'>
+          <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>
+          <InfoOutlined className='text-base text-gray-400 ml-1' />
+          <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>
 
-            {/* 그래프 부분 */}
-            <ContentGraph mergedNutrientData={임시} />
-          </article>
-        }
+          {/* TODO: 밑에 두 개 CONTENT_GRAPH_DUMMY_DATA를 다 mergedNutrientData로 바꾸면 됨 -> 지금 일단 해둠 */}
+          {userId ? (
+            arrayIsNotEmpty(mergedNutrientData) &&
+              // 그래프 부분
+              <ContentGraph mergedNutrientData={mergedNutrientData} />
+          ) : (
+            <div className='relative'>
+              <div className='blur-sm'>
+                <ContentGraph mergedNutrientData={CONTENT_GRAPH_DUMMY_DATA} />
+              </div>
+              <div className='absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center'>
+                <div className='relative w-[18.75rem] h-[12.5rem]'>
+                  <Image
+                    src={balanceIllust}
+                    className='object-cover'
+                    layout='fill'
+                  />
+                </div>
+                <Link href='/initial'>
+                  <a className='w-5/6 py-2.5 rounded-[0.625rem] bg-primary flex items-center justify-center text-white text-sm'>
+                    회원 가입 후 확인하기
+                  </a>
+                </Link>
+              </div>
+            </div>
+          )}
+        </article>
 
         {/* 효능 부분 */}
-        <article className='bg-white p-6 text-gray-900'>
-          {/* 주요 효능 부분 */}
-          <p className='text-base font-bold'>주요 효능</p>
-          <div className='mt-2 flex items-center flex-wrap gap-2'>
-            <EfficiencyTag tagName='노화&항산화' />
-            <EfficiencyTag tagName='면역 기능' />
-            <EfficiencyTag tagName='혈액 생성' />
-            <EfficiencyTag tagName='멀티미네랄' />
-            <EfficiencyTag tagName='콜레스테롤 합성 조절' />
-          </div>
+        {arrayIsNotEmpty(mainEfficacyList) &&
+          <article className='bg-white p-6 text-gray-900'>
+            {/* 주요 효능 부분 */}
+            <p className='text-base font-bold'>주요 효능</p>
+            <div className='mt-2 flex items-center flex-wrap gap-2'>
+              {mainEfficacyList.map((efficacy) =>
+                <EfficiencyTag key={efficacy} tagName={efficacy} />
+              )}
+            </div>
 
-          {/* 보조 효능 부분 */}
-          <button
-            className='mt-6 w-full flex items-center justify-between'
-            onClick={() => setIsOpenEfficiency(!isOpenEfficiency)}
-          >
-            <p className='text-base font-bold'>보조 효능</p>
-            {isOpenEfficiency ? (
-              <ExpandLess className='text-2xl' />
-            ) : (
-              <ExpandMore className='text-2xl' />
-            )}
-          </button>
-          <div className={'mt-2 flex items-center flex-wrap gap-2' + (isOpenEfficiency ? ' visible' : ' hidden')}>
-            <EfficiencyTag tagName='노화&항산화' />
-            <EfficiencyTag tagName='면역 기능' />
-            <EfficiencyTag tagName='혈액 생성' />
-            <EfficiencyTag tagName='멀티미네랄' />
-            <EfficiencyTag tagName='콜레스테롤 합성 조절' />
-          </div>
-        </article>
+            {/*/!* 보조 효능 부분 *!/*/}
+            {/*<button*/}
+            {/*  className='mt-6 w-full flex items-center justify-between'*/}
+            {/*  onClick={() => setIsOpenSubEfficiency(!isOpenSubEfficiency)}*/}
+            {/*>*/}
+            {/*  <p className='text-base font-bold'>보조 효능</p>*/}
+            {/*  {isOpenSubEfficiency ? (*/}
+            {/*    <ExpandLess className='text-2xl' />*/}
+            {/*  ) : (*/}
+            {/*    <ExpandMore className='text-2xl' />*/}
+            {/*  )}*/}
+            {/*</button>*/}
+            {/*<div className={'mt-2 flex items-center flex-wrap gap-2' + (isOpenSubEfficiency ? ' visible' : ' hidden')}>*/}
+            {/*  <EfficiencyTag tagName='노화&항산화' />*/}
+            {/*  <EfficiencyTag tagName='면역 기능' />*/}
+            {/*  <EfficiencyTag tagName='혈액 생성' />*/}
+            {/*  <EfficiencyTag tagName='멀티미네랄' />*/}
+            {/*  <EfficiencyTag tagName='콜레스테롤 합성 조절' />*/}
+            {/*</div>*/}
+          </article>
+        }
 
         {/* 추천 섭취 방법 부분 */}
         <article className='bg-white p-6'>
           <p className='text-base font-bold text-gray-900'>추천 섭취 방법</p>
-          <div className='mt-2 grid grid-cols-2 gap-y-2'>
+          <div className='mt-2 space-y-2'>
             {/* 일일 복용 횟수 */}
             <div className='flex items-center'>
               <div className='w-10 h-10 rounded-[1.25rem] bg-surface flex items-center justify-center'>
                 <Today className='text-2xl text-primary' />
               </div>
-              <p className='ml-2 text-sm font-bold text-primary'>1일 {dailyDose}회</p>
+              <p className='ml-2 text-sm font-bold text-primary'>{dailyDose}</p>
             </div>
             {/* 1회 복용량 */}
             <div className='flex items-center'>
               <div className='w-10 h-10 rounded-[1.25rem] bg-surface flex items-center justify-center'>
                 <Filter1 className='text-2xl text-primary' />
               </div>
-              <p className='ml-2 text-sm font-bold text-primary'>1회 {intakeCount}정</p>
+              <p className='ml-2 text-sm font-bold text-primary'>{intakeCount}</p>
             </div>
             {/* 먹는 시간 */}
             <div className='flex items-center'>
               <div className='w-10 h-10 rounded-[1.25rem] bg-surface flex items-center justify-center'>
                 <LocalDining className='text-2xl text-primary' />
               </div>
-              <p className='ml-2 text-sm font-bold text-primary'>{intakeTiming}</p>
+              <div className='ml-2 flex items-center'>
+                {intakeTimings.map((intakeTiming, idx) =>
+                  <p key={idx} className='text-sm font-bold text-primary'>
+                    {intakeTimings + (idx !== intakeTimings.length - 1 ? ', ' : '')}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </article>
       </section>
+
+      {/* 유저 밸런스 데이터 불러오기 오류 알림 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isGetBalanceDataError}
+        setIsSnackBarOpen={setIsGetBalanceDataError}
+        severity='error'
+        content='Error : 유저 밸런스 데이터 불러오기 오류. 문의바랍니다.'
+      />
+
+      {/* 내 영양제 등록 알림 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isAddMyPillSuccess}
+        setIsSnackBarOpen={setIsAddMyPillSuccess}
+        severity='success'
+        content='내 영양제 목록에 추가되었습니다!'
+      />
+
+      {/* 내 영양제 제거 알림 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isDeleteMyPillSuccess}
+        setIsSnackBarOpen={setIsDeleteMyPillSuccess}
+        severity='success'
+        content='내 영양제 목록에서 제거되었습니다!'
+      />
     </div>
   )
 }

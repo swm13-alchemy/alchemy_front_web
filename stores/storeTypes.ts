@@ -1,11 +1,25 @@
-import { SupplementDetailsType } from '../utils/types'
+import { IntakeManagementType, SupplementDetailsType } from '../utils/types'
 import { StateCreator } from 'zustand'
 import { PersistOptions } from 'zustand/middleware'
+import { Dayjs } from 'dayjs'
 
 // export const dummyStorageApi = {
 //   getItem: () => null,
 //   setItem: () => undefined,
 // }
+
+export type userInformationState = {
+  userId: string | null
+  setUserId: (userId: string | null) => void
+  oauthId: string | null
+  setOauthId: (oauthId: string | null) => void
+  // wellIntakePercent: number | null
+  // setWellIntakePercent: (wellIntakePercent: number) => void
+}
+export type userInformationPersist = (
+  config: StateCreator<userInformationState>,
+  options: PersistOptions<userInformationState>
+) => StateCreator<userInformationState>
 
 export type pillListState = {
   userTakingPillList: SupplementDetailsType[]
@@ -20,11 +34,22 @@ export type pillListPersist = (
 
 export type userHealthState = {
   age: number | null
-  setAge: (age: number) => void
+  setAge: (age: number | null) => void
   isMale: boolean | null
-  setIsMale: (isMale: boolean) => void
+  setIsMale: (isMale: boolean | null) => void
 }
 export type userHealthPersist = (
   config: StateCreator<userHealthState>,
   options: PersistOptions<userHealthState>
 ) => StateCreator<userHealthState>
+
+export type intakeManagementState = {
+  intakeServiceStartDate: Dayjs | null,
+  setIntakeServiceStartDate: (date: Dayjs | null) => void
+  intakePillList: IntakeManagementType[]
+  setIntakePillList: (pillList: IntakeManagementType[]) => void
+}
+export type intakeManagementPersist = (
+  config: StateCreator<intakeManagementState>,
+  options: PersistOptions<intakeManagementState>
+) => StateCreator<intakeManagementState>
