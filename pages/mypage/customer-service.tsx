@@ -2,7 +2,7 @@ import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomN
 import BackHeader from '../../components/layout/BackHeader'
 import { useRouter } from 'next/router'
 import TextField from '@mui/material/TextField'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { postAirTable } from '../../utils/airtable'
 import TopCenterSnackBar from '../../components/common/TopCenterSnackBar'
 import LoadingCircular from '../../components/layout/LoadingCircular'
@@ -27,12 +27,15 @@ const CustomerService = () => {
     } else {
       alert('오류 : 유저아이디 없음!')
     }
-
   }
 
-  if (!userId) {  // 로그인이 안되어 있는 경우 redirect
-    router.push('/initial')
-  }
+  // 로그인이 안되어 있는 경우 redirect
+  useEffect(() => {
+    if (!userId) {
+      router.push('/initial')
+    }
+  }, [userId])
+
 
   return (
     <ContainerWithBottomNav>

@@ -6,6 +6,7 @@ import { CompareContent } from '../../../utils/functions/CompareContent'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import React, { useEffect, useState } from 'react'
 import EfficiencyTag from '../../../components/tag/EfficiencyTag'
+import { arrayIsNotEmpty } from '../../../utils/functions/arrayIsNotEmpty'
 
 // interface QueryProps extends UserIntakeNutrientType {
 //   // query로 왔기 때문에 string으로 온다.
@@ -80,7 +81,8 @@ const Report = () => {
 
           <p className='mt-6 text-sm font-bold text-gray-400'>관련 건강 고민 토픽</p>
           <div className='mt-1 flex items-center flex-wrap gap-2'>
-            {efficacy.map((efficacy) =>
+            {arrayIsNotEmpty(efficacy) &&
+              efficacy.map((efficacy) =>
               <EfficiencyTag key={efficacy} tagName={efficacy} />
             )}
           </div>
