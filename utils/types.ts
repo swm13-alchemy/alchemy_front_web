@@ -24,11 +24,11 @@ export interface IngredientType {
 export interface SupplementDetailsType {
   id: number
   name: string
-  dailyDose: number
+  dailyDose: string
   // imageUrl: string | null
   information: string
-  intakeCount: number
-  intakeTimings: string
+  intakeCount: string
+  intakeTimings: string[]
   maker: string
   ingredients: IngredientType[]
 }

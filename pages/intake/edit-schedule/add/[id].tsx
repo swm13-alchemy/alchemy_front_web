@@ -7,7 +7,7 @@ import IntakeDaysBtns from '../../../../components/common/intake/IntakeDaysBtns'
 import RemoveCircleOutline from '@mui/icons-material/RemoveCircleOutline'
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline'
 import ChevronRight from '@mui/icons-material/ChevronRight'
-import { useUserIntakeManagementStore, useUserPillListStore } from '../../../../stores/store'
+import { useUserInformationStore, useUserIntakeManagementStore, useUserPillListStore } from '../../../../stores/store'
 import { Days, SupplementDetailsType } from '../../../../utils/types'
 import dayjs, { Dayjs } from 'dayjs'
 import { replaceValueInArray } from '../../../../utils/functions/replaceValueInArray'
@@ -15,10 +15,13 @@ import TimePickerModal from '../../../../components/common/intake/TimePickerModa
 import { arrayIsNotEmpty } from '../../../../utils/functions/arrayIsNotEmpty'
 import { addWeeklyNotification } from '../../../../utils/functions/flutterBridgeFunc/intakeNotification'
 import { isMobile } from '../../../../utils/functions/isMobile'
+import TopCenterSnackBar from '../../../../components/common/TopCenterSnackBar'
+import { intakeApi, PutIntakeHistoryType } from '../../../../utils/api'
 
 const AddingPillNotification = () => {
   const router = useRouter()
   const id: number = parseInt(router.query.id as string)
+  const userId = useUserInformationStore(state => state.userId)
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   const { intakeServiceStartDate, setIntakeServiceStartDate, intakePillList, setIntakePillList } = useUserIntakeManagementStore()
   const [pillName, setPillName] = useState<string>('')
@@ -29,6 +32,11 @@ const AddingPillNotification = () => {
   const [isTimePickerOpen, setIsTimePickerOpen] = useState<boolean[]>([false, false, false, false, false])
   const [intakeTimesDayjs, setIntakeTimesDayjs] = useState<Dayjs[]>([dayjs().set('h', 9).set('m', 0)])
   const [intakeAmount, setIntakeAmount] = useState<number>(1)
+
+  // 스낵바 boolean들
+  const [isSaveSuccess, setIsSaveSuccess] = useState<boolean>(false)
+  const [isNicknameError, setIsNicknameError] = useState<boolean>(false)
+  const [isDayError, setIsDayError] = useState<boolean>(false)
 
   // 영양제 name, maker를 가져옴
   useEffect(() => {
@@ -90,7 +98,7 @@ const AddingPillNotification = () => {
     //   setIntakeServiceStartDate(dayjs())
     // }
 
-    if (pillNickName !== '' && arrayIsNotEmpty(intakeDays)) {
+    if (pillNickName !== '' && arrayIsNotEmpty(intakeDays) && userId) {
       // local storage에 저장
       setIntakePillList(intakePillList.concat({
         pillId: id,
@@ -108,13 +116,35 @@ const AddingPillNotification = () => {
       if (isMobile()) {
         addWeeklyNotification(id, intakeDays, intakeTimesDayjs, `${pillNickName} 드실 시간이에요😉 비힐러가 늘 곁에서 챙겨드릴게요!`)
       }
+      
+      // 서버에 해당 영양제 복용 기록 false로 남기기
+      ;(async () => {
+        const tempPutHistoryJSONList: PutIntakeHistoryType[] = []
 
-      router.back()
+        intakeTimesDayjs.forEach((intakeTimeDayjs) => {
+          tempPutHistoryJSONList.push({
+            userId: userId,
+            pillId: id,
+            intakeDate: dayjs().format('YYYY-MM-DD'),
+            intakeTime: intakeTimeDayjs.format('HH:mm'),
+            isTake: false
+          })
+        })
+        
+        await intakeApi.putIntakeHistory(tempPutHistoryJSONList)
+      })()
+
+      // 다 완료되었으면 스낵바에 success 알리기
+      setIsSaveSuccess(true)
+      setTimeout(() => router.back(), 1000)
     } else {
       if (pillNickName === '') {
-        alert('영양제 별명을 입력해주세요')
-      } else {
-        alert('섭취 요일을 선택해주세요')
+        setIsNicknameError(true)
+      } else if (!arrayIsNotEmpty(intakeDays)) {
+        setIsDayError(true)
+      } else if (!userId) {
+        alert('Error : 유저 아이디 없음!')
+        router.back()
       }
     }
   }
@@ -243,6 +273,29 @@ const AddingPillNotification = () => {
         onOffModal={onOffModal}
         intakeTimesDayjs={intakeTimesDayjs}
         setIntakeTimesDayjs={setIntakeTimesDayjs}
+      />
+
+      {/* 스낵바들 */}
+      {/* 등록 완료 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isSaveSuccess}
+        setIsSnackBarOpen={setIsSaveSuccess}
+        severity='success'
+        content='편집이 완료되었습니다!'
+      />
+      {/* 입력 오류 알림 스낵바 (닉네임) */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isNicknameError}
+        setIsSnackBarOpen={setIsNicknameError}
+        severity='error'
+        content='영양제 별명을 입력해주세요'
+      />
+      {/* 입력 오류 알림 스낵바 (요일) */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isDayError}
+        setIsSnackBarOpen={setIsDayError}
+        severity='error'
+        content='섭취 요일을 선택해주세요'
       />
     </ContainerWithBottomNav>
   )

@@ -38,14 +38,14 @@ function ContentGraph({ mergedNutrientData }: Props) {
       <section className='mt-4 space-y-6'>
         {/* 더보기 누르기 전 보여지는 바 들 */}
         {arrayIsNotEmpty(firstDisplayedData) &&
-          firstDisplayedData.map((data) => (
-            <ContentBar key={data.name} {...data} />
+          firstDisplayedData.map((data, idx) => (
+            <ContentBar key={idx} {...data} />
           ))
         }
         {/* 더보기 누르면 추가로 보여지는 바 들 */}
         {isOpenGraph && arrayIsNotEmpty(secondDisplayedData) &&
-          secondDisplayedData.map((data) => (
-            <ContentBar key={data.name} {...data} />
+          secondDisplayedData.map((data, idx) => (
+            <ContentBar key={idx} {...data} />
           ))
         }
       </section>

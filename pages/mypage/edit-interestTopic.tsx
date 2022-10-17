@@ -5,8 +5,7 @@ import { useRouter } from 'next/router'
 import BackHeader from '../../components/layout/BackHeader'
 import { useEffect, useState } from 'react'
 import { useUserInformationStore } from '../../stores/store'
-import { topicApi, userApi } from '../../utils/api'
-import { UserInformationTypes } from '../../utils/types'
+import { topicApi } from '../../utils/api'
 
 const EditInterestTopic = () => {
   const router = useRouter()
