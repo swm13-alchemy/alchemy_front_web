@@ -19,9 +19,12 @@ const EditInterestTopic = () => {
     }
   }, [queryInterestTopicIds])
 
-  if (!userId) { // 로그인 안했으면 Redirect
-    router.back()
-  }
+  // 로그인 안했으면 Redirect
+  useEffect(() => {
+    if (!userId) {
+      router.back()
+    }
+  }, [userId])
 
   /** 완료 버튼 눌렀을 때 함수 */
   const completingTheEdit = async () => {
