@@ -18,12 +18,14 @@ export const postAirTable = (userId: string, customerText: string) => base('cust
       // }
     }
   },
-], function(err, records) {
-  if (err) {
-    console.error(err)
-    return
-  }
-  records.forEach(function (record) {
-    console.log(record.getId())
-  })
-})
+],
+//   function(err, records) {
+//   if (err) {
+//     console.error(err)
+//     return
+//   }
+//   records.forEach(function (record) {
+//     console.log(record.getId())
+//   })
+// }
+)
