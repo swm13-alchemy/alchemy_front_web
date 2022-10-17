@@ -6,7 +6,7 @@ const base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('app9Twnw
 export const postAirTable = (userId: string, customerText: string) => base('customer-service').create([
   {
     "fields": {
-      "Name": userId,
+      "UserId": userId,
       "Status": "To do",
       "Priority": "Medium",
       "Text": customerText,

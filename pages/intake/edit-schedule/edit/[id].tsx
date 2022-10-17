@@ -8,7 +8,7 @@ import ContainerWithBottomNav from '../../../../components/layout/ContainerWithB
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Days, IntakeManagementType } from '../../../../utils/types'
-import { useUserInformation, useUserIntakeManagementStore } from '../../../../stores/store'
+import { useUserInformationStore, useUserIntakeManagementStore } from '../../../../stores/store'
 import { replaceValueInArray } from '../../../../utils/functions/replaceValueInArray'
 import dayjs, { Dayjs } from 'dayjs'
 import TimePickerModal from '../../../../components/common/intake/TimePickerModal'
@@ -19,10 +19,11 @@ import {
   editWeeklyNotification,
 } from '../../../../utils/functions/flutterBridgeFunc/intakeNotification'
 import { intakeApi, PutIntakeHistoryType } from '../../../../utils/api'
+import TopCenterSnackBar from '../../../../components/common/TopCenterSnackBar'
 
 const EditingPillNotification = () => {
   const router = useRouter()
-  const userId = useUserInformation(state => state.userId)
+  const userId = useUserInformationStore(state => state.userId)
   const pillId: number = parseInt(router.query.id as string)
   const intakePillList = useUserIntakeManagementStore(state => state.intakePillList)
   const setIntakePillList = useUserIntakeManagementStore(state => state.setIntakePillList)
@@ -35,6 +36,12 @@ const EditingPillNotification = () => {
   const [intakeTimesDayjs, setIntakeTimesDayjs] = useState<Dayjs[]>([dayjs().set('h', 9).set('m', 0)])
   const [intakeAmount, setIntakeAmount] = useState<number>(1)
   const [editingPillManagementData, setEditingPillManagementData] = useState<IntakeManagementType | null>(null) // 수정 전, 기존 값들
+
+  // 스낵바 boolean들
+  const [isSaveSuccess, setIsSaveSuccess] = useState<boolean>(false)
+  const [isDeleteSuccess, setIsDeleteSuccess] = useState<boolean>(false)
+  const [isNicknameError, setIsNicknameError] = useState<boolean>(false)
+  const [isDayError, setIsDayError] = useState<boolean>(false)
 
   // 해당 영양제 복용 관리 저장된 정보들을 가져옴 (사용자 설정 값들로 초기 설정)
   useEffect(() => {
@@ -51,6 +58,7 @@ const EditingPillNotification = () => {
       setEditingPillManagementData(matchOne)
     } else {
       alert("Error: 복용 관리중인 영양제가 아닙니다.")
+      router.back()
     }
   }, [])
 
@@ -108,15 +116,14 @@ const EditingPillNotification = () => {
         startIntakeDate: editingPillManagementData.startIntakeDate
       }))
 
-      // TODO: 현재 오늘 날짜 시간표에 대한 시간표 편집만 가능함 (나중에 아예 UI 변경 자체가 필요함 -> 수정 누르면 오늘 시간표 편집이 아니라 그냥 전체 시간표 등록 영양제들 목록이 나오도록)
       // 서버에 저장된 기존 복용 기록 삭제
       if (!intakeDays.includes(dayjs().format('ddd') as Days)) {  // 수정한 복용 요일에 오늘 요일이 제거됐다면,
         // 오늘 저장된 해당 영양제의 모든 복용 기록들을 삭제함
-        (async () => {
+        ;(async () => {
           await intakeApi.deleteIntakeHistory(userId, pillId)
         })()
       } else {  // 수정한 복용 요일에 오늘 요일이 포함되는 경우
-        (async () => {
+        ;(async () => {
           // 오늘 저장된 해당 영양제의 모든 복용 기록을 삭제함
           await intakeApi.deleteIntakeHistory(userId, pillId)
             .then(() => { // 삭제가 완료되면 변경된 사항들을 바탕으로 복용 기록을 새로 채워넣음
@@ -137,18 +144,18 @@ const EditingPillNotification = () => {
         })()
       }
 
-
       // flutter_local_notification 기존 알림 수정
       if (isMobile()) {
         editWeeklyNotification(pillId, intakeDays, intakeTimesDayjs, `${pillNickName} 드실 시간이에요😉 비힐러가 늘 곁에서 챙겨드릴게요!`)
       }
 
-      router.back()
-    } else {
+      setIsSaveSuccess(true)
+      setTimeout(() => router.back(), 1000)
+    } else {  // 입력 오류 처리
       if (pillNickName === '') {
-        alert('영양제 별명을 입력해주세요')
+        setIsNicknameError(true)
       } else {
-        alert('섭취 요일을 선택해주세요')
+        setIsDayError(true)
       }
     }
   }
@@ -156,21 +163,19 @@ const EditingPillNotification = () => {
   /** 복용 관리 목록에서 제거 함수 */
   const deleteNotification = async () => {
     if (userId) {
+      // local storage에서 해당 영양제 제거
+      setIntakePillList(intakePillList.filter((pill) => pill.pillId !== pillId))
+
+      // flutter_local_notification 기존 알림 삭제
+      if (isMobile()) {
+        deleteWeeklyNotification(pillId)
+      }
+
       // 오늘 저장된 서버에 있는 해당 영양제의 모든 복용 기록들을 삭제함
       await intakeApi.deleteIntakeHistory(userId, pillId)
-        .then(() => {
-          // local storage에서 해당 영양제 제거
-          setIntakePillList(intakePillList.filter((pill) => pill.pillId !== pillId))
 
-          // flutter_local_notification 기존 알림 삭제
-          if (isMobile()) {
-            deleteWeeklyNotification(pillId)
-          }
-
-          alert('복용 관리 목록에서 해당 영양제가 제거되었습니다.')
-
-          router.back()
-        })
+      setIsDeleteSuccess(true)
+      setTimeout(() => router.back(), 1000)
     }
   }
 
@@ -304,6 +309,36 @@ const EditingPillNotification = () => {
         onOffModal={onOffModal}
         intakeTimesDayjs={intakeTimesDayjs}
         setIntakeTimesDayjs={setIntakeTimesDayjs}
+      />
+
+      {/* 스낵바들 */}
+      {/* 영양제 편집 완료 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isSaveSuccess}
+        setIsSnackBarOpen={setIsSaveSuccess}
+        severity='success'
+        content='편집이 완료되었습니다!'
+      />
+      {/* 복용 관리 삭제 완료 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isDeleteSuccess}
+        setIsSnackBarOpen={setIsDeleteSuccess}
+        severity='success'
+        content='복용 관리 목록에서 해당 영양제가 제거되었습니다.'
+      />
+      {/* 입력 오류 알림 스낵바 (닉네임) */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isNicknameError}
+        setIsSnackBarOpen={setIsNicknameError}
+        severity='error'
+        content='영양제 별명을 입력해주세요'
+      />
+      {/* 입력 오류 알림 스낵바 (요일) */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isDayError}
+        setIsSnackBarOpen={setIsDayError}
+        severity='error'
+        content='섭취 요일을 선택해주세요'
       />
     </ContainerWithBottomNav>
   )

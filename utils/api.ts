@@ -52,12 +52,27 @@ export const intakeApi = {
 
 export const userApi = {
   getUserInformationByOauthId: (oauthId: string) => nest.get(`/user/oauth/${oauthId}`),
-  postUserInformation: (oauthId: string, nickName: string, email: string | null | undefined, birth: string, isMale: boolean, oauthRefreshToken: string) => nest.post('/user', {
-    oauthId: oauthId,
-    nickname: nickName,
-    email: email,
-    birth: birth,
-    isMale: isMale,
-    oauthRefreshToken: oauthRefreshToken
+  postUserInformation: (oauthId: string, nickName: string, email: string | null | undefined, birth: string, isMale: boolean, interestTopicIds: number[], oauthRefreshToken: string) => nest.post('/user', {
+    userData: {
+      oauthId: oauthId,
+      nickname: nickName,
+      email: email,
+      birth: birth,
+      isMale: isMale,
+      oauthRefreshToken: oauthRefreshToken
+    },
+    topicIds: interestTopicIds
+  }),
+  deleteUserAccount: (userId: string) => nest.delete('/user', {
+    data: {
+      userId: userId
+    }
+  })
+}
+
+export const topicApi = {
+  patchUserInterestTopics: (userId: string, topicIds: number[]) => nest.patch('/topic/user-topic', {
+    userId: userId,
+    topicIds: topicIds
   })
 }

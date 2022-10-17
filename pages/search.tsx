@@ -9,6 +9,7 @@ import { NextPage } from 'next'
 import { arrayIsNotEmpty } from '../utils/functions/arrayIsNotEmpty'
 import Image from 'next/image'
 import noSearchResult from '../public/asset/image/noSearchResult.png'
+import PillLenseFNB from '../components/layout/PillLenseFNB'
 
 const Search: NextPage = () => {
   const router = useRouter()
@@ -81,6 +82,8 @@ const Search: NextPage = () => {
           <Image src={noSearchResult} className='object-cover' layout='fill' />
         </div>
       )}
+
+      <PillLenseFNB />
     </div>
   )
 }

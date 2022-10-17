@@ -6,9 +6,9 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 dayjs.extend(weekday)
 dayjs.extend(isSameOrBefore)
 
-export function makeIntakeTimeTableByDate(timeTableByDay: TimeTableByDayType): TimeTableByDateType {
-  const INITIAL_YEAR: number = parseInt(dayjs().format('YYYY'))
-  const INITIAL_MONTH: number = parseInt(dayjs().format('M'))
+export function makeIntakeTimeTableByDate(timeTableByDay: TimeTableByDayType, selectedYearANDMonth: Dayjs): TimeTableByDateType {
+  const INITIAL_YEAR: number = selectedYearANDMonth.get('year')
+  const INITIAL_MONTH: number = selectedYearANDMonth.get('month') + 1 // start 0
 
   let currentMonthDays: TimeTableByDateType
   let previousMonthDays: TimeTableByDateType

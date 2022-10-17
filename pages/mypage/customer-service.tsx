@@ -6,21 +6,32 @@ import { useState } from 'react'
 import { postAirTable } from '../../utils/airtable'
 import TopCenterSnackBar from '../../components/common/TopCenterSnackBar'
 import LoadingCircular from '../../components/layout/LoadingCircular'
+import { useUserInformationStore } from '../../stores/store'
 
 const CustomerService = () => {
   const router = useRouter()
+  const userId = useUserInformationStore(state => state.userId)
   const [customerText, setCustomerText] = useState<string>('')
   const [isSnackBarOpen, setIsSnackBarOpen] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const submitCustomerText = () => {
-    setIsLoading(true)
-    postAirTable('test', customerText)  // TODO: 실제 유저 아이디를 넣어야함
-    setIsSnackBarOpen(true)
-    setTimeout(() => {
-      setIsLoading(false)
-      router.back()
-    }, 1500)
+    if (userId) {
+      setIsLoading(true)
+      postAirTable(userId, customerText)
+      setIsSnackBarOpen(true)
+      setTimeout(() => {
+        setIsLoading(false)
+        router.back()
+      }, 1500)
+    } else {
+      alert('오류 : 유저아이디 없음!')
+    }
+
+  }
+
+  if (!userId) {  // 로그인이 안되어 있는 경우 redirect
+    router.push('/initial')
   }
 
   return (

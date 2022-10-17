@@ -14,17 +14,20 @@ import Filter1 from '@mui/icons-material/Filter1'
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline'
 import Lock from '@mui/icons-material/Lock'
 import LiveHelpOutlined from '@mui/icons-material/LiveHelpOutlined'
-import { useUserInformation } from '../../stores/store'
+import { useUserInformationStore } from '../../stores/store'
 import { userApi } from '../../utils/api'
-import { UserInformationTypes } from '../../utils/types'
+import { TopicType, UserInformationTypes } from '../../utils/types'
 import LoadingCircular from '../../components/layout/LoadingCircular'
 import { getAgeRange } from '../../utils/functions/getAgeRange'
+import PersonOutline from '@mui/icons-material/PersonOutline'
+import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 
 const MyPage = () => {
-  const oauthId = useUserInformation(state => state.oauthId)
+  const oauthId = useUserInformationStore(state => state.oauthId)
   const [nickname, setNickname] = useState<string>('')
   const [ageRange, setAgeRange] = useState<string>('')
   const [isMale, setIsMale] = useState<boolean | null>(null)
+  const [interestTopicIds, setInterestTopicIds] = useState<TopicType[]>([])
 
   // 유저 정보를 서버에서 가져옴
   useEffect(() => {
@@ -36,12 +39,13 @@ const MyPage = () => {
           setNickname(userInfo.nickname)
           setAgeRange(getAgeRange(userInfo.birth))
           setIsMale(userInfo.isMale)
+          setInterestTopicIds(userInfo.topics)
         }
       })()
     }
   }, [oauthId])
 
-  if (!(nickname && ageRange && isMale)) return <LoadingCircular />
+  if (!(nickname && ageRange && isMale) && arrayIsNotEmpty(interestTopicIds)) return <LoadingCircular />
 
   return (
     <ContainerWithBottomNav>
@@ -82,17 +86,26 @@ const MyPage = () => {
         </section>
 
         {/* 관심 건강 고민 부분 */}
-        {/*<section className='bg-white px-6 py-4 space-y-4'>*/}
-        {/*  <div className='flex items-center space-x-2'>*/}
-        {/*    <p className='text-base font-bold text-gray-900'>관심 건강 고민</p>*/}
-        {/*    <button className='bg-gray-100 px-2 py-1 rounded text-xs font-medium text-gray-500'>관리</button>*/}
-        {/*  </div>*/}
-        {/*  <div className='flex items-center flex-wrap gap-2'>*/}
-        {/*    {['간 건강', '눈 건강', '혈액순환', '피로감', '치아건강', '스트레스 & 수면', '혈중 중성지방', '체지방'].map((efficacy) =>*/}
-        {/*    <EfficiencyTag key={efficacy} tagName={efficacy} />*/}
-        {/*    )}*/}
-        {/*  </div>*/}
-        {/*</section>*/}
+        <section className='bg-white px-6 py-4 space-y-4'>
+          <div className='flex items-center space-x-2'>
+            <p className='text-base font-bold text-gray-900'>관심 건강 고민</p>
+            <Link href={{
+              pathname: '/mypage/edit-interestTopic',
+              query: {
+                interestTopicIds: interestTopicIds.map(x => x.id)
+              }
+            }}>
+              <a className='bg-gray-100 px-2 py-1 rounded text-xs font-medium text-gray-500'>
+                관리
+              </a>
+            </Link>
+          </div>
+          <div className='flex items-center flex-wrap gap-2'>
+            {interestTopicIds.map((efficacy) =>
+              <EfficiencyTag key={efficacy.id} tagName={efficacy.name} />
+            )}
+          </div>
+        </section>
 
         {/* 영양제 편의 부분 */}
         {/*<section className='bg-white px-6 py-4'>*/}
@@ -116,6 +129,9 @@ const MyPage = () => {
           </ListLinkBtn>
           <ListLinkBtn href='https://swm13-alchemists.notion.site/de276bcf42a74938a7d6bd1ee3353358' btnName='개인정보 처리 방침'>
             <Lock className='text-2xl text-gray-400' />
+          </ListLinkBtn>
+          <ListLinkBtn href='/mypage/account-management' btnName='계정 관리'>
+            <PersonOutline className='text-2xl text-gray-400' />
           </ListLinkBtn>
 
           <p className='mt-4 text-xs text-gray-400'>앱 버전 0.1.0</p>

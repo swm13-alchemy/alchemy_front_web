@@ -1,12 +1,7 @@
 import PillListItem from './PillListItem'
 import DeleteForeverOutlined from '@mui/icons-material/DeleteForeverOutlined'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogActions from '@mui/material/DialogActions'
-import Button from '@mui/material/Button'
 import React, { useState } from 'react'
+import { MuiDialogWithParameters } from './MuiDialog'
 
 interface Props {
   id: number
@@ -36,27 +31,15 @@ function EditMyPillListItem({ maker, name, id, deletePillFunc }: Props) {
       </button>
 
       {/* 삭제 확인 Dialog */}
-      <Dialog
-        open={isDeleteDialogOpen}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          내 영양제 목록에서 제거
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            복용 관리 중인 영양제 삭제 시, 복용 관리 내용도 함께 삭제됩니다. 내 영양제 목록에서 제거하시겠습니까?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsDeleteDialogOpen(false)}>취소</Button>
-          <Button onClick={() => deletePillFunc(id)} autoFocus>
-            삭제
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <MuiDialogWithParameters
+        isDialogOpen={isDeleteDialogOpen}
+        setIsDialogOpen={setIsDeleteDialogOpen}
+        dialogTitle='내 영양제 목록에서 제거'
+        dialogContent='복용 관리 중인 영양제 삭제 시, 복용 관리 내용도 함께 삭제됩니다. 내 영양제 목록에서 제거하시겠습니까?'
+        executedBtnName='삭제'
+        funcToBeExecuted={deletePillFunc}
+        funcParameter={id}
+      />
     </div>
     // <div className='flex items-center justify-between w-full h-28 border-[#BABABA] border rounded-3xl px-2'>
     //   <Link href={`/pill-details/${id}`}>

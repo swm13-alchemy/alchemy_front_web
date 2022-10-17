@@ -20,6 +20,7 @@ export default NextAuth({
       clientSecret: process.env.KAKAO_CLIENT_SECRET as string
     })
   ],
+  secret: process.env.JWT_SECRET,
   callbacks: {
     async jwt({ token, user, account }) {
       if (account) {

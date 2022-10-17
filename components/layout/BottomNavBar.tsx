@@ -5,6 +5,8 @@ import GraphicEq from '@mui/icons-material/GraphicEq'
 import { useEffect, useState } from 'react'
 import ListAlt from '@mui/icons-material/ListAlt'
 import PersonOutline from '@mui/icons-material/PersonOutline'
+import { useUserInformationStore } from '../../stores/store'
+import useUserId from '../../hooks/useUserId'
 
 // const menuList = [
 //   { id: '1', name: 'HOME', icon: Home, path: '/' },
@@ -14,10 +16,11 @@ import PersonOutline from '@mui/icons-material/PersonOutline'
 
 function BottomNavBar() {
   const router = useRouter()
+  const userId = useUserId()
 
   return (
     <nav className='h-12 flex items-center fixed bottom-0 left-0 right-0 bg-surface z-50'>
-      <Menu router={router} id={1} name='HOME' paths={['/', '/search', '/pill-details']}>
+      <Menu router={router} id={1} name='홈' paths={['/', '/search', '/pill-details']}>
         <Home className='text-2xl' />
       </Menu>
       <Menu router={router} id={2} name='밸런스' paths={['/balance']}>
@@ -26,9 +29,11 @@ function BottomNavBar() {
       <Menu router={router} id={3} name='복용관리' paths={['/intake']}>
         <ListAlt className='text-2xl'/>
       </Menu>
-      <Menu router={router} id={4} name='마이페이지' paths={['/mypage']}>
-        <PersonOutline className='text-2xl' />
-      </Menu>
+      {userId &&
+        <Menu router={router} id={4} name='마이페이지' paths={['/mypage']}>
+          <PersonOutline className='text-2xl' />
+        </Menu>
+      }
     </nav>
   )
 }

@@ -12,18 +12,22 @@ import {
 import { Dayjs } from 'dayjs'
 
 /** 유저아이디와 OAuth에서 받은 id를 저장하는 Store */
-export const useUserInformation = create<userInformationState>(
+export const useUserInformationStore = create<userInformationState>(
   // @ts-ignore
   (persist as userInformationPersist)(
     (set) => ({
       userId: null,
-      setUserId: (userId: string) => {
+      setUserId: (userId: string | null) => {
         set((state) => ({...state, userId: userId}))
       },
       oauthId: null,
-      setOauthId: (oauthId: string) => {
+      setOauthId: (oauthId: string | null) => {
         set((state) => ({...state, oauthId: oauthId}))
-      }
+      },
+      // wellIntakePercent: null,  // TODO: 메인 화면에 보여주기 위해 임시로 둔 값 추후 다른 방법 고민
+      // setWellIntakePercent: (wellIntakePercent: number) => {
+      //   set((state) => ({...state, wellIntakePercent: wellIntakePercent}))
+      // }
     }),
     {
       name: 'userInformation'
@@ -59,11 +63,11 @@ export const useUserHealthDataStore = create<userHealthState>(
   (persist as userHealthPersist)(
     (set) => ({
       age: null,
-      setAge: (age: number) => {
+      setAge: (age: number | null) => {
         set((state) => ({...state, age: age}))
       },
       isMale: null,
-      setIsMale: (isMale: boolean) => {
+      setIsMale: (isMale: boolean | null) => {
         set((state) => ({...state, isMale: isMale}))
       }
     }),
@@ -79,7 +83,7 @@ export const useUserIntakeManagementStore = create<intakeManagementState>(
   (persist as intakeManagementPersist)(
     (set) => ({
       intakeServiceStartDate: null,
-      setIntakeServiceStartDate: (intakeServiceDate: Dayjs) => {
+      setIntakeServiceStartDate: (intakeServiceDate: Dayjs | null) => {
         set((state) => ({...state, intakeServiceStartDate: intakeServiceDate}))
       },
       intakePillList: [],

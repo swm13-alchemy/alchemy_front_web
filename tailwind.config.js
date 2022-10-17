@@ -9,7 +9,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        notosansKR: ['Noto Sans KR', ...defaultTheme.fontFamily.sans]
+        notosansKR: ['Noto Sans KR', ...defaultTheme.fontFamily.sans],
+        roboto: ['Roboto', ...defaultTheme.fontFamily.sans]
       },
       colors: {
         'primary': '#1C65D1',

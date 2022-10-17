@@ -24,11 +24,11 @@ export interface IngredientType {
 export interface SupplementDetailsType {
   id: number
   name: string
-  dailyDose: number
+  dailyDose: string
   // imageUrl: string | null
   information: string
-  intakeCount: number
-  intakeTimings: string
+  intakeCount: string
+  intakeTimings: string[]
   maker: string
   ingredients: IngredientType[]
 }
@@ -95,7 +95,7 @@ export interface IntakeManagementType {
 
 export interface TimeTableDataType {
   pillId: number
-  isTake: boolean
+  isIntake: boolean
 }
 
 export interface TimeTableByTimeType {
@@ -126,6 +126,10 @@ export interface TimeTableByDateType {
 //   [date: string]: ServerSideIntakeHistoryDataType[]
 // }
 
+export interface TopicType {
+  id: number
+  name: string
+}
 export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 변경
   id: string
   oauthId: string
@@ -133,6 +137,7 @@ export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 �
   birth: string
   isMale: boolean
   email: string | null | undefined
-  refreshToken: string | null
+  // refreshToken: string | null
   oauthRefreshToken: string | null
+  topics: TopicType[]
 }
