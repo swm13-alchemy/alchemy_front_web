@@ -242,7 +242,7 @@ const Details = ({ details }: Props) => {
           <InfoOutlined className='text-base text-gray-400 ml-1' />
           <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>
 
-          {/* TODO: CONTENT_GRAPH_DUMMY_DATA를 다 mergedNutrientData로 바꾸면 됨 -> 지금 일단 해둠 */}
+          {/* TODO: 밑에 두 개 CONTENT_GRAPH_DUMMY_DATA를 다 mergedNutrientData로 바꾸면 됨 -> 지금 일단 해둠 */}
           {userId ? (
             arrayIsNotEmpty(mergedNutrientData) &&
               // 그래프 부분
@@ -250,7 +250,7 @@ const Details = ({ details }: Props) => {
           ) : (
             <div className='relative'>
               <div className='blur-sm'>
-                <ContentGraph mergedNutrientData={mergedNutrientData} />
+                <ContentGraph mergedNutrientData={CONTENT_GRAPH_DUMMY_DATA} />
               </div>
               <div className='absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center'>
                 <div className='relative w-[18.75rem] h-[12.5rem]'>
@@ -326,7 +326,13 @@ const Details = ({ details }: Props) => {
               <div className='w-10 h-10 rounded-[1.25rem] bg-surface flex items-center justify-center'>
                 <LocalDining className='text-2xl text-primary' />
               </div>
-              <p className='ml-2 text-sm font-bold text-primary'>{intakeTimings}</p>
+              <div className='ml-2 flex items-center'>
+                {intakeTimings.map((intakeTiming, idx) =>
+                  <p key={idx} className='text-sm font-bold text-primary'>
+                    {intakeTimings + (idx !== intakeTimings.length - 1 ? ', ' : '')}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </article>
