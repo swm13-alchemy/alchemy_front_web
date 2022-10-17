@@ -5,7 +5,7 @@ import MainHeader from '../../components/layout/MainHeader'
 import ScheduleBox from '../../components/common/intake/ScheduleBox'
 import Link from 'next/link'
 import { useUserInformationStore, useUserIntakeManagementStore, useUserPillListStore } from '../../stores/store'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IntakeManagementType, TimeTableByDateType } from '../../utils/types'
 import LoadingCircular from '../../components/layout/LoadingCircular'
 import dayjs, { Dayjs } from 'dayjs'
@@ -29,9 +29,12 @@ const Intake: NextPage = () => {
   // 복용 관리 기록 데이터 가져오기 (커스텀 훅)
   const intakeTimeTableByDate: TimeTableByDateType | null = useUserIntakeTimeTableByDate(selectedYearANDMonth)
 
-  if (!userId) {  // 로그인이 안되어 있는 경우 redirect
-    router.push('/initial')
-  }
+  // 로그인이 안되어 있는 경우 redirect
+  useEffect(() => {
+    if (!userId) {
+      router.push('/initial')
+    }
+  }, [userId])
 
   if (!arrayIsNotEmpty(userTakingPillList)) { // 등록된 영양제가 없는 경우 보여지는 화면
     return (
@@ -117,6 +120,7 @@ const Intake: NextPage = () => {
 
         {/* 영양제 시간표 부분 */}
         {intakeTimeTableByDate[selectedDate] && intakeTimeTableByDate[selectedDate].totalIntakePillCnt !== 0 ? (
+          Object.keys(intakeTimeTableByDate[selectedDate].intakeHistory) &&
           Object.keys(intakeTimeTableByDate[selectedDate].intakeHistory).sort().map((intakeTime) =>
             <ScheduleBox
               key={intakeTime}

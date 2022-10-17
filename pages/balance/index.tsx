@@ -62,9 +62,12 @@ const Balance: NextPage = () => {
     }
   }, [properNutrients, minimumNutrients])
 
-  if (!userId) {  // 로그인이 안되어 있는 경우 redirect
-    router.push('/initial')
-  }
+  // 로그인이 안되어 있는 경우 redirect
+  useEffect(() => {
+    if (!userId) {
+      router.push('/initial')
+    }
+  }, [userId])
 
   if (!arrayIsNotEmpty(userTakingPillList)) { // 등록된 영양제가 없는 경우 보여지는 화면
     return (

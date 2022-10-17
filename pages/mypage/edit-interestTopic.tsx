@@ -14,7 +14,9 @@ const EditInterestTopic = () => {
   const [interestTopicIds, setInterestTopicIds] = useState<number[]>([])
 
   useEffect(() => {
-    setInterestTopicIds(queryInterestTopicIds.map(x => parseInt(x)))
+    if (arrayIsNotEmpty(queryInterestTopicIds)) {
+      setInterestTopicIds(queryInterestTopicIds.map(x => parseInt(x)))
+    }
   }, [queryInterestTopicIds])
 
   if (!userId) { // 로그인 안했으면 Redirect
@@ -25,7 +27,7 @@ const EditInterestTopic = () => {
   const completingTheEdit = async () => {
     if (userId) {
       await topicApi.patchUserInterestTopics(userId, interestTopicIds)
-        .then(() => router.back())
+        .then(function() { router.back() })
     }
   }
 
@@ -40,7 +42,8 @@ const EditInterestTopic = () => {
         </div>
 
         <div className='mt-12 w-full grid grid-cols-3 gap-6 pb-12'>
-          {TOPICS.map((topic) =>
+          {TOPICS &&
+            TOPICS.map((topic) =>
             <SelectableTopicBox
               key={topic.id}
               topicId={topic.id}
