@@ -16,6 +16,7 @@ import balanceIllust from '../../public/asset/image/balanceIllust.png'
 import intakeIllust from '../../public/asset/image/intakeIllust.png'
 import emptyPillIllust from '../../public/asset/image/emptyPillIllust.jpg'
 import useUserIntakeTimeTableByDate from '../../hooks/useUserIntakeTimeTableByDate'
+import { signIn } from 'next-auth/react'
 
 const Intake: NextPage = () => {
   const router = useRouter()
@@ -30,13 +31,26 @@ const Intake: NextPage = () => {
   const intakeTimeTableByDate: TimeTableByDateType | null = useUserIntakeTimeTableByDate(selectedYearANDMonth)
 
   // 로그인이 안되어 있는 경우 redirect
-  useEffect(() => {
-    if (!userId) {
-      router.push('/initial')
-    }
-  }, [userId])
+  if (!userId) {
+    return (
+      <ContainerWithBottomNav>
+        <MainHeader />
 
-  if (!arrayIsNotEmpty(userTakingPillList)) { // 등록된 영양제가 없는 경우 보여지는 화면
+        <div className='absolute top-10 left-0 right-0 bottom-12 bg-white flex flex-col items-center justify-center space-y-4'>
+          <p className='text-lg text-gray-900 text-center'>3초만에 가입해서,<br/><strong className='text-primary'>복용 알림 받고 기록 관리</strong>하기!</p>
+          <button
+            className='w-11/12 bg-primary text-gray-50 shadow-md py-3 rounded-[0.625rem]'
+            onClick={() => signIn()}
+          >
+            로그인 or 회원가입 하기
+          </button>
+        </div>
+      </ContainerWithBottomNav>
+    )
+  }
+
+  // 등록된 영양제가 없는 경우 보여지는 화면
+  if (!arrayIsNotEmpty(userTakingPillList)) {
     return (
       <ContainerWithBottomNav>
         <MainHeader />
@@ -63,7 +77,8 @@ const Intake: NextPage = () => {
     )
   }
 
-  if (!arrayIsNotEmpty(intakePillList)) { // 등록된 영양제들은 있지만 영양제 시간표를 생성하지 않은 경우
+  // 등록된 영양제들은 있지만 영양제 시간표를 생성하지 않은 경우
+  if (!arrayIsNotEmpty(intakePillList)) {
     return (
       <ContainerWithBottomNav>
         <MainHeader />
@@ -90,8 +105,10 @@ const Intake: NextPage = () => {
     )
   }
 
-  if (!intakeTimeTableByDate) return <LoadingCircular />  // 로딩
+  // 로딩
+  if (!intakeTimeTableByDate) return <LoadingCircular />
 
+  // 등록된 영양제가 있고 영양제 시간표를 생성한 경우 보여지는 화면
   return (
     <ContainerWithBottomNav>
       <MainHeader />
