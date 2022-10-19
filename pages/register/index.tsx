@@ -1,10 +1,10 @@
 import { ClientSafeProvider, getProviders, LiteralUnion, signIn } from 'next-auth/react'
 import { BuiltInProviderType } from 'next-auth/providers'
-import { useRouter } from 'next/router'
 import { useUserInformationStore } from '../../stores/store'
 import Image from 'next/image'
 import googleLogo from '../../public/asset/loginBtn/googleLogo.png'
 import kakaoLogo from '../../public/asset/loginBtn/kakaoLogo.png'
+import { useEffect } from 'react'
 
 interface Props {
   providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null
@@ -14,10 +14,11 @@ const RegisterPage = ({ providers }: Props) => {
   const { userId, oauthId } = useUserInformationStore()
 
   // 이미 로그인을 한 사람의 경우 Redirect
-  if (userId || oauthId) {
-    const router = useRouter()
-    router.push('/')
-  }
+  useEffect(() => {
+    if (userId && oauthId) {
+      window.location.replace('/')
+    }
+  }, [userId, oauthId])
 
   return (
     <div className='bg-gray-50 h-screen px-8 py-28 text-gray-900'>

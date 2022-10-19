@@ -49,7 +49,7 @@ const MyPage = () => {
 
   // 로그인이 안되어 있는 경우 redirect
   useEffect(() => {
-    if (userId && oauthId) {
+    if (!userId && !oauthId) {
       router.push('/')
     }
   }, [userId, oauthId])
