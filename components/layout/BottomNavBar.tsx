@@ -10,6 +10,8 @@ import Article from '@mui/icons-material/Article'
 import ArticleOutlined from '@mui/icons-material/ArticleOutlined'
 import HomeOutlined from '@mui/icons-material/HomeOutlined'
 import Person from '@mui/icons-material/Person'
+import ChatBubble from '@mui/icons-material/ChatBubble'
+import ChatBubbleOutline from '@mui/icons-material/ChatBubbleOutline'
 
 // const menuList = [
 //   { id: '1', name: 'HOME', icon: Home, path: '/' },
@@ -45,6 +47,13 @@ const menuList: MenuType[] = [
     paths: ['/intake'],
     activeIcon: <Article className={iconSize} />,
     inActiveIcon: <ArticleOutlined className={iconSize} />
+  },
+  {
+    id: 5,
+    name: '커뮤니티',
+    paths: ['/community'],
+    activeIcon: <ChatBubble className={iconSize} />,
+    inActiveIcon: <ChatBubbleOutline className={iconSize} />
   },
   {
     id: 4,
