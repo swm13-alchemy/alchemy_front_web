@@ -2,12 +2,10 @@ import { TimeTableByDateType } from '../types'
 import { intakeApi } from '../api'
 import { arrayIsNotEmpty } from './arrayIsNotEmpty'
 import dayjs, { Dayjs } from 'dayjs'
-import { useUserIntakeManagementStore } from '../../stores/store'
 
-export async function processPastIntakeHistory(temporaryIntakeTimeTableByDate: TimeTableByDateType, userId: string): Promise<TimeTableByDateType> {
+export async function processPastIntakeHistory(temporaryIntakeTimeTableByDate: TimeTableByDateType, userId: string, setIntakeServiceStartDate : (date: Dayjs | null) => void): Promise<TimeTableByDateType> {
   const today: Dayjs = dayjs()
   const dateList: string[] = Object.keys(temporaryIntakeTimeTableByDate).sort() // 영양제 시간표 틀 데이터에서 날짜(key)들을 순서대로 나열함
-  const setIntakeServiceStartDate = useUserIntakeManagementStore(state => state.setIntakeServiceStartDate)
 
   const startDate: string = dateList[0]
   // intakeServiceStartDate를 구하기 위해 캘린더 시작 날짜보다 하루 이전의 복용 기록까지 가져옴
@@ -51,7 +49,7 @@ export async function processPastIntakeHistory(temporaryIntakeTimeTableByDate: T
 
       // temporaryIntakeTimeTableByDate에서 복용 관리 서비스를 시작한 날짜보다 이전 날짜가 있다면 영양제 시간표 틀 값들 삭제(초기화)
       Object.keys(temporaryIntakeTimeTableByDate).forEach((date: string) => {
-        if (intakeHistoryByDate && intakeServiceStartDate && dayjs(date).isBefore(intakeServiceStartDate.subtract(1, 'day'))) {
+        if (intakeHistoryByDate && intakeServiceStartDate && dayjs(date).isSameOrBefore(intakeServiceStartDate.subtract(1, 'day'))) {
           temporaryIntakeTimeTableByDate[date].remainIntakePillCnt = 0
           temporaryIntakeTimeTableByDate[date].totalIntakePillCnt = 0
           temporaryIntakeTimeTableByDate[date].intakeHistory = {}
@@ -62,6 +60,6 @@ export async function processPastIntakeHistory(temporaryIntakeTimeTableByDate: T
       setIntakeServiceStartDate(intakeServiceStartDate)
     }
   }
-  console.log("temporaryIntakeTimeTableByDate : ", temporaryIntakeTimeTableByDate)
+
   return temporaryIntakeTimeTableByDate
 }

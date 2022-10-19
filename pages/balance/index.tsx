@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import { useUserInformationStore, useUserPillListStore } from '../../stores/store'
 import { UserIntakeNutrientType } from '../../utils/types'
-import { Essential14Nutrients, ESSENTIAL_NUTRIENTS_LIST, EssentialNutrientsTakeCheckType } from '../../utils/constants'
+import { Essential14Nutrients, ESSENTIAL_NUTRIENTS_LIST, EssentialNutrientsTakeCheckType } from '../../utils/constant/constants'
 import BalanceSummary from '../../components/common/balance/BalanceSummary'
 import IntakeReport from '../../components/common/balance/IntakeReport'
 import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
@@ -17,6 +17,8 @@ import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
 import { convertEnDayToKoDay } from '../../utils/functions/timeFormatFunc/convertEnDayToKoDay'
 import useUserNutrientsBalanceData from '../../hooks/useUserNutrientsBalanceData'
+import { signIn } from 'next-auth/react'
+import { BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE } from '../../utils/constant/systemConstants'
 
 const Balance: NextPage = () => {
   const router = useRouter()
@@ -63,13 +65,26 @@ const Balance: NextPage = () => {
   }, [properNutrients, minimumNutrients])
 
   // 로그인이 안되어 있는 경우 redirect
-  useEffect(() => {
-    if (!userId) {
-      router.push('/initial')
-    }
-  }, [userId])
+  if (!userId) {
+    return (
+      <ContainerWithBottomNav>
+        <MainHeader />
 
-  if (!arrayIsNotEmpty(userTakingPillList)) { // 등록된 영양제가 없는 경우 보여지는 화면
+        <div className={`absolute top-10 left-0 right-0 bottom-${BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE} bg-white flex flex-col items-center justify-center space-y-4`}>
+          <p className='text-lg text-gray-900 text-center'>3초만에 가입해서,<br/><strong className='text-primary'>권장량에 맞춰 잘 먹고 있는지 분석</strong>받기!</p>
+          <button
+            className='w-11/12 bg-primary text-gray-50 shadow-md py-3 rounded-[0.625rem]'
+            onClick={() => signIn()}
+          >
+            로그인 or 회원가입 하기
+          </button>
+        </div>
+      </ContainerWithBottomNav>
+    )
+  }
+
+  // 등록된 영양제가 없는 경우 보여지는 화면
+  if (!arrayIsNotEmpty(userTakingPillList)) {
     return (
       <ContainerWithBottomNav>
         <MainHeader />

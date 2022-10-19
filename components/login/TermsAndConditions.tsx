@@ -1,7 +1,7 @@
 import logo from '../../public/asset/image/logo.png'
 import Image from 'next/image'
 import { CheckCircleOutline } from '@mui/icons-material'
-import { PRIVACY_POLICY, TERMS } from '../../utils/termsConstants'
+import { PRIVACY_POLICY, TERMS } from '../../utils/constant/termsConstants'
 import React from 'react'
 
 interface Props {

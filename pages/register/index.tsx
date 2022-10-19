@@ -34,7 +34,7 @@ const RegisterPage = ({ providers }: Props) => {
                   <button
                     key={provider.name}
                     className='bg-white px-6 h-10 shadow-md rounded-xl flex items-center space-x-[4.5rem]'
-                    onClick={() => signIn(provider.id, {callbackUrl: 'https://www.beehealer.com/register/step'})}  // TODO: 출시할 때는 링크 변경
+                    onClick={() => signIn(provider.id, {callbackUrl: 'https://www.beehealer.com/register/step'})}  // TODO: 출시할 때는 링크 변경 (로컬 : http://localhost:1234/register/step / 출시 : https://www.beehealer.com/register/step)
                   >
                     <div className='relative w-[1.125rem] h-[1.125rem]'>
                       <Image

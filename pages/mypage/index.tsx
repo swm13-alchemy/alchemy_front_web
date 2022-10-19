@@ -21,9 +21,11 @@ import LoadingCircular from '../../components/layout/LoadingCircular'
 import { getAgeRange } from '../../utils/functions/getAgeRange'
 import PersonOutline from '@mui/icons-material/PersonOutline'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
+import { useRouter } from 'next/router'
 
 const MyPage = () => {
-  const oauthId = useUserInformationStore(state => state.oauthId)
+  const router = useRouter()
+  const { userId, oauthId } = useUserInformationStore()
   const [nickname, setNickname] = useState<string>('')
   const [ageRange, setAgeRange] = useState<string>('')
   const [isMale, setIsMale] = useState<boolean | null>(null)
@@ -44,6 +46,13 @@ const MyPage = () => {
       })()
     }
   }, [oauthId])
+
+  // 로그인이 안되어 있는 경우 redirect
+  useEffect(() => {
+    if (userId && oauthId) {
+      router.push('/')
+    }
+  }, [userId, oauthId])
 
   if (!(nickname && ageRange && isMale) && arrayIsNotEmpty(interestTopicIds)) return <LoadingCircular />
 

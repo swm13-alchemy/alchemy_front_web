@@ -1,4 +1,4 @@
-import { Essential14Nutrients, EssentialNutrientsTakeCheckType } from '../../../utils/constants'
+import { Essential14Nutrients, EssentialNutrientsTakeCheckType } from '../../../utils/constant/constants'
 import { useEffect, useState } from 'react'
 import { changeEssentialNutrientName } from '../../../utils/functions/changeEssentialNutrientName'
 

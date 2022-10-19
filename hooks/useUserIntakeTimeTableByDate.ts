@@ -13,6 +13,7 @@ const useUserIntakeTimeTableByDate = (selectedYearANDMonth: Dayjs): TimeTableByD
   const userId = useUserInformationStore(state => state.userId)
   const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
   const { intakeTimeTableByDate, setIntakeTimeTableByDate } = useIntakeTimeTableByDate()
+  const setIntakeServiceStartDate = useUserIntakeManagementStore(state => state.setIntakeServiceStartDate)
 
   useEffect(() => {
     // 복용 관리 등록한 영양제 목록이 있을 때 복용 기록 불러오기
@@ -23,13 +24,11 @@ const useUserIntakeTimeTableByDate = (selectedYearANDMonth: Dayjs): TimeTableByD
       // 위에서 만든 요일 기준 영양제 시간표 데이터를 활용하여 '영양제 시간표 틀 데이터'를 만듦
       const temporaryIntakeTimeTableByDate: TimeTableByDateType = makeIntakeTimeTableByDate(timeTableByDay, selectedYearANDMonth)
 
-      console.log("temporaryIntakeTimeTableByDate : ", temporaryIntakeTimeTableByDate)
-
       // 과거 복용 기록을 서버에서 가져와 '영양제 시간표 틀 데이터'에 넣음
       if (userId) {
-        processPastIntakeHistory(temporaryIntakeTimeTableByDate, userId)
+        processPastIntakeHistory(temporaryIntakeTimeTableByDate, userId, setIntakeServiceStartDate)
           .then((finalIntakeTimeTableByDate) => {
-            console.log("finalIntakeTimeTableByDate : ", finalIntakeTimeTableByDate)
+            // console.log("finalIntakeTimeTableByDate : ", finalIntakeTimeTableByDate)
             setIntakeTimeTableByDate(finalIntakeTimeTableByDate)
           })
           .catch((error) => {

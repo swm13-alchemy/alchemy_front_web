@@ -1,4 +1,4 @@
-import { MergedNutrientDataType } from './types'
+import { MergedNutrientDataType } from '../types'
 
 // export const ESSENTIAL_NUTRIENTS_LIST: string[] = ['VitaminC', 'VitaminD', 'VitaminB1', 'VitaminB2', 'VitaminB3',
 //   'VitaminB5', 'VitaminB6', 'VitaminB7', 'VitaminB9', 'VitaminB12', 'Omega-3', 'Magnesium', 'Calcium', 'Probiotics']
