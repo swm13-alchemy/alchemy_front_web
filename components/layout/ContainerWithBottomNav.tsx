@@ -1,6 +1,6 @@
 import React from 'react'
 import BottomNavBar from './BottomNavBar'
-import { BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE } from '../../utils/constant/systemConstants'
+// import { BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE } from '../../utils/constant/systemConstants'
 
 interface Props {
   children: any
@@ -13,7 +13,7 @@ function ContainerWithBottomNav({ children, headerHeight = '' }: Props) {
     <>
       {/* margin이 더 적합한 값일 수 있으나 스크롤 바닥에서는 하단 margin이 안들어감 이러한 이유로 padding 사용. (이런 이유로 다른 사이트들도 padding 쓰는듯) */}
       {/* 때문에 여기서 background color등 사용 X */}
-      <div className={'w-full' + ` pb-${BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE}` + ` ${headerHeight}`}>
+      <div className={'w-full pb-14' + ` ${headerHeight}`}>
         {children}
       </div>
       <BottomNavBar />

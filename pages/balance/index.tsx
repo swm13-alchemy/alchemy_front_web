@@ -7,21 +7,18 @@ import BalanceSummary from '../../components/common/balance/BalanceSummary'
 import IntakeReport from '../../components/common/balance/IntakeReport'
 import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
 import Image from 'next/image'
-import balanceIcon from '../../public/asset/image/balanceIcon.png'
 import balanceIllust from '../../public/asset/image/balanceIllust.png'
 import MuiCarousel from '../../components/common/MuiCarousel'
 import MainHeader from '../../components/layout/MainHeader'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
 import { convertEnDayToKoDay } from '../../utils/functions/timeFormatFunc/convertEnDayToKoDay'
 import useUserNutrientsBalanceData from '../../hooks/useUserNutrientsBalanceData'
 import { signIn } from 'next-auth/react'
-import { BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE } from '../../utils/constant/systemConstants'
+// import { BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE } from '../../utils/constant/systemConstants'
 
 const Balance: NextPage = () => {
-  const router = useRouter()
   const userId = useUserInformationStore(state => state.userId)
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   // const pillListVersion = useUserPillListStore(state => state.pillListVersion)
@@ -70,7 +67,7 @@ const Balance: NextPage = () => {
       <ContainerWithBottomNav>
         <MainHeader />
 
-        <div className={`absolute top-10 left-0 right-0 bottom-${BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE} bg-white flex flex-col items-center justify-center space-y-4`}>
+        <div className={`absolute top-10 left-0 right-0 bottom-14 bg-white flex flex-col items-center justify-center space-y-4`}>
           <p className='text-lg text-gray-900 text-center'>3초만에 가입해서,<br/><strong className='text-primary'>권장량에 맞춰 잘 먹고 있는지 분석</strong>받기!</p>
           <button
             className='w-11/12 bg-primary text-gray-50 shadow-md py-3 rounded-[0.625rem]'
@@ -114,7 +111,6 @@ const Balance: NextPage = () => {
   // 등록된 영양제가 있는 경우 보여지는 화면
   return (
     <ContainerWithBottomNav>
-      {/*<BackHeader router={router} name='영양제 분석 리포트' />*/}
       <MainHeader />
 
       <div className='flex flex-col space-y-4'>
@@ -133,13 +129,6 @@ const Balance: NextPage = () => {
               <p className='text-xs font-bold'>{wellIntakePercent}%</p>
             </span>
           </div>
-          {/*<div className='relative w-[3.25rem] h-[3.25rem]'>*/}
-          {/*  <Image*/}
-          {/*    src={balanceIcon}*/}
-          {/*    className='object-cover'*/}
-          {/*    layout='fill'*/}
-          {/*  />*/}
-          {/*</div>*/}
         </div>
 
         {/* 요약 리포트 부분 */}
@@ -167,15 +156,3 @@ const Balance: NextPage = () => {
 }
 
 export default Balance
-
-// SSR
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const res = await axios.get(requestURLs.fetchTotalBalance + `?age=`)
-//   const details = res.data.pill[0]
-//
-//   return {
-//     props: {
-//       details,
-//     },
-//   }
-// }

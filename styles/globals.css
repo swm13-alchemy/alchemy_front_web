@@ -30,7 +30,7 @@
     @apply
   }
 
-  .ellipsisThreeLine {
+  .ellipsisTwoLine {
     text-overflow: ellipsis;
     overflow: hidden;
     word-break: break-word;

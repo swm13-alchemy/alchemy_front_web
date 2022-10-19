@@ -1,17 +1,19 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-// import '@fortawesome/fontawesome-svg-core/styles.css' // import Font Awesome CSS
-import { config } from '@fortawesome/fontawesome-svg-core'
 import Layout from '../components/layout/Layout'
 import CssBaseline from '@mui/material/CssBaseline'
 import { SessionProvider } from 'next-auth/react'
 import Script from 'next/script'
-import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import LoadingCircular from '../components/layout/LoadingCircular'
+// import '@fortawesome/fontawesome-svg-core/styles.css' // import Font Awesome CSS
+// import { config } from '@fortawesome/fontawesome-svg-core'
 // config.autoAddCss = false // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 
 function MyApp({ Component, pageProps }: AppProps) {
-  // const router = useRouter()
+  const router = useRouter()
+  const [loading, setLoading] = useState<boolean>(false)
   //
   // // 이벤트(유입, 이탈) 유형에 따라 조회수를 측정
   // useEffect(() => {
@@ -27,6 +29,18 @@ function MyApp({ Component, pageProps }: AppProps) {
   //     router.events.off('hashChangeComplete', handleRouteChange)
   //   }
   // }, [router.events])
+
+  // 페이지 이동 시 로딩 처리를 위한 부분
+  useEffect(() => {
+    router.events.on('routeChangeStart', () => setLoading(true))
+    router.events.on('routeChangeComplete', () => setLoading(false))
+    router.events.on('routeChangeError', () => setLoading(false))
+    return () => {
+      router.events.off('routeChangeStart', () => setLoading(true))
+      router.events.off('routeChangeComplete', () => setLoading(false))
+      router.events.off('routeChangeError', () => setLoading(false))
+    }
+  }, [])
 
   return (
     <>
@@ -51,7 +65,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Layout>
         <CssBaseline />
         <SessionProvider session={pageProps.session}>
-          <Component {...pageProps} />
+          {loading ? (
+            <LoadingCircular />
+          ) : (
+            <Component {...pageProps} />
+          )}
         </SessionProvider>
       </Layout>
 
