@@ -11,13 +11,13 @@ interface Props {
 function Second({ setPageNum, interestTopicIds, setInterestTopicIds }: Props) {
 
   return (
-    <div className='bg-gray-50 h-screen px-8 py-16 text-gray-900'>
+    <div className='bg-gray-50 px-8 py-16 text-gray-900'>
       <div className='space-y-2'>
         <h1 className='text-3xl font-bold'>건강고민이 있나요? 🤔</h1>
         <h2 className='text-lg'>관심있는 건강 고민 토픽을 선택해주세요.</h2>
       </div>
 
-      <div className='mt-12 w-full grid grid-cols-3 gap-6 pb-12'>
+      <div className='mt-12 w-full pb-12 selectTopicsContainer'>
         {TOPICS.map((topic) =>
           <SelectableTopicBox
             key={topic.id}

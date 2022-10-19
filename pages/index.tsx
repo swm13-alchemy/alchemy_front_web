@@ -161,7 +161,7 @@ const Home: NextPage = () => {
       {/*  </div>*/}
       {/*</div>*/}
 
-      <PillLenseFNB />
+      <PillLenseFNB bottomMargin='bottom-[4.5rem]' />
     </ContainerWithBottomNav>
   )
 }
