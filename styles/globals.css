@@ -40,13 +40,6 @@
     -webkit-box-orient: vertical
   }
 
-  .termsBox {
-    content: "";
-    display: block;
-    height: 50px;
-    width: 100%;
-  }
-
   /*.weekCalendar {*/
   /*  @apply w-[12%] h-14 border rounded-xl bg-[#D5E3B1] flex flex-col items-center space-y-1.5;*/
   /*}*/
