@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
 import BackHeader from '../../components/layout/BackHeader'
-import { Essential14Nutrients, ESSENTIAL_NUTRIENTS_LIST } from '../../utils/constants'
+import { Essential14Nutrients, ESSENTIAL_NUTRIENTS_LIST } from '../../utils/constant/constants'
 import { changeEssentialNutrientName } from '../../utils/functions/changeEssentialNutrientName'
 
 const IntroductionEssentialNutrients = () => {
