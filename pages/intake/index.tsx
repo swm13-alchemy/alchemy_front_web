@@ -5,11 +5,10 @@ import MainHeader from '../../components/layout/MainHeader'
 import ScheduleBox from '../../components/common/intake/ScheduleBox'
 import Link from 'next/link'
 import { useUserInformationStore, useUserIntakeManagementStore, useUserPillListStore } from '../../stores/store'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { IntakeManagementType, TimeTableByDateType } from '../../utils/types'
 import LoadingCircular from '../../components/layout/LoadingCircular'
 import dayjs, { Dayjs } from 'dayjs'
-import { useRouter } from 'next/router'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 import Image from 'next/image'
 import balanceIllust from '../../public/asset/image/balanceIllust.png'
@@ -17,10 +16,9 @@ import intakeIllust from '../../public/asset/image/intakeIllust.png'
 import emptyPillIllust from '../../public/asset/image/emptyPillIllust.jpg'
 import useUserIntakeTimeTableByDate from '../../hooks/useUserIntakeTimeTableByDate'
 import { signIn } from 'next-auth/react'
-import { BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE } from '../../utils/constant/systemConstants'
+// import { BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE } from '../../utils/constant/systemConstants'
 
 const Intake: NextPage = () => {
-  const router = useRouter()
   const userId = useUserInformationStore(state => state.userId)
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   const intakePillList: IntakeManagementType[] = useUserIntakeManagementStore(state => state.intakePillList)
@@ -37,7 +35,7 @@ const Intake: NextPage = () => {
       <ContainerWithBottomNav>
         <MainHeader />
 
-        <div className={`absolute top-10 left-0 right-0 bottom-${BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE} bg-white flex flex-col items-center justify-center space-y-4`}>
+        <div className={`absolute top-10 left-0 right-0 bottom-14 bg-white flex flex-col items-center justify-center space-y-4`}>
           <p className='text-lg text-gray-900 text-center'>3초만에 가입해서,<br/><strong className='text-primary'>복용 알림 받고 기록 관리</strong>하기!</p>
           <button
             className='w-11/12 bg-primary text-gray-50 shadow-md py-3 rounded-[0.625rem]'

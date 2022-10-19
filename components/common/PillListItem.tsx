@@ -13,8 +13,8 @@ function PillListItem({ maker, name, id, prefixDomain }: Props) {
   return (
     <Link href={`${prefixDomain}/${id}`}>
       <a>
-        <div className='w-full flex bg-white shadow-04dp rounded-lg'>
-          <div className='relative basis-5/12 overflow-hidden'>
+        <div className='w-full h-[6.75rem] flex bg-white shadow-04dp rounded-lg'>
+          <div className='relative basis-5/12 overflow-hidden shadow rounded-lg'>
             <Image
               src={requestURLs.getSupplementThumbnailURL(id.toString())}
               className='object-contain'
@@ -22,8 +22,8 @@ function PillListItem({ maker, name, id, prefixDomain }: Props) {
             />
           </div>
           <div className='basis-7/12 pt-2 pb-4 px-4 flex flex-col space-y-1'>
-            <p className='text-xs text-gray-500 truncate'>{maker}</p>
-            <p className='text-base text-gray-900 ellipsisThreeLine'>{name}</p>
+            <p className='text-xs text-gray-500 ellipsisTwoLine'>{maker}</p>
+            <p className='text-base text-gray-900 ellipsisTwoLine'>{name}</p>
           </div>
         </div>
       </a>
