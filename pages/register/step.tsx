@@ -9,12 +9,15 @@ import { useUserHealthDataStore, useUserInformationStore } from '../../stores/st
 import { useSession } from 'next-auth/react'
 import { userApi } from '../../utils/api'
 import LoadingCircular from '../../components/layout/LoadingCircular'
+import TermsAndConditions from '../../components/login/TermsAndConditions'
 
 const Step = () => {
   const { userId, setUserId, oauthId, setOauthId } = useUserInformationStore()
   const { setAge, setIsMale } = useUserHealthDataStore()
   const { data: session } = useSession()
-  const [pageNum, setPageNum] = useState<number>(1) // 페이지 컴포넌트 변경 시키는 값
+  const [pageNum, setPageNum] = useState<number>(0) // 페이지 컴포넌트 변경 시키는 값
+  const [agreeTerms, setAgreeTerms] = useState<boolean>(false)  // 서비스 이용약관 동의여부
+  const [agreePrivacyPolicy, setAgreePrivacyPolicy] = useState<boolean>(false)  // 개인정보처리방침 동의여부
   const [nickName, setNickName] = useState<string>('')
   const [birth, setBirth] = useState<Dayjs | null>(null)
   const [isMaleDataInStepPage, setIsMaleDataInStepPage] = useState<boolean | undefined>(undefined)
@@ -42,6 +45,8 @@ const Step = () => {
           setAge(dayjs().get('year') - dayjs(userInfo.birth).get('year') + 1)  // 나이 계산
           setIsMale(userInfo.isMale)
           window.location.replace('/')
+        } else {
+          setIsLoading(false)
         }
       })()
     }
@@ -50,6 +55,16 @@ const Step = () => {
   if (isLoading) return <LoadingCircular />
 
   switch (pageNum) {
+    case 0:
+      return (
+        <TermsAndConditions
+          setPageNum={setPageNum}
+          agreeTerms={agreeTerms}
+          setAgreeTerms={setAgreeTerms}
+          agreePrivacyPolicy={agreePrivacyPolicy}
+          setAgreePrivacyPolicy={setAgreePrivacyPolicy}
+        />
+      )
     case 1:
       return (
         <First
