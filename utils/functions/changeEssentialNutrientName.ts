@@ -1,4 +1,4 @@
-import { Essential14Nutrients } from '../constants'
+import { Essential14Nutrients } from '../constant/constants'
 
 export function changeEssentialNutrientName(nutrientName: Essential14Nutrients): string {
   switch (nutrientName) {

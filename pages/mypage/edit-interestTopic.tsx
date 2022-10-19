@@ -1,4 +1,4 @@
-import { TOPICS } from '../../utils/constants'
+import { TOPICS } from '../../utils/constant/constants'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 import SelectableTopicBox from '../../components/common/SelectableTopicBox'
 import { useRouter } from 'next/router'

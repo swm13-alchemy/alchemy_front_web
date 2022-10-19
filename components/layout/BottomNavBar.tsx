@@ -7,6 +7,8 @@ import ListAlt from '@mui/icons-material/ListAlt'
 import PersonOutline from '@mui/icons-material/PersonOutline'
 import { useUserInformationStore } from '../../stores/store'
 import useUserId from '../../hooks/useUserId'
+import InsertChart from '@mui/icons-material/InsertChart'
+import InsertChartOutlined from '@mui/icons-material/InsertChartOutlined'
 
 // const menuList = [
 //   { id: '1', name: 'HOME', icon: Home, path: '/' },
@@ -23,8 +25,10 @@ function BottomNavBar() {
       <Menu router={router} id={1} name='홈' paths={['/', '/search', '/pill-details']}>
         <Home className='text-2xl' />
       </Menu>
-      <Menu router={router} id={2} name='밸런스' paths={['/balance']}>
-        <GraphicEq className='text-2xl'/>
+      <Menu router={router} id={2} name='섭취분석' paths={['/balance']}>
+        {/*<GraphicEq className='text-2xl'/>*/}
+        <InsertChart className='text-2xl'/>
+        {/*<InsertChartOutlined className='text-2xl'/>*/}
       </Menu>
       <Menu router={router} id={3} name='복용관리' paths={['/intake']}>
         <ListAlt className='text-2xl'/>
@@ -72,7 +76,8 @@ function Menu({ children, router, id, name, paths }: MenuProps) {
           }
         >
           {children}
-          <p className={'text-sm' + (isActive ? ' text-primary' : ' hidden')}>{name}</p>
+          {/*<p className={'text-sm' + (isActive ? ' text-primary' : ' hidden')}>{name}</p>*/}
+          <p className={'text-sm' + (isActive ? ' text-primary' : ' text-gray-300')}>{name}</p>
         </div>
       </a>
     </Link>

@@ -1,5 +1,5 @@
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
-import { TOPICS } from '../../utils/constants'
+import { TOPICS } from '../../utils/constant/constants'
 import SelectableTopicBox from '../common/SelectableTopicBox'
 
 interface Props {
