@@ -35,7 +35,7 @@ const EditInterestTopic = () => {
   }
 
   return (
-    <div className='bg-gray-50 h-screen'>
+    <div className='bg-gray-50'>
       <BackHeader router={router} name='관심 건강 고민 편집' />
 
       <div className='px-8 pt-10 pb-16 text-gray-900'>
@@ -44,7 +44,7 @@ const EditInterestTopic = () => {
           <h2 className='text-lg'>관심있는 건강 고민 토픽을 선택해주세요.</h2>
         </div>
 
-        <div className='mt-12 w-full grid grid-cols-3 gap-6 pb-12'>
+        <div className='mt-12 w-full pb-12 selectTopicsContainer'>
           {TOPICS &&
             TOPICS.map((topic) =>
             <SelectableTopicBox
