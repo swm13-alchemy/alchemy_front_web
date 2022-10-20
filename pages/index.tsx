@@ -56,7 +56,7 @@ const Home: NextPage = () => {
       <div className='space-y-4'>
         {/* 검색 버튼 부분 */}
         <section className='bg-white p-4'>
-          <SearchBtn />
+          <SearchBtn href='/search' placeHolder='제품명이나 브랜드 명으로 검색' />
         </section>
 
         {/* 밸런스 요약 부분 */}

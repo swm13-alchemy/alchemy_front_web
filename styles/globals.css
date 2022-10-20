@@ -40,6 +40,16 @@
     -webkit-box-orient: vertical
   }
 
+  .ellipsisThreeLine {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-word;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical
+  }
+
   .selectTopicsContainer {
     @apply grid grid-cols-3 gap-6;
     grid-auto-rows: minmax(100px, auto);
