@@ -49,14 +49,14 @@ const menuList: MenuType[] = [
     inActiveIcon: <ArticleOutlined className={iconSize} />
   },
   {
-    id: 5,
+    id: 4,
     name: '커뮤니티',
     paths: ['/community'],
     activeIcon: <ChatBubble className={iconSize} />,
     inActiveIcon: <ChatBubbleOutline className={iconSize} />
   },
   {
-    id: 4,
+    id: 5,
     name: '마이페이지',
     paths: ['/mypage', '/editMyPillList'],
     activeIcon: <Person className={iconSize} />,

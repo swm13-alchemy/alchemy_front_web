@@ -4,8 +4,9 @@ import ThumbUpOutlined from '@mui/icons-material/ThumbUpOutlined'
 import ThumbUp from '@mui/icons-material/ThumbUp'
 import ChatBubbleOutline from '@mui/icons-material/ChatBubbleOutline'
 import ShareOutlined from '@mui/icons-material/ShareOutlined'
-import BookmarkOutlined from '@mui/icons-material/BookmarkOutlined'
 import Bookmark from '@mui/icons-material/Bookmark'
+import Link from 'next/link'
+import BookmarkBorder from '@mui/icons-material/BookmarkBorder'
 
 interface Props {
   userName: string
@@ -26,7 +27,7 @@ interface Props {
 function CommunityPreviewPost({ userName, ageRange, isMale, userThumbs, createdAt, postTitle, postBody, postTopics, postTags, postLikeCnt, commentCnt, isLike, isBookmark }: Props) {
   return (
     <div className='bg-white'>
-      <div className='px-6 pt-6 pb-4 text-gray-900 space-y-4'>
+      <div className='px-6 pt-6 pb-4 text-gray-900'>
         {/* 상단 부분 */}
         <div className='flex justify-between'>
           {/* 유저 프로필 부분 */}
@@ -48,19 +49,25 @@ function CommunityPreviewPost({ userName, ageRange, isMale, userThumbs, createdA
           <p className='text-xs'>{createdAt.format('h')}시간 전</p>
         </div>
         {/* 글 내용 부분 */}
-        <main className='space-y-2'>
-          {/* 글 제목 */}
-          <h1 className='text-base font-bold truncate'>{postTitle}</h1>
-          {/* 글 본문 */}
-          <p className='text-sm ellipsisThreeLine'>{postBody}</p>
-          {/* 글 태그들 */}
-          <div className='flex items-center space-x-1 flex-wrap'>
-            {postTags.map((tag, idx) =>
-              <p key={idx} className='text-sm text-gray-400'>#{tag}</p>
-            )}
-          </div>
-        </main>
-        <p className='text-xs text-primary'>더보기</p>
+        <Link href='/'>
+          <a>
+            <div className='mt-4 space-y-4'>
+              <main className='space-y-2'>
+                {/* 글 제목 */}
+                <h1 className='text-base font-bold truncate'>{postTitle}</h1>
+                {/* 글 본문 */}
+                <p className='text-sm ellipsisThreeLine'>{postBody}</p>
+                {/* 글 태그들 */}
+                <div className='flex items-center space-x-1 flex-wrap'>
+                  {postTags.map((tag, idx) =>
+                    <p key={idx} className='text-sm text-gray-400'>#{tag}</p>
+                  )}
+                </div>
+              </main>
+              <p className='text-xs text-primary'>더보기</p>
+            </div>
+          </a>
+        </Link>
       </div>
       {/* 인터랙션 버튼들 */}
       <section className='px-6 py-4 border-t border-t-gray-100 text-gray-300 flex items-center justify-between'>
@@ -82,7 +89,7 @@ function CommunityPreviewPost({ userName, ageRange, isMale, userThumbs, createdA
         </div>
         {/* 북마크 버튼 */}
         <button className='flex items-center justify-center'>
-          {isBookmark ? <Bookmark className='text-2xl text-primary' /> : <BookmarkOutlined className='text-2xl text-gray-300' />}
+          {isBookmark ? <Bookmark className='text-2xl text-primary' /> : <BookmarkBorder className='text-2xl text-gray-300' />}
         </button>
       </section>
     </div>

@@ -9,6 +9,7 @@ import PillListItem from '../components/common/PillListItem'
 import { arrayIsNotEmpty } from '../utils/functions/arrayIsNotEmpty'
 import Link from 'next/link'
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline'
+import BackHeaderWithBtn from '../components/layout/BackHeaderWithBtn'
 
 const EditMyPillList: NextPage = () => {
   const router = useRouter()
@@ -24,14 +25,7 @@ const EditMyPillList: NextPage = () => {
   return (
     <ContainerWithBottomNav>
       {/* 헤더 부분 */}
-      <header className='relative py-2 flex items-center justify-center text-gray-900 bg-white shadow'>
-        <button
-          className='absolute left-4 flex items-center justify-center'
-          onClick={() => router.back()}
-        >
-          <ChevronLeft className='text-2xl' />
-        </button>
-        <h1 className='text-base'>내 영양제 관리</h1>
+      <BackHeaderWithBtn router={router} name='내 영양제 관리'>
         {arrayIsNotEmpty(userTakingPillList) && // 등록된 영양제가 있을 때만 편집 버튼이 보임
           <button
             className='absolute right-4 border rounded-xl px-2 py-1'
@@ -40,7 +34,7 @@ const EditMyPillList: NextPage = () => {
             {isEditModeOn ? '완료' : '편집'}
           </button>
         }
-      </header>
+      </BackHeaderWithBtn>
 
       {/* 안내 문구 부분 */}
       <div className='bg-white p-6 text-sm space-y-2'>

@@ -12,6 +12,7 @@ import Link from 'next/link'
 import CommunityPreviewPost from '../../components/common/community/CommunityPreviewPost'
 import { getAgeRange } from '../../utils/functions/getAgeRange'
 import dayjs from 'dayjs'
+import Create from '@mui/icons-material/Create'
 
 const Community: NextPage = () => {
   const { userId, oauthId } = useUserInformationStore()
@@ -47,7 +48,7 @@ const Community: NextPage = () => {
             <>
               {/* 건강고민토픽 검색 버튼 */}
               <Link href='/'>
-                <a className='bg-white rounded-lg p-1 flex items-center justify-center'>
+                <a className='bg-white rounded-lg p-1 shadow outline outline-1 outline-gray-200 flex items-center justify-center'>
                   <ListAlt className='text-2xl text-primary' />
                 </a>
               </Link>
@@ -120,6 +121,15 @@ const Community: NextPage = () => {
           isLike={true}
           isBookmark={false}
         />
+      </div>
+
+      {/* 글쓰기 버튼 */}
+      <div className='fixed right-4 bottom-[4.5rem] w-12 h-12 bg-primary z-60 rounded-full shadow-[0px_4px_4px_rgba(0,0,0,0.25)] cursor-pointer flex items-center justify-center'>
+        <Link href='/community/addPost'>
+          <a className='flex items-center justify-center'>
+            <Create className='text-2xl text-white' />
+          </a>
+        </Link>
       </div>
     </ContainerWithBottomNav>
   )
