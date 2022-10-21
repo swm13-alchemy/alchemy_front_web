@@ -47,7 +47,7 @@ const menuList: MenuType[] = [
     inActiveIcon: <ArticleOutlined className={iconSize} />
   },
   {
-    id: 4,
+    id: 5,
     name: '마이페이지',
     paths: ['/mypage', '/editMyPillList'],
     activeIcon: <Person className={iconSize} />,
