@@ -9,7 +9,7 @@ import { TopicType, UserInformationTypes } from '../../utils/types'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 import ListAlt from '@mui/icons-material/ListAlt'
 import Link from 'next/link'
-import CommunityPreviewPost from '../../components/common/community/CommunityPreviewPost'
+import PreviewPost from '../../components/common/community/PreviewPost'
 import { getAgeRange } from '../../utils/functions/getAgeRange'
 import dayjs from 'dayjs'
 import Create from '@mui/icons-material/Create'
@@ -76,8 +76,9 @@ const Community: NextPage = () => {
         </div>
 
         {/* 글 목록 표시 부분 */}
-        <CommunityPreviewPost
-          userName='홍길동전주인공'
+        <PreviewPost
+          postId={1}
+          userNickname='홍길동전주인공'
           ageRange={getAgeRange('1999-10-18')}
           isMale={true}
           userThumbs={1329}
@@ -91,8 +92,9 @@ const Community: NextPage = () => {
           isLike={true}
           isBookmark={false}
         />
-        <CommunityPreviewPost
-          userName='홍길동전주인공'
+        <PreviewPost
+          postId={1}
+          userNickname='홍길동전주인공'
           ageRange={getAgeRange('1999-10-18')}
           isMale={true}
           userThumbs={1329}
@@ -106,8 +108,9 @@ const Community: NextPage = () => {
           isLike={true}
           isBookmark={false}
         />
-        <CommunityPreviewPost
-          userName='홍길동전주인공'
+        <PreviewPost
+          postId={1}
+          userNickname='홍길동전주인공'
           ageRange={getAgeRange('1999-10-18')}
           isMale={true}
           userThumbs={1329}

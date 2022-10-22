@@ -7,9 +7,11 @@ import ShareOutlined from '@mui/icons-material/ShareOutlined'
 import Bookmark from '@mui/icons-material/Bookmark'
 import Link from 'next/link'
 import BookmarkBorder from '@mui/icons-material/BookmarkBorder'
+import AuthorInfoAtTheTopOfThePost from './AuthorInfoAtTheTopOfThePost'
 
 interface Props {
-  userName: string
+  postId: number
+  userNickname: string
   ageRange: string
   isMale: boolean
   userThumbs: number
@@ -24,32 +26,20 @@ interface Props {
   isBookmark: boolean
 }
 
-function CommunityPreviewPost({ userName, ageRange, isMale, userThumbs, createdAt, postTitle, postBody, postTopics, postTags, postLikeCnt, commentCnt, isLike, isBookmark }: Props) {
+function PreviewPost({ postId, userNickname, ageRange, isMale, userThumbs, createdAt, postTitle, postBody, postTopics, postTags, postLikeCnt, commentCnt, isLike, isBookmark }: Props) {
   return (
     <div className='bg-white'>
       <div className='px-6 pt-6 pb-4 text-gray-900'>
-        {/* 상단 부분 */}
-        <div className='flex justify-between'>
-          {/* 유저 프로필 부분 */}
-          <div className='flex items-center space-x-2.5'>
-            {/* 프로필 사진 */}
-            {/*<ProfileImgView imgUrl='/' />*/}
-            {/* 프로필 정보 */}
-            <div className='space-y-1'>
-              <p className='text-sm font-bold'>{userName}</p>
-              <div className='text-xs text-gray-400 flex items-center space-x-1'>
-                <p>{ageRange} /</p>
-                <p>{isMale ? '남성' : '여성'} ·</p>
-                <ThumbUpOutlined className='w-4 h-4' />
-                <p>{userThumbs}</p>
-              </div>
-            </div>
-          </div>
-          {/* 글 작성 시간 TODO: 이거수정 */}
-          <p className='text-xs'>{createdAt.format('h')}시간 전</p>
-        </div>
+        {/* 작성자 정보 부분 */}
+        <AuthorInfoAtTheTopOfThePost
+          userNickname={userNickname}
+          ageRange={ageRange}
+          isMale={isMale}
+          userThumbs={userThumbs}
+          createdAt={createdAt}
+        />
         {/* 글 내용 부분 */}
-        <Link href='/'>
+        <Link href={`/community/postDetails/${postId}`}>
           <a>
             <div className='mt-4 space-y-4'>
               <main className='space-y-2'>
@@ -96,4 +86,4 @@ function CommunityPreviewPost({ userName, ageRange, isMale, userThumbs, createdA
   )
 }
 
-export default CommunityPreviewPost
+export default PreviewPost
