@@ -141,3 +141,5 @@ export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 �
   oauthRefreshToken: string | null
   topics: TopicType[]
 }
+
+export type TrustedUserType = 'doctor' | 'pharmacist' | 'influencer' | 'normal'

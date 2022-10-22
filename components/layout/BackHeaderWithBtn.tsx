@@ -10,7 +10,7 @@ interface Props {
 
 function BackHeaderWithBtn({ children, router, name }: Props) {
   return (
-    <header className='relative py-2 flex items-center justify-center text-gray-900 bg-white shadow'>
+    <header className='relative py-2 flex items-center justify-center text-gray-900 bg-white shadow z-20'>
       <button
         className='absolute left-4 flex items-center justify-center'
         onClick={() => router.back()}

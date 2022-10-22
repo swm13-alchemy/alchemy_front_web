@@ -1,4 +1,3 @@
-import ProfileImgView from '../ProfileImgView'
 import { Dayjs } from 'dayjs'
 import ThumbUpOutlined from '@mui/icons-material/ThumbUpOutlined'
 import ThumbUp from '@mui/icons-material/ThumbUp'
