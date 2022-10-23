@@ -88,6 +88,7 @@ const UserProfile = () => {
           <p className='bg-white px-6 py-4 text-base font-bold text-gray-900'>작성한 포스트</p>
           <PreviewPost
             postId={1}
+            userId={1}
             userNickname='홍길동전주인공'
             ageRange={getAgeRange('1999-10-18')}
             isMale={true}
@@ -104,6 +105,7 @@ const UserProfile = () => {
           />
           <PreviewPost
             postId={1}
+            userId={1}
             userNickname='홍길동전주인공'
             ageRange={getAgeRange('1999-10-18')}
             isMale={true}

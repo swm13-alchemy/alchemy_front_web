@@ -78,6 +78,7 @@ const Community: NextPage = () => {
         {/* 글 목록 표시 부분 */}
         <PreviewPost
           postId={1}
+          userId={1}
           userNickname='홍길동전주인공'
           ageRange={getAgeRange('1999-10-18')}
           isMale={true}
@@ -94,6 +95,7 @@ const Community: NextPage = () => {
         />
         <PreviewPost
           postId={1}
+          userId={1}
           userNickname='홍길동전주인공'
           ageRange={getAgeRange('1999-10-18')}
           isMale={true}
@@ -110,6 +112,7 @@ const Community: NextPage = () => {
         />
         <PreviewPost
           postId={1}
+          userId={1}
           userNickname='홍길동전주인공'
           ageRange={getAgeRange('1999-10-18')}
           isMale={true}

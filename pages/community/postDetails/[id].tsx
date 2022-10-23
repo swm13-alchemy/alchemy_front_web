@@ -72,6 +72,7 @@ const PostDetails = ({ details }: Props) => {
         <div className='space-y-4'>
           {/* 작성자 정보 부분 */}
           <AuthorInfoAtTheTopOfThePost
+            userId={1}
             userNickname='홍길동전주인공'
             ageRange={getAgeRange('1999-10-18')}
             isMale={true}
@@ -120,6 +121,7 @@ const PostDetails = ({ details }: Props) => {
       {/* 댓글 목록 */}
       <div className='space-y-1'>
         <Comment
+          userId={1}
           userNickname='홍길동전주인공'
           ageRange={getAgeRange('1999-10-18')}
           isMale={true}
@@ -128,6 +130,7 @@ const PostDetails = ({ details }: Props) => {
           commentBody='가지에 피에 있는 방황하였으며, 인간의 하여도 황금시대다. 그러므로 풀이 인생에 평화스러운 예수는 가슴에 봄바람을 이상 우리 것이다. 가슴에 수 스며들어 뼈 같은 따뜻한 그들은 부패뿐이다. 길지 이는 청춘의 그들의 열락의 보라. 현저하게 쓸쓸한 용기가 그들에게 말이다. 있는 곳이 무엇을 위하여서, 풍부하게 있음으로써 설레는 봄바람이다. 것은 같지 위하여 피는 실로 오직 광야에서 싶이.'
         />
         <Reply
+          userId={1}
           userNickname='홍길동전주인공'
           ageRange={getAgeRange('1999-10-18')}
           isMale={true}
@@ -136,6 +139,7 @@ const PostDetails = ({ details }: Props) => {
           commentBody='가지에 피에 있는 방황하였으며, 인간의 하여도 황금시대다. 그러므로 풀이 인생에 평화스러운 예수는 가슴에 봄바람을 이상 우리 것이다. 가슴에 수 스며들어 뼈 같은 따뜻한 그들은 부패뿐이다. 길지 이는 청춘의 그들의 열락의 보라. 현저하게 쓸쓸한 용기가 그들에게 말이다. 있는 곳이 무엇을 위하여서, 풍부하게 있음으로써 설레는 봄바람이다. 것은 같지 위하여 피는 실로 오직 광야에서 싶이.'
         />
         <Reply
+          userId={1}
           userNickname='홍길동전주인공'
           ageRange={getAgeRange('1999-10-18')}
           isMale={true}
@@ -144,6 +148,7 @@ const PostDetails = ({ details }: Props) => {
           commentBody='가지에 피에 있는 방황하였으며, 인간의 하여도 황금시대다. 그러므로 풀이 인생에 평화스러운 예수는 가슴에 봄바람을 이상 우리 것이다. 가슴에 수 스며들어 뼈 같은 따뜻한 그들은 부패뿐이다. 길지 이는 청춘의 그들의 열락의 보라. 현저하게 쓸쓸한 용기가 그들에게 말이다. 있는 곳이 무엇을 위하여서, 풍부하게 있음으로써 설레는 봄바람이다. 것은 같지 위하여 피는 실로 오직 광야에서 싶이.'
         />
         <Comment
+          userId={1}
           userNickname='홍길동전주인공'
           ageRange={getAgeRange('1999-10-18')}
           isMale={true}

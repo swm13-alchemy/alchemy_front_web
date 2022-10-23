@@ -10,6 +10,7 @@ import AuthorInfoAtTheTopOfThePost from './AuthorInfoAtTheTopOfThePost'
 
 interface Props {
   postId: number
+  userId: number
   userNickname: string
   ageRange: string
   isMale: boolean
@@ -25,12 +26,13 @@ interface Props {
   isBookmark: boolean
 }
 
-function PreviewPost({ postId, userNickname, ageRange, isMale, userThumbs, createdAt, postTitle, postBody, postTopics, postTags, postLikeCnt, commentCnt, isLike, isBookmark }: Props) {
+function PreviewPost({ postId, userId, userNickname, ageRange, isMale, userThumbs, createdAt, postTitle, postBody, postTopics, postTags, postLikeCnt, commentCnt, isLike, isBookmark }: Props) {
   return (
     <div className='bg-white'>
       <div className='px-6 pt-6 pb-4 text-gray-900'>
         {/* 작성자 정보 부분 */}
         <AuthorInfoAtTheTopOfThePost
+          userId={userId}
           userNickname={userNickname}
           ageRange={ageRange}
           isMale={isMale}
