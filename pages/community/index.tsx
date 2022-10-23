@@ -47,7 +47,7 @@ const Community: NextPage = () => {
           {userId &&
             <>
               {/* 건강고민토픽 검색 버튼 */}
-              <Link href='/'>
+              <Link href='/community/searchTopic'>
                 <a className='bg-white rounded-lg p-1 shadow outline outline-1 outline-gray-200 flex items-center justify-center'>
                   <ListAlt className='text-2xl text-primary' />
                 </a>
