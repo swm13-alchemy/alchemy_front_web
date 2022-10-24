@@ -31,14 +31,21 @@ const 임시토픽목록 = [
   "혈액 생성"
 ]
 
-const 임시영양제목록 = [
+export const 임시영양제목록 = [
   {
     pillId: 1,
-    pillName: "PillTest1"
+    pillName: "PillTest1",
+    startIntakeDate: dayjs('2022-09-12')
   },
   {
     pillId: 2,
-    pillName: "PillTest2"
+    pillName: "PillTest2",
+    startIntakeDate: dayjs('2012-09-12')
+  },
+  {
+    pillId: 3,
+    pillName: "PillTest3",
+    startIntakeDate: dayjs('2022-07-12')
   },
   {
     pillId: 3,
@@ -46,11 +53,8 @@ const 임시영양제목록 = [
   },
   {
     pillId: 3,
-    pillName: "PillTest3"
-  },
-  {
-    pillId: 3,
-    pillName: "PillTest3"
+    pillName: "PillTest3",
+    startIntakeDate: dayjs('2021-09-12')
   },
 ]
 

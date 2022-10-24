@@ -2,6 +2,7 @@ import ThumbUpOutlined from '@mui/icons-material/ThumbUpOutlined'
 import MoreVert from '@mui/icons-material/MoreVert'
 import { Dayjs } from 'dayjs'
 import Link from 'next/link'
+import { getTimeDiff } from '../../../utils/functions/getTimeDiff'
 
 interface Props {
   userId: number
@@ -25,7 +26,7 @@ function AuthorInfoAtTheTopOfTheComment({ userId, userNickname, ageRange, isMale
             <div className='space-y-1'>
               <div className='flex items-center space-x-1'>
                 <p className='text-sm font-bold'>{userNickname}</p>
-                <p className='text-xs'>· {createdAt.format('h')}시간 전</p>
+                <p className='text-xs'>· {getTimeDiff(createdAt)}</p>
               </div>
               <div className='text-xs text-gray-400 flex items-center space-x-1'>
                 <p>{ageRange} /</p>

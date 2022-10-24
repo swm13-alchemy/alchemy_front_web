@@ -1,6 +1,7 @@
 import ThumbUpOutlined from '@mui/icons-material/ThumbUpOutlined'
 import { Dayjs } from 'dayjs'
 import Link from 'next/link'
+import { getTimeDiff } from '../../../utils/functions/getTimeDiff'
 
 interface Props {
   userId: number
@@ -34,7 +35,7 @@ function AuthorInfoAtTheTopOfThePost({ userId, userNickname, ageRange, isMale, u
         </a>
       </Link>
       {/* 글 작성 시간 TODO: 이거수정 */}
-      <p className='text-xs'>{createdAt.format('h')}시간 전</p>
+      <p className='text-xs'>{getTimeDiff(createdAt)}</p>
     </div>
   )
 }
