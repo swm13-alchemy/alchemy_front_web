@@ -53,7 +53,7 @@ const UserProfile = () => {
         </section>
         {/* 포트폴리오 링크 */}
         <section className='bg-white px-6 py-4'>
-          <Link href='/'>
+          <Link href={`/community/userProfile/${1}/portfolio`}>
             <a className='text-gray-900 flex items-center justify-between'>
               <p className='text-base font-bold'>포트폴리오</p>
               <ChevronRight className='text-2xl' />
