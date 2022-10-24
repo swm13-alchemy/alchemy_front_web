@@ -104,7 +104,7 @@ function PillIntakeBtn({ pillId, selectedDate, intakeTime, isPillIntake }: Props
             })
         }
       }
-    } else {
+    } else {  // 오늘 날짜에 해당하는 복용 체크 버튼이 아닌 경우
       setIsErrorSnackBarOpen(true)
     }
   }

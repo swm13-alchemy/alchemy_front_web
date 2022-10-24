@@ -51,6 +51,7 @@ function IntakeCalendar({ intakeTimeTableByDate, selectedDate, setSelectedDate, 
     }
   }, [intakeTimeTableByDate])
 
+  /** 이전 달 복용기록 불러오기 함수 */
   const goToPreviousMonth = () => {
     // 현재 보고 있는 달이 복용 관리 서비스를 시작한 날이 포함된 달이 아닐 때만 이전 달로 넘길 수 있음
     if (!isTheMonthIncludedIntakeServiceStartDate) {
@@ -59,6 +60,7 @@ function IntakeCalendar({ intakeTimeTableByDate, selectedDate, setSelectedDate, 
     }
   }
 
+  /** 다음 달 복용기록 불러오기 함수 */
   const goToNextMonth = () => {
     // 현재 보고 있는 달이 오늘을 포함된 달이 아닐 때만 이후 달로 넘길 수 있음
     if (!isTheMonthIncludedToday) {
