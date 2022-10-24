@@ -101,16 +101,14 @@ function WeekDateBoxInner({ date, isSelectedDate, dateState, remainNum, totalNum
 
   // 예외 처리 : 영양제를 먹지 않는 날 or 복용 관리를 시작하기 이전 시점 표시
   if (totalNum === 0) {
-    if (dateState === DATE_STATE.PAST_DAY || dateState === DATE_STATE.FUTURE_DAY) {
-      return (
-        <div className='p-2 rounded-3xl flex flex-col items-center space-y-2 bg-blue-50'>
-          <p className='text-center text-xs text-blue-100'>{dayjs(date).format('ddd')}</p>
-          <div className='w-6 h-6 rounded-full bg-surface flex items-center justify-center'>
-            <p className='text-xs font-bold text-blue-100'>0</p>
-          </div>
+    return (
+      <div className='p-2 rounded-3xl flex flex-col items-center space-y-2 bg-blue-50'>
+        <p className='text-center text-xs text-blue-100'>{dayjs(date).format('ddd')}</p>
+        <div className='w-6 h-6 rounded-full bg-surface flex items-center justify-center'>
+          <p className='text-xs font-bold text-blue-100'>0</p>
         </div>
-      )
-    }
+      </div>
+    )
   }
 
   // 오늘인지, 과거인지, 미래인지에 따라 UI가 변경되고 남아있는 영양제가 몇 개냐에 따라 UI가 변경됨
@@ -181,15 +179,13 @@ function MonthDateBoxInner({ date, isSelectedDate, dateState, remainNum, totalNu
 
   // 예외 처리 : 영양제를 먹지 않는 날 or 복용 관리를 시작하기 이전 시점 표시
   if (totalNum === 0) {
-    if (dateState === DATE_STATE.PAST_DAY || dateState === DATE_STATE.FUTURE_DAY) {
-      return (
-        <div className='p-2 rounded-full flex flex-col items-center bg-blue-50'>
-          <div className='w-6 h-6 rounded-full bg-surface flex items-center justify-center'>
-            <p className='text-xs font-bold text-blue-100'>0</p>
-          </div>
+    return (
+      <div className='p-2 rounded-full flex flex-col items-center bg-blue-50'>
+        <div className='w-6 h-6 rounded-full bg-surface flex items-center justify-center'>
+          <p className='text-xs font-bold text-blue-100'>0</p>
         </div>
-      )
-    }
+      </div>
+    )
   }
 
   // 오늘인지, 과거인지, 미래인지에 따라 UI가 변경되고 남아있는 영양제가 몇 개냐에 따라 UI가 변경됨
