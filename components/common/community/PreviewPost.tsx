@@ -10,7 +10,7 @@ import AuthorInfoAtTheTopOfThePost from './AuthorInfoAtTheTopOfThePost'
 
 interface Props {
   postId: number
-  userId: number
+  userId: string
   userNickname: string
   ageRange: string
   isMale: boolean
@@ -18,7 +18,7 @@ interface Props {
   createdAt: Dayjs
   postTitle: string
   postBody: string
-  postTopics: string[]
+  // postTopics: string[]
   postTags: string[]
   postLikeCnt: number
   commentCnt: number
@@ -26,7 +26,7 @@ interface Props {
   isBookmark: boolean
 }
 
-function PreviewPost({ postId, userId, userNickname, ageRange, isMale, userThumbs, createdAt, postTitle, postBody, postTopics, postTags, postLikeCnt, commentCnt, isLike, isBookmark }: Props) {
+function PreviewPost({ postId, userId, userNickname, ageRange, isMale, userThumbs, createdAt, postTitle, postBody, postTags, postLikeCnt, commentCnt, isLike, isBookmark }: Props) {
   return (
     <div className='bg-white'>
       <div className='px-6 pt-6 pb-4 text-gray-900'>

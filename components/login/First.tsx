@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { userApi } from '../../utils/api'
-import { UserInformationTypes } from '../../utils/types'
+import { UserInformationType } from '../../utils/types'
 import { useUserInformationStore } from '../../stores/store'
 import { useRouter } from 'next/router'
 import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers'

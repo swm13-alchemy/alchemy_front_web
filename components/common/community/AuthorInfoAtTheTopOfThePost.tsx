@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { getTimeDiff } from '../../../utils/functions/getTimeDiff'
 
 interface Props {
-  userId: number
+  userId: string
   userNickname: string
   ageRange: string
   isMale: boolean
@@ -34,7 +34,7 @@ function AuthorInfoAtTheTopOfThePost({ userId, userNickname, ageRange, isMale, u
           </div>
         </a>
       </Link>
-      {/* 글 작성 시간 TODO: 이거수정 */}
+      {/* 글 작성 시간 */}
       <p className='text-xs'>{getTimeDiff(createdAt)}</p>
     </div>
   )

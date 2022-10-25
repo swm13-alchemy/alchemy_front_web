@@ -2,10 +2,9 @@ import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomN
 import MainHeader from '../../components/layout/MainHeader'
 import SearchBtn from '../../components/common/search/SearchBtn'
 import { NextPage } from 'next'
-import { useUserInformationStore } from '../../stores/store'
 import { useEffect, useState } from 'react'
-import { userApi } from '../../utils/api'
-import { TopicType, UserInformationTypes } from '../../utils/types'
+import { postApi, userApi } from '../../utils/api'
+import { PostType, TopicType, UserInformationType } from '../../utils/types'
 import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
 import ListAlt from '@mui/icons-material/ListAlt'
 import Link from 'next/link'
@@ -13,24 +12,55 @@ import PreviewPost from '../../components/common/community/PreviewPost'
 import { getAgeRange } from '../../utils/functions/getAgeRange'
 import dayjs from 'dayjs'
 import Create from '@mui/icons-material/Create'
+import useUserInformation from '../../hooks/useUserInformation'
 
 const Community: NextPage = () => {
-  const { userId, oauthId } = useUserInformationStore()
+  const { userId, oauthId } = useUserInformation()
   const [interestTopics, setInterestTopics] = useState<TopicType[]>([])
-  const [activeTopicName, setActiveTopicName] = useState<string>('전체')
+  const [activeTopic, setActiveTopic] = useState<TopicType>({ id: -1, name: '전체' })
+  const [postList, setPostList] = useState<PostType[]>([])
 
   // 유저 정보를 서버에서 가져옴
   useEffect(() => {
     if (oauthId) {
       (async () => {
         const { data: response } = await userApi.getUserInformationByOauthId(oauthId)
-        const userInfo: UserInformationTypes = response.data
+        const userInfo: UserInformationType = response.data
         if (userInfo) {
           setInterestTopics(userInfo.topics)
         }
       })()
     }
   }, [oauthId])
+
+  // active된 토픽에 해당하는 글들을 불러오는 부분
+  useEffect(() => {
+    if (activeTopic.name === '전체') {
+      ;(async () => {
+        const { data: response } = await postApi.getAllPost()
+        const allPostData: PostType[] = response.data
+        if (arrayIsNotEmpty(allPostData)) {
+          // 시간순으로 정렬
+          const sortedPostList = allPostData.sort((a, b) => (dayjs(a.createdAt).isAfter(b.createdAt) ? -1 : 1))
+          setPostList(sortedPostList)
+        } else {  // 불러온 데이터가 없는 경우
+          setPostList([])
+        }
+      })()
+    } else {
+      ;(async () => {
+        const { data: response } = await postApi.getPostWithTopicIds([activeTopic.id])
+        const activeTopicPostData: PostType[] = response.data
+        if (arrayIsNotEmpty(activeTopicPostData)) {
+          // 시간순으로 정렬
+          const sortedPostList = activeTopicPostData.sort((a, b) => (dayjs(a.createdAt).isAfter(b.createdAt) ? -1 : 1))
+          setPostList(sortedPostList)
+        } else {  // 불러온 데이터가 없는 경우
+          setPostList([])
+        }
+      })()
+    }
+  }, [activeTopic])
 
   return (
     <ContainerWithBottomNav>
@@ -58,75 +88,47 @@ const Community: NextPage = () => {
           }
           {/* 전체, 포트폴리오 공유 버튼 */}
           <TopicTap
-            topicName='전체'
-            isActive={activeTopicName === '전체'}
-            setActiveTopicName={setActiveTopicName}
+            topic={{ id: -1, name: '전체' }}
+            isActive={activeTopic.name === '전체'}
+            setActiveTopic={setActiveTopic}
           />
           {/* 사용자 관심 건강 고민 토픽 버튼들 */}
           {userId && arrayIsNotEmpty(interestTopics) &&
             interestTopics.map((topic) =>
               <TopicTap
                 key={topic.id}
-                topicName={topic.name}
-                isActive={activeTopicName === topic.name}
-                setActiveTopicName={setActiveTopicName}
+                topic={topic}
+                isActive={activeTopic.name === topic.name}
+                setActiveTopic={setActiveTopic}
               />
             )
           }
         </div>
 
         {/* 글 목록 표시 부분 */}
-        <PreviewPost
-          postId={1}
-          userId={1}
-          userNickname='홍길동전주인공'
-          ageRange={getAgeRange('1999-10-18')}
-          isMale={true}
-          userThumbs={1329}
-          createdAt={dayjs().subtract(1, 'hour')}
-          postTitle='2024년 6월 글제목 글 제목글 제목 글제목2022 글제목 글제목'
-          postBody='Lorem ipsum dolor sit amet, consectetur adipiscing. Massa cras velit viverra duis odio consectetur nulla. Euismod sit eget ullamcorper integer pordafsdfasdfasd dsfasdfafsdafds'
-          postTopics={['간건강', '치아건강']}
-          postTags={['노화&항산화', '면역기능', '혈액생성', '멀티미네랄', '콜레스테롤 합성조절', '혈압호르몬조절', '혈당조절']}
-          postLikeCnt={4}
-          commentCnt={35}
-          isLike={true}
-          isBookmark={false}
-        />
-        <PreviewPost
-          postId={1}
-          userId={1}
-          userNickname='홍길동전주인공'
-          ageRange={getAgeRange('1999-10-18')}
-          isMale={true}
-          userThumbs={1329}
-          createdAt={dayjs().subtract(1, 'hour')}
-          postTitle='2024년 6월 글제목 글 제목글 제목 글제목2022 글제목 글제목'
-          postBody='Lorem ipsum dolor sit amet, consectetur adipiscing. Massa cras velit viverra duis odio consectetur nulla. Euismod sit eget ullamcorper integer pordafsdfasdfasd dsfasdfafsdafds'
-          postTopics={['간건강', '치아건강']}
-          postTags={['노화&항산화', '면역기능', '혈액생성', '멀티미네랄', '콜레스테롤 합성조절', '혈압호르몬조절', '혈당조절']}
-          postLikeCnt={4}
-          commentCnt={35}
-          isLike={true}
-          isBookmark={false}
-        />
-        <PreviewPost
-          postId={1}
-          userId={1}
-          userNickname='홍길동전주인공'
-          ageRange={getAgeRange('1999-10-18')}
-          isMale={true}
-          userThumbs={1329}
-          createdAt={dayjs().subtract(1, 'hour')}
-          postTitle='2024년 6월 글제목 글 제목글 제목 글제목2022 글제목 글제목'
-          postBody='Lorem ipsum dolor sit amet, consectetur adipiscing. Massa cras velit viverra duis odio consectetur nulla. Euismod sit eget ullamcorper integer pordafsdfasdfasd dsfasdfafsdafds'
-          postTopics={['간건강', '치아건강']}
-          postTags={['노화&항산화', '면역기능', '혈액생성', '멀티미네랄', '콜레스테롤 합성조절', '혈압호르몬조절', '혈당조절']}
-          postLikeCnt={4}
-          commentCnt={35}
-          isLike={true}
-          isBookmark={false}
-        />
+        {arrayIsNotEmpty(postList) ? (  // 글 목록이 있는 경우
+          postList.map((post) =>
+            <PreviewPost
+              key={post.id}
+              postId={post.id}
+              userId={post.user.id}
+              userNickname={post.user.nickname}
+              ageRange={getAgeRange(post.user.birth)}
+              isMale={true} // TODO: 추후 백엔드 변경되면 수정
+              userThumbs={1329}
+              createdAt={dayjs(post.createdAt)}
+              postTitle={post.title}
+              postBody={post.content}
+              postTags={post.topics.map(x => x.name)}  // TODO : 일단 건강고민토픽으로 진행
+              postLikeCnt={post.likeCnt}
+              commentCnt={35} // TODO : 일단 댓글은 구현 X
+              isLike={false} // TODO : 추후 추가
+              isBookmark={false}  // TODO : 추후 추가
+            />
+          )
+        ) : ( // 조건에 맞는 글이 없는 경우
+          <p className='pt-32 text-center text-lg text-gray-900'>작성된 글이 없습니다!<br/><strong className='text-primary'>가장 먼저 글을 작성해보세요 🤗</strong></p>
+        )}
       </div>
 
       {/* 글쓰기 버튼 */}
@@ -144,18 +146,18 @@ const Community: NextPage = () => {
 export default Community
 
 interface TopicTapProps {
-  topicName: string
+  topic: TopicType
   isActive: boolean
-  setActiveTopicName: (activeTopicName: string) => void
+  setActiveTopic: (activeTopic: TopicType) => void
 }
-function TopicTap({ topicName, isActive, setActiveTopicName }: TopicTapProps) {
+function TopicTap({ topic, isActive, setActiveTopic }: TopicTapProps) {
   return (
     <button
       className={'px-4 py-1.5 rounded-2xl text-sm whitespace-nowrap' +
         (isActive ? ' bg-primary outline-none text-white font-bold' : ' bg-white outline outline-1 outline-gray-400 text-gray-400 font-normal')}
-      onClick={() => setActiveTopicName(topicName)}
+      onClick={() => setActiveTopic(topic)}
     >
-      {topicName === '전체' ? '전체' : `#${topicName}`}
+      {topic.name === '전체' ? '전체' : `#${topic.name}`}
     </button>
   )
 }

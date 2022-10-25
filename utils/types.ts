@@ -130,7 +130,7 @@ export interface TopicType {
   id: number
   name: string
 }
-export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 변경
+export interface UserInformationType { // TODO: 추후 수정사항 있으면 변경
   id: string
   oauthId: string
   nickname: string
@@ -143,3 +143,20 @@ export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 �
 }
 
 export type TrustedUserType = 'doctor' | 'pharmacist' | 'influencer' | 'normal'
+
+interface AuthorType {
+  id: string
+  nickname: string
+  birth: string
+}
+
+export interface PostType {
+  id: number
+  title: string
+  content: string
+  likeCnt: number
+  tags: string[]
+  createdAt: string
+  topics: TopicType[]
+  user: AuthorType
+}

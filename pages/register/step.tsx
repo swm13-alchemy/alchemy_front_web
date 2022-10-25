@@ -1,7 +1,7 @@
 import First from '../../components/login/First'
 import Second from '../../components/login/Second'
 import Third from '../../components/login/Third'
-import { SupplementDetailsType, UserInformationTypes } from '../../utils/types'
+import { SupplementDetailsType, UserInformationType } from '../../utils/types'
 import { useEffect, useState } from 'react'
 import Finish from '../../components/login/Finish'
 import dayjs, { Dayjs } from 'dayjs'
@@ -38,7 +38,7 @@ const Step = () => {
       setIsLoading(true)
       ;(async () => {
         const { data: response } = await userApi.getUserInformationByOauthId(session.user.oauthId)
-        const userInfo: UserInformationTypes = response.data
+        const userInfo: UserInformationType = response.data
         if (userInfo && userInfo.id && userInfo.oauthId && userInfo.birth && userInfo.isMale) {
           setUserId(userInfo.id)
           setOauthId(userInfo.oauthId)

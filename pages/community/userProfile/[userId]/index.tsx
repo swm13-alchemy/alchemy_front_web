@@ -88,7 +88,7 @@ const UserProfile = () => {
           <p className='bg-white px-6 py-4 text-base font-bold text-gray-900'>작성한 포스트</p>
           <PreviewPost
             postId={1}
-            userId={1}
+            userId=''
             userNickname='홍길동전주인공'
             ageRange={getAgeRange('1999-10-18')}
             isMale={true}
@@ -96,7 +96,7 @@ const UserProfile = () => {
             createdAt={dayjs().subtract(1, 'hour')}
             postTitle='2024년 6월 글제목 글 제목글 제목 글제목2022 글제목 글제목'
             postBody='Lorem ipsum dolor sit amet, consectetur adipiscing. Massa cras velit viverra duis odio consectetur nulla. Euismod sit eget ullamcorper integer pordafsdfasdfasd dsfasdfafsdafds'
-            postTopics={['간건강', '치아건강']}
+            // postTopics={['간건강', '치아건강']}
             postTags={['노화&항산화', '면역기능', '혈액생성', '멀티미네랄', '콜레스테롤 합성조절', '혈압호르몬조절', '혈당조절']}
             postLikeCnt={4}
             commentCnt={35}
@@ -105,7 +105,7 @@ const UserProfile = () => {
           />
           <PreviewPost
             postId={1}
-            userId={1}
+            userId=''
             userNickname='홍길동전주인공'
             ageRange={getAgeRange('1999-10-18')}
             isMale={true}
@@ -113,7 +113,7 @@ const UserProfile = () => {
             createdAt={dayjs().subtract(1, 'hour')}
             postTitle='2024년 6월 글제목 글 제목글 제목 글제목2022 글제목 글제목'
             postBody='Lorem ipsum dolor sit amet, consectetur adipiscing. Massa cras velit viverra duis odio consectetur nulla. Euismod sit eget ullamcorper integer pordafsdfasdfasd dsfasdfafsdafds'
-            postTopics={['간건강', '치아건강']}
+            // postTopics={['간건강', '치아건강']}
             postTags={['노화&항산화', '면역기능', '혈액생성', '멀티미네랄', '콜레스테롤 합성조절', '혈압호르몬조절', '혈당조절']}
             postLikeCnt={4}
             commentCnt={35}
