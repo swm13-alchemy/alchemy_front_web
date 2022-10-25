@@ -1,18 +1,70 @@
 import { useRouter } from 'next/router'
 import BackHeader from '../../components/layout/BackHeader'
 import MuiAutoCompleteTopicInput from '../../components/common/community/MuiAutoCompleteTopicInput'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TopicType } from '../../utils/types'
 import ImageOutlined from '@mui/icons-material/ImageOutlined'
 import InsertChartOutlined from '@mui/icons-material/InsertChartOutlined'
 import Tag from '@mui/icons-material/Tag'
+import TopCenterSnackBar from '../../components/common/TopCenterSnackBar'
+import { arrayIsNotEmpty } from '../../utils/functions/arrayIsNotEmpty'
+import { postApi } from '../../utils/api'
+import { useUserInformationStore } from '../../stores/store'
+import LoadingCircular from '../../components/layout/LoadingCircular'
 
 const AddPost = () => {
   const router = useRouter()
+  const userId = useUserInformationStore(state => state.userId)
   const [selectedTopics, setSelectedTopics] = useState<TopicType[]>([])
   const [inputTags, setInputTags] = useState<string[]>([])
   const [title, setTitle] = useState<string>('')
   const [body, setBody] = useState<string>('')
+  const [isTopicError, setIsTopicError] = useState<boolean>(false)
+  const [isTitleError, setIsTitleError] = useState<boolean>(false)
+  const [isBodyError, setIsBodyError] = useState<boolean>(false)
+  const [isSuccessPost, setIsSuccessPost] = useState<boolean>(false)
+  const [isFailPost, setIsFailPost] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  /** 글 작성 함수 */
+  const submitPost = () => {
+    setIsLoading(true)
+    if (!arrayIsNotEmpty(selectedTopics)) {
+      setIsTopicError(true)
+      setIsLoading(false)
+    } else if (!title) {
+      setIsTitleError(true)
+      setIsLoading(false)
+    } else if (!body) {
+      setIsBodyError(true)
+      setIsLoading(false)
+    } else {
+      if (userId) {
+        ;(async () => {
+          await postApi.postNewPost(userId, title, body, [], selectedTopics.map(x => x.id))
+            .then(() => {
+              setIsLoading(false)
+              setIsSuccessPost(true)
+              setTimeout(() => router.push('/community'), 1500)
+            })
+            .catch(() => {
+              setIsLoading(false)
+              setIsFailPost(true)
+            })
+        })()
+      }
+    }
+  }
+
+  // 로그인이 안되어있는 경우 Redirect
+  useEffect(() => {
+    if (!userId) {
+      router.back()
+    }
+  }, [userId])
+  
+  // 로딩 처리
+  if (isLoading) return <LoadingCircular />
 
   return (
     <div className='bg-gray-50'>
@@ -72,10 +124,49 @@ const AddPost = () => {
           {/*</div>*/}
         </div>
         {/* 글 등록 버튼 */}
-        <button className='w-11/12 py-3.5 bg-primary rounded-[0.625rem] text-sm font-bold text-gray-50'>
+        <button
+          className='w-11/12 py-3.5 bg-primary rounded-[0.625rem] text-sm font-bold text-gray-50'
+          onClick={submitPost}
+        >
           글 등록하기
         </button>
       </div>
+
+      {/* 건강고민토픽 에러 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isTopicError}
+        setIsSnackBarOpen={setIsTopicError}
+        severity='error'
+        content='건강고민토픽을 최소 1개 이상 입력해주세요.'
+      />
+      {/* 제목 에러 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isTitleError}
+        setIsSnackBarOpen={setIsTitleError}
+        severity='error'
+        content='제목을 입력해주세요.'
+      />
+      {/* 본문 에러 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isBodyError}
+        setIsSnackBarOpen={setIsBodyError}
+        severity='error'
+        content='본문을 입력해주세요.'
+      />
+      {/* 글 작성 성공 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isSuccessPost}
+        setIsSnackBarOpen={setIsSuccessPost}
+        severity='success'
+        content='글이 등록되었습니다! 😉'
+      />
+      {/* 글 작성 실패 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isFailPost}
+        setIsSnackBarOpen={setIsFailPost}
+        severity='error'
+        content='글 작성에 실패했습니다. 다시 시도해주세요! 문제가 반복되는 경우 문의 바랍니다 😥'
+      />
     </div>
   )
 }
