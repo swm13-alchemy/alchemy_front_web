@@ -4,7 +4,6 @@ import React, { useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useUserInformationStore } from '../stores/store'
-import BackHeader from '../components/layout/BackHeader'
 import ChevronLeft from '@mui/icons-material/ChevronLeft'
 
 const Initial = () => {
@@ -39,7 +38,7 @@ const Initial = () => {
           className='bg-primary text-gray-50 shadow-md w-full p-3.5 rounded-[0.625rem]'
           onClick={() => signIn()}
         >
-          로그인 or 회원가입 하기
+          로그인 하기
         </button>
       </div>
     </div>

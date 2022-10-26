@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import { useUserInformationStore, useUserPillListStore } from '../../stores/store'
-import { UserIntakeNutrientType } from '../../utils/types'
-import { Essential14Nutrients, ESSENTIAL_NUTRIENTS_LIST, EssentialNutrientsTakeCheckType } from '../../utils/constant/constants'
 import BalanceSummary from '../../components/common/balance/BalanceSummary'
 import IntakeReport from '../../components/common/balance/IntakeReport'
 import ContainerWithBottomNav from '../../components/layout/ContainerWithBottomNav'
@@ -16,6 +13,7 @@ import dayjs from 'dayjs'
 import { convertEnDayToKoDay } from '../../utils/functions/timeFormatFunc/convertEnDayToKoDay'
 import useUserNutrientsBalanceData from '../../hooks/useUserNutrientsBalanceData'
 import { signIn } from 'next-auth/react'
+import useUserIsTakeEssentialNutrients from '../../hooks/useUserIsTakeEssentialNutrients'
 // import { BOTTOM_NAV_BAR_PADDING_TAILWINDCSS_VALUE } from '../../utils/constant/systemConstants'
 
 const Balance: NextPage = () => {
@@ -23,43 +21,12 @@ const Balance: NextPage = () => {
   const userTakingPillList = useUserPillListStore(state => state.userTakingPillList)
   // const pillListVersion = useUserPillListStore(state => state.pillListVersion)
   // const addPillListVersion = useUserPillListStore(state => state.addPillListVersion)
-  const [isTakeEssentialNutrients, setIsTakeEssentialNutrients] = useState<EssentialNutrientsTakeCheckType>({
-    '비타민C': false,
-    '비타민D': false,
-    '비타민B1': false,
-    '비타민B2': false,
-    '나이아신(B3)': false,
-    '판토텐산(B5)': false,
-    '비타민B6': false,
-    '비오틴': false,
-    '엽산': false,
-    '비타민B12': false,
-    '오메가3(EPA+DHA)': false,
-    '마그네슘': false,
-    '칼슘': false,
-    '프로바이오틱스(유산균)': false,
-  })
 
   // 섭취중인 영양분 데이터 가져오기 (커스텀 훅)
   const { totalIntakeNutrients, excessNutrients, properNutrients, minimumNutrients, lackNutrients, wellIntakePercent } = useUserNutrientsBalanceData()
 
-  // 필수 영양분 14가지 잘 먹고 있는지 보여주는 부분
-  useEffect(() => {
-    if (arrayIsNotEmpty(properNutrients) || arrayIsNotEmpty(minimumNutrients)) {
-      ESSENTIAL_NUTRIENTS_LIST.forEach((essentialNutrient) => {
-        // 해당 필수 영양분의 이름과 같은 이름의 영양분을 섭취하고 있는지 find 함수로 확인
-        const essentialNutrientIntakeByUser: UserIntakeNutrientType | undefined = totalIntakeNutrients.find(x => x.name === essentialNutrient.name)
-        // 필수 영양분에 해당하는 영양제를 섭취중이고 (not undefined)
-        if (essentialNutrientIntakeByUser !== undefined &&  // 적정 또는 최소 기준량에 맞춰 섭취중이라면,
-          (properNutrients.includes(essentialNutrientIntakeByUser) || minimumNutrients.includes(essentialNutrientIntakeByUser))) {
-          // 해당 영양분 알약을 채우기 위해 true로 바꿈
-          const tempIsTakeEssentialNutrients = {...isTakeEssentialNutrients}
-          tempIsTakeEssentialNutrients[essentialNutrientIntakeByUser.name as Essential14Nutrients] = true
-          setIsTakeEssentialNutrients(tempIsTakeEssentialNutrients)
-        }
-      })
-    }
-  }, [properNutrients, minimumNutrients])
+  // 필수 영양분 14가지 잘 먹고 있는지 가져오기 (커스텀 훅)
+  const { isTakeEssentialNutrients } = useUserIsTakeEssentialNutrients()
 
   // 로그인이 안되어 있는 경우 redirect
   if (!userId) {
@@ -73,7 +40,7 @@ const Balance: NextPage = () => {
             className='w-11/12 bg-primary text-gray-50 shadow-md py-3 rounded-[0.625rem]'
             onClick={() => signIn()}
           >
-            로그인 or 회원가입 하기
+            로그인 하기
           </button>
         </div>
       </ContainerWithBottomNav>
