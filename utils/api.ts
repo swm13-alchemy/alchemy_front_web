@@ -91,5 +91,5 @@ export const postApi = {
       topicIds: topicIds
     }
   }),
-  deletePost: (postId: number) => nest.delete(`/post?id=${postId}`)
+  deletePost: (postId: number) => nest.delete(`/post/${postId}`)
 }

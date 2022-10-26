@@ -18,6 +18,8 @@ import MenuItem from '@mui/material/MenuItem'
 import useUserId from '../../../hooks/useUserId'
 import { postApi } from '../../../utils/api'
 import { PostType } from '../../../utils/types'
+import LoadingCircular from '../../../components/layout/LoadingCircular'
+import TopCenterSnackBar from '../../../components/common/TopCenterSnackBar'
 
 interface Props {
   postDetails: PostType
@@ -28,12 +30,6 @@ const 임시태그목록 = [
   "🍎콜레스테롤 합성 조절",
   "💧멀티미네랄",
   "🌊콜레스테롤 합성 조절 "
-]
-
-const 임시토픽목록 = [
-  '노화&항산화',
-  '면역기능',
-  "혈액 생성"
 ]
 
 export const 임시영양제목록 = [
@@ -74,21 +70,33 @@ const PostDetails = ({ postDetails }: Props) => {
   const [isThreeDotMenuOpen, setIsThreeDotMenuOpen] = useState<boolean>(false)
   const [isDeleteSuccess, setIsDeleteSuccess] = useState<boolean>(false)
   const [isDeleteError, setIsDeleteError] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   /** 글 삭제 함수 (글 작성자인 경우만 호출 가능) */
   const deleteMyPost = () => {
     if (userId === authorId && id) {
+      setIsLoading(true)
       ;(async () => {
         await postApi.deletePost(id)
-          .then(() => setIsDeleteSuccess(true))
-          .catch(() => setIsDeleteError(true))
+          .then(() => {
+            setIsLoading(false)
+            setIsDeleteSuccess(true)
+            setTimeout(() => router.back(), 1500)
+          })
+          .catch(() => {
+            setIsLoading(false)
+            setIsDeleteError(true)
+          })
       })()
     }
   }
+  
+  // 로딩 처리
+  if (isLoading) return <LoadingCircular />
 
   return (
     <ContainerWithBottomNav>
-      <BackHeaderWithBtn router={router} name={'간 건강 라운지'}>
+      <BackHeaderWithBtn router={router} name='건강 고민 라운지'>
         <button
           className='absolute right-1.5 flex items-center justify-center'
           onClick={() => setIsThreeDotMenuOpen(true)}
@@ -128,8 +136,8 @@ const PostDetails = ({ postDetails }: Props) => {
           {/* 글 태그 목록 부분 */}
           <div className='w-full flex flex-wrap items-center gap-2'>
             {/* TODO: 추후 수정 */}
-            {임시태그목록.map((tagName) =>
-              <PostETCTag key={tagName} tagName={tagName} />
+            {임시태그목록.map((tagName, idx) =>
+              <PostETCTag key={idx} tagName={tagName} />
             )}
           </div>
           {/* 글 제목 */}
@@ -204,6 +212,21 @@ const PostDetails = ({ postDetails }: Props) => {
           commentBody='가지에 피에 있는 방황하였으며, 인간의 하여도 황금시대다. 그러므로 풀이 인생에 평화스러운 예수는 가슴에 봄바람을 이상 우리 것이다. 가슴에 수 스며들어 뼈 같은 따뜻한 그들은 부패뿐이다. 길지 이는 청춘의 그들의 열락의 보라. 현저하게 쓸쓸한 용기가 그들에게 말이다. 있는 곳이 무엇을 위하여서, 풍부하게 있음으로써 설레는 봄바람이다. 것은 같지 위하여 피는 실로 오직 광야에서 싶이.'
         />
       </div>
+
+      {/* 글 삭제 성공 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isDeleteSuccess}
+        setIsSnackBarOpen={setIsDeleteSuccess}
+        severity='success'
+        content='글이 삭제되었습니다!'
+      />
+      {/* 글 삭제 실패 스낵바 */}
+      <TopCenterSnackBar
+        isSnackBarOpen={isDeleteError}
+        setIsSnackBarOpen={setIsDeleteError}
+        severity='error'
+        content='삭제에 실패했습니다 😥 같은 상황이 반복되면 문의해주세요.'
+      />
    </ContainerWithBottomNav>
   )
 }
