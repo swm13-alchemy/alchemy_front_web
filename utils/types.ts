@@ -144,10 +144,11 @@ export interface UserInformationType { // TODO: 추후 수정사항 있으면 �
 
 export type TrustedUserType = 'doctor' | 'pharmacist' | 'influencer' | 'normal'
 
-interface AuthorType {
+export interface AuthorType {
   id: string
   nickname: string
   birth: string
+  isMale: boolean
 }
 
 export interface PostType {

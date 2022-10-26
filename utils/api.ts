@@ -80,6 +80,7 @@ export const topicApi = {
 export const postApi = {
   getAllPost: () => nest.get('/post'),
   getPostWithTopicIds: (topicIds: number[]) => nest.get(`/post?${topicIds.map((id) => `topicIds=${id}`).join('&')}`),
+  getPostDetails: (postId: number) => nest.get(`/post/${postId}`),
   searchPostWithContent: (content: string) => nest.get(`/post?content=${content}`),
   postNewPost: (userId: string, title: string, content: string, tags: string[], topicIds: number[]) => nest.post('/post', {
     postData: {
