@@ -166,7 +166,7 @@ const Details = ({ details }: Props) => {
 
           // 오늘 저장된 서버에 있는 해당 영양제의 모든 복용 기록들을 삭제함
           ;(async () => {
-            await intakeApi.deleteIntakeHistory(userId, id)
+            await intakeApi.deleteIntakeHistory(userId, [id])
           })()
         }
       }
