@@ -120,12 +120,12 @@ const EditingPillNotification = () => {
       if (!intakeDays.includes(dayjs().format('ddd') as Days)) {  // 수정한 복용 요일에 오늘 요일이 제거됐다면,
         // 오늘 저장된 해당 영양제의 모든 복용 기록들을 삭제함
         ;(async () => {
-          await intakeApi.deleteIntakeHistory(userId, pillId)
+          await intakeApi.deleteIntakeHistory(userId, [pillId])
         })()
       } else {  // 수정한 복용 요일에 오늘 요일이 포함되는 경우
         ;(async () => {
           // 오늘 저장된 해당 영양제의 모든 복용 기록을 삭제함
-          await intakeApi.deleteIntakeHistory(userId, pillId)
+          await intakeApi.deleteIntakeHistory(userId, [pillId])
             .then(() => { // 삭제가 완료되면 변경된 사항들을 바탕으로 복용 기록을 새로 채워넣음
               const tempPutHistoryJSONList: PutIntakeHistoryType[] = []
 
@@ -172,7 +172,7 @@ const EditingPillNotification = () => {
       }
 
       // 오늘 저장된 서버에 있는 해당 영양제의 모든 복용 기록들을 삭제함
-      await intakeApi.deleteIntakeHistory(userId, pillId)
+      await intakeApi.deleteIntakeHistory(userId, [pillId])
 
       setIsDeleteSuccess(true)
       setTimeout(() => router.back(), 1000)

@@ -42,12 +42,18 @@ export const intakeApi = {
   putIntakeHistory: (historyArray: PutIntakeHistoryType[]) => nest.put(`/intake-log`, {
     intakeData: historyArray
   }),
-  deleteIntakeHistory: (userId: string, pillId: number) => nest.delete('/user-pill', {
+  deleteIntakeHistory: (userId: string, pillIds: number[]) => nest.delete('/intake-log', {
     data: {
       userId: userId,
-      pillId: pillId
+      pillIds: pillIds
     }
   })
+  // deleteIntakeHistory: (userId: string, pillId: number) => nest.delete('/user-pill', {
+  //   data: {
+  //     userId: userId,
+  //     pillId: pillId
+  //   }
+  // })
 }
 
 export const userApi = {
