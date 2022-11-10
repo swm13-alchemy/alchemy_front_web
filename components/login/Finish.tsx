@@ -11,7 +11,7 @@ import { userApi } from '../../utils/api'
 interface Props {
   nickName: string
   birth: Dayjs | null
-  isMale: boolean | undefined
+  isMale: boolean | null
   interestTopicIds: number[]
   userPillList: SupplementDetailsType[]
 }
@@ -25,7 +25,7 @@ function Finish({ nickName, birth, isMale, interestTopicIds, userPillList }: Pro
 
   const completeSignUp = () => {
     // TODO: 되는지 Test 필요
-    if (nickName && birth && isMale !== undefined && session) {
+    if (nickName && birth && isMale !== null && session) {
       ;(async () => {
         await userApi.postUserInformation(
           session.user.oauthId,
