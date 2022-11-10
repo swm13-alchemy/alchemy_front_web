@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Home from '@mui/icons-material/Home'
-import React, { useCallback, useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import PersonOutline from '@mui/icons-material/PersonOutline'
 import useUserId from '../../hooks/useUserId'
 import InsertChart from '@mui/icons-material/InsertChart'
@@ -57,7 +57,7 @@ const menuList: MenuType[] = [
 
 function BottomNavBar() {
   const router = useRouter()
-  const userId = useCallback(useUserId, []);
+  const userId = useUserId()
   const [activeMenuId, setActiveMenuId] = useState<number>(1)
 
   useLayoutEffect(() => {
