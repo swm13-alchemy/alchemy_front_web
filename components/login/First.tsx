@@ -2,11 +2,7 @@ import React from 'react'
 import { LocalizationProvider, DesktopDatePicker } from '@mui/x-date-pickers'
 import TextField from '@mui/material/TextField'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import dayjs, { Dayjs } from 'dayjs'
-
-import DatePicker from "react-datepicker"; // date picker
-import "react-datepicker/dist/react-datepicker.css"; // 이렇게 가져와야 기본 디자인이 설정된다
-import ko from "date-fns/locale/ko"; // 달력을 한글 지원으로 바꾸는 용도
+import { Dayjs } from 'dayjs'
 
 interface Props {
   setPageNum: (pageNum: number) => void
