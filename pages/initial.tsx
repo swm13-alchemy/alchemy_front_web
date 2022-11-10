@@ -1,14 +1,16 @@
 import Image from 'next/image'
 import bigLogo from '../public/asset/image/bigLogo.png'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useUserInformationStore } from '../stores/store'
 import ChevronLeft from '@mui/icons-material/ChevronLeft'
+import LoadingCircular from '../components/layout/LoadingCircular'
 
 const Initial = () => {
   const router = useRouter()
   const { userId, oauthId } = useUserInformationStore()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   // 이미 로그인을 한 사람의 경우 Redirect
   useEffect(() => {
@@ -16,6 +18,14 @@ const Initial = () => {
       router.push('/')
     }
   }, [userId, oauthId])
+
+  const goToRegister = () => {
+    setIsLoading(true)
+    signIn()
+  }
+
+  // 로그인 하기 누르면 로딩 처리
+  if (isLoading) return <LoadingCircular />
 
   return (
     <div className='h-screen relative'>
@@ -36,7 +46,7 @@ const Initial = () => {
         </div>
         <button
           className='bg-primary text-gray-50 shadow-md w-full p-3.5 rounded-[0.625rem]'
-          onClick={() => signIn()}
+          onClick={goToRegister}
         >
           로그인 하기
         </button>
