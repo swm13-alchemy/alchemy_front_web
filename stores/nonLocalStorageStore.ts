@@ -1,5 +1,5 @@
 import create from 'zustand'
-import { TimeTableByDateType, UserIntakeNutrientType } from '../utils/types'
+import { SearchResultsItemType, TimeTableByDateType, UserIntakeNutrientType } from '../utils/types'
 
 interface NutrientsBalanceDataState {
   totalIntakeNutrients: UserIntakeNutrientType[]
@@ -53,5 +53,23 @@ export const useIntakeTimeTableByDate = create<IntakeTimeTableByDateState>((set)
   intakeTimeTableByDate: null,
   setIntakeTimeTableByDate: (data: TimeTableByDateType) => {
     set((state) => ({ ...state, intakeTimeTableByDate: data }))
+  }
+}))
+
+interface TempSearchResultsState {
+  prevSearchTerm: string | null
+  setPrevSearchTerm: (prevSearchTerm: string) => void
+  tempSearchResults: SearchResultsItemType[]
+  setTempSearchResults: (tempSearchResults: SearchResultsItemType[]) => void
+}
+/** 영양제 검색 결과 임시 보관소 */
+export const useTempSearchResults = create<TempSearchResultsState>((set) => ({
+  prevSearchTerm: null,
+  setPrevSearchTerm: (searchTerm: string) => {
+    set((state) => ({ ...state, prevSearchTerm: searchTerm }))
+  },
+  tempSearchResults: [],
+  setTempSearchResults: (results: SearchResultsItemType[]) => {
+    set((state) => ({ ...state, tempSearchResults: results }))
   }
 }))

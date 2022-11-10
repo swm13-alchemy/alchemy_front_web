@@ -11,11 +11,13 @@ import Image from 'next/image'
 import noSearchResult from '../public/asset/image/noSearchResult.png'
 import PillLenseFNB from '../components/layout/PillLenseFNB'
 import LoadingCircular from '../components/layout/LoadingCircular'
+import { useTempSearchResults } from '../stores/nonLocalStorageStore'
 
 const Search: NextPage = () => {
   const router = useRouter()
   // const [formInputs, setFormInputs] = useState({})
   const [searchTerm, setSearchTerm] = useState<string>('')
+  const { prevSearchTerm, setPrevSearchTerm, tempSearchResults, setTempSearchResults } = useTempSearchResults() // 검색 결과 유지를 위해 사용
   const [searchResults, setSearchResults] = useState<SearchResultsItemType[]>([])
   const [isNoResult, setIsNoResult] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -24,23 +26,32 @@ const Search: NextPage = () => {
   useEffect(() => {
     if (router.query.name) {
       setIsLoading(true)
-      ;(async function reloadingSearch() {
-        // 쿼리 스트링 보고 검색하는 함수
-        const {
-          data: { data: result },
-        } = await pillApi.getSearchResults(router.query.name)
-        if (arrayIsNotEmpty(result)) {
-          setIsNoResult(false)
-          setSearchResults(result)
-        } else {
-          // 받아온 data의 배열이 비어있는 경우 isNoResult를 true로 바꿈
-          setIsNoResult(true)
-        }
-      })().finally(() => {
-        // QueryString으로 /search에 name을 넘겨주는 경우, 검색어 State 변경
-        setSearchTerm(router.query.name as string)
+      // 이전에 검색을 했었다면 검색 결과 유지
+      if (router.query.name === prevSearchTerm && arrayIsNotEmpty(tempSearchResults)) {
+        setSearchResults(tempSearchResults)
         setIsLoading(false)
-      })
+      } else {  // 처음 검색하는거면 그냥 검색
+        ;(async function reloadingSearch() {  // 쿼리 스트링 보고 검색하는 함수
+          const {
+            data: { data: result },
+          } = await pillApi.getSearchResults(router.query.name)
+          if (arrayIsNotEmpty(result)) {
+            setIsNoResult(false)
+            setSearchResults(result)
+            // 검색 결과 유지를 위해 전역 상태에도 검색 결과를 저장
+            setPrevSearchTerm(searchTerm)
+            setTempSearchResults(result)
+          } else {
+            // 받아온 data의 배열이 비어있는 경우 isNoResult를 true로 바꿈
+            setIsNoResult(true)
+          }
+        })().finally(() => {
+          setIsLoading(false)
+        })
+      }
+
+      // QueryString으로 /search에 name을 넘겨주는 경우, 검색어 State 변경
+      setSearchTerm(router.query.name as string)
     }
   }, [router.query.name])
 
@@ -71,7 +82,7 @@ const Search: NextPage = () => {
                 {searchResults.map((supplement) => {
                   return (
                     <PillListItem
-                      key={supplement.name}
+                      key={supplement.id}
                       id={supplement.id}
                       name={supplement.name}
                       maker={supplement.maker}
