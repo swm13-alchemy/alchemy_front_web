@@ -90,6 +90,7 @@ const Details = ({ details }: Props) => {
           await pillApi.getSupplementDetailsWithBalance(age, isMale, id)
               .then(({ data: { data: thisPillBalanceResult } }) => {
                 const newIngredients: IngredientWithIntakesType[] = thisPillBalanceResult[0].ingredients
+                console.log('newIngredients : ', newIngredients)
                 setMergedNutrientData(mergeNutrientsData(totalBalanceResult, newIngredients))
               })
               .catch((error) => {
@@ -238,9 +239,13 @@ const Details = ({ details }: Props) => {
       <section className='mt-2 space-y-4'>
         {/* 변화량 그래프 부분(임시) */}
         <article className='bg-white p-6 text-gray-900'>
-          <span className='text-xs text-gray-500'>현재 영양분 섭취량 기준</span>
-          <InfoOutlined className='text-base text-gray-400 ml-1' />
-          <p className='text-base font-bold mb-6'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>
+          <Link href='/balance/category'>
+            <a className='flex items-center'>
+              <p className='text-xs text-gray-500'>현재 영양분 섭취량 기준</p>
+              <InfoOutlined className='text-base text-gray-400 ml-1' />
+            </a>
+          </Link>
+          <p className='text-base font-bold mb-4'>한눈에 보는 <strong className='text-primary'>예상 변화량 그래프</strong></p>
 
           {/* TODO: 밑에 두 개 CONTENT_GRAPH_DUMMY_DATA를 다 mergedNutrientData로 바꾸면 됨 -> 지금 일단 해둠 */}
           {userId ? (

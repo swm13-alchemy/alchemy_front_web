@@ -5,23 +5,27 @@ import { UserIntakeNutrientType } from '../../../utils/types'
 import { CompareContent } from '../../../utils/functions/CompareContent'
 import { useEffect, useState } from 'react'
 
-function IntakeReportListItem({ name, content, reqMin, reqAvg, reqLimit, unit, tips, efficacy }: UserIntakeNutrientType) {
+function IntakeReportListItem({ name, content, reqMin, reqAvg, reqMax, unit, tips, efficacy }: UserIntakeNutrientType) {
   const [state, setState] = useState<number>(-1)
   const [excessOrLackContent, setExcessOrLackContent] = useState<number | null>(null)
 
   useEffect(() => {
-    // reqMin, reqAvg, reqLimit 기준과 비교하는 클래스
+    // reqMin, reqAvg, reqMax 기준과 비교하는 클래스
     // 해당 클래스에 값을 넣고 클래스의 메서드를 사용해서 비교하면 됨.
-    const compare = new CompareContent(content, reqMin, reqAvg, reqLimit)
-    if (compare.compareWithLimit()) {
+    const compare = new CompareContent(content, reqMin, reqAvg, reqMax)
+    // console.log('reqMin : ', reqMin)
+    // console.log('reqAvg : ', reqAvg)
+    // console.log('reqMax : ', reqMax)
+    if (compare.compareWithMax()) {
       setState(3) // 과다
-      setExcessOrLackContent(content - reqLimit)
-    } else if (compare.compareWithAvgAndLimit()) {
+      setExcessOrLackContent(content - reqMax)
+    } else if (compare.compareWithAvgAndMax()) {
       setState(2) // 최적
     } else if (compare.compareWithMinAndAvg()) {
       setState(1) // 최소
     } else {
       setState(0) // 부족
+      // console.log('name : ', name, ' / reqMin : ', reqMin, ' / content : ', content)
       setExcessOrLackContent(reqMin - content)
     }
   }, [])
@@ -35,7 +39,7 @@ function IntakeReportListItem({ name, content, reqMin, reqAvg, reqLimit, unit, t
           content: content,
           reqMin: reqMin,
           reqAvg: reqAvg,
-          reqLimit: reqLimit,
+          reqMax: reqMax,
           unit: unit,
           tips: tips,
           efficacy: efficacy,

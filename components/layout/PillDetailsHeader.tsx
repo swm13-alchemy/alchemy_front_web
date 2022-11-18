@@ -11,7 +11,7 @@ interface Props {
 
 function PillDetailsHeader({ router, pillName }: Props) {
   return (
-    <header className='fixed left-0 top-0 right-0 pl-4 pr-2 py-2 flex items-center justify-between text-gray-900 bg-white z-10'>
+    <header className='fixed left-0 top-0 right-0 pl-4 pr-2 py-2 flex items-center justify-between text-gray-900 bg-white z-50'>
       <button
         className='flex items-center justify-center'
         onClick={() => router.back()}
