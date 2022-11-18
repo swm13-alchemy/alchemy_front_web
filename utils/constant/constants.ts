@@ -218,7 +218,7 @@ export const CONTENT_GRAPH_DUMMY_DATA: MergedNutrientDataType[] = [
     unit: 'mg',
     reqMin: 1500,
     reqAvg: 3000,
-    reqLimit: 4000
+    reqMax: 4000
   },
   {
     name: 'VitaminD',
@@ -227,7 +227,7 @@ export const CONTENT_GRAPH_DUMMY_DATA: MergedNutrientDataType[] = [
     unit: 'mg',
     reqMin: 200,
     reqAvg: 500,
-    reqLimit: 700
+    reqMax: 700
   },
   {
     name: 'Magnesium',
@@ -236,7 +236,7 @@ export const CONTENT_GRAPH_DUMMY_DATA: MergedNutrientDataType[] = [
     unit: 'mg',
     reqMin: 200,
     reqAvg: 600,
-    reqLimit: 1000
+    reqMax: 1000
   },
   {
     name: 'Probiotics',
@@ -245,7 +245,7 @@ export const CONTENT_GRAPH_DUMMY_DATA: MergedNutrientDataType[] = [
     unit: 'mg',
     reqMin: 400,
     reqAvg: 900,
-    reqLimit: 1200
+    reqMax: 1200
   },
   {
     name: 'VitaminC',
@@ -254,7 +254,7 @@ export const CONTENT_GRAPH_DUMMY_DATA: MergedNutrientDataType[] = [
     unit: 'mg',
     reqMin: 1500,
     reqAvg: 3000,
-    reqLimit: 4000
+    reqMax: 4000
   },
   {
     name: 'VitaminC',
@@ -263,7 +263,7 @@ export const CONTENT_GRAPH_DUMMY_DATA: MergedNutrientDataType[] = [
     unit: 'mg',
     reqMin: 1500,
     reqAvg: 3000,
-    reqLimit: 4000
+    reqMax: 4000
   },
   {
     name: 'VitaminC',
@@ -272,7 +272,7 @@ export const CONTENT_GRAPH_DUMMY_DATA: MergedNutrientDataType[] = [
     unit: 'mg',
     reqMin: 1500,
     reqAvg: 3000,
-    reqLimit: 4000
+    reqMax: 4000
   },
   {
     name: 'VitaminC',
@@ -281,7 +281,7 @@ export const CONTENT_GRAPH_DUMMY_DATA: MergedNutrientDataType[] = [
     unit: 'mg',
     reqMin: 1500,
     reqAvg: 3000,
-    reqLimit: 4000
+    reqMax: 4000
   },
   {
     name: 'VitaminC',
@@ -290,7 +290,7 @@ export const CONTENT_GRAPH_DUMMY_DATA: MergedNutrientDataType[] = [
     unit: 'mg',
     reqMin: 1500,
     reqAvg: 3000,
-    reqLimit: 4000
+    reqMax: 4000
   },
   {
     name: 'VitaminC',
@@ -299,6 +299,6 @@ export const CONTENT_GRAPH_DUMMY_DATA: MergedNutrientDataType[] = [
     unit: 'mg',
     reqMin: 1500,
     reqAvg: 3000,
-    reqLimit: 4000
+    reqMax: 4000
   }
 ]
