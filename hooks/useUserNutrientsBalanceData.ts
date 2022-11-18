@@ -37,12 +37,12 @@ const useUserNutrientsBalanceData = () => {
         const minimumNutrientsList: UserIntakeNutrientType[] = []
         const lackNutrientsList: UserIntakeNutrientType[] = []
         for (const nutrient of totalNutrients) {
-          // reqMin, reqAvg, reqLimit 기준과 비교하는 클래스
+          // reqMin, reqAvg, reqMax 기준과 비교하는 클래스
           // 해당 클래스에 값을 넣고 클래스의 메서드를 사용해서 비교하면 됨.
-          const compare = new CompareContent(nutrient.content, nutrient.reqMin, nutrient.reqAvg, nutrient.reqLimit)
-          if (compare.compareWithLimit()) {
+          const compare = new CompareContent(nutrient.content, nutrient.reqMin, nutrient.reqAvg, nutrient.reqMax)
+          if (compare.compareWithMax()) {
             excessNutrientsList.push(nutrient)
-          } else if (compare.compareWithAvgAndLimit()) {
+          } else if (compare.compareWithAvgAndMax()) {
             properNutrientsList.push(nutrient)
           } else if (compare.compareWithMinAndAvg()) {
             minimumNutrientsList.push(nutrient)
@@ -55,7 +55,7 @@ const useUserNutrientsBalanceData = () => {
         setMinimumNutrients(minimumNutrientsList)
         setLackNutrients(lackNutrientsList)
 
-        setWellIntakePercent(parseInt(((minimumNutrientsList.length + properNutrientsList.length) / totalNutrients.length).toString()))
+        setWellIntakePercent(parseInt(((minimumNutrientsList.length + properNutrientsList.length) / totalNutrients.length * 100).toString()))
       })()
     }
   }, [userTakingPillList, age, isMale])

@@ -143,7 +143,7 @@ const MyPage = () => {
             <PersonOutline className='text-2xl text-gray-400' />
           </ListLinkBtn>
 
-          <p className='mt-4 text-xs text-gray-400'>앱 버전 0.1.0</p>
+          <p className='mt-4 text-xs text-gray-400'>앱 버전 0.3.2</p>
         </section>
       </div>
     </ContainerWithBottomNav>

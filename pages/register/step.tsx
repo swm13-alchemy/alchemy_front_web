@@ -34,8 +34,8 @@ const Step = () => {
 
   // 기존에 가입했던 유저인 경우 로그인 처리 후 Home 페이지로 보냄
   useEffect(() => {
+    setIsLoading(true)
     if (session?.user.oauthId) {
-      setIsLoading(true)
       ;(async () => {
         const { data: response } = await userApi.getUserInformationByOauthId(session.user.oauthId)
         const userInfo: UserInformationTypes = response.data

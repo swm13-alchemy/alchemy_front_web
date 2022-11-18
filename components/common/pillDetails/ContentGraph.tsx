@@ -26,13 +26,18 @@ function ContentGraph({ mergedNutrientData }: Props) {
   }, [])
 
   return (
-    <>
-      <span className='text-xs text-gray-300 font-medium'>
-        <HorizontalRule className='text-xs'/>기존 섭취량
-      </span>
-      <span className='ml-2 text-xs text-emerald-500 font-medium'>
-        <HorizontalRule className='text-xs'/>추가 섭취량
-      </span>
+    <div>
+      <div className='flex items-center space-x-2'>
+        <span className='text-xs text-amber-400 font-medium'>
+          <HorizontalRule className='text-xs'/>최소량
+        </span>
+        <span className='text-xs text-emerald-400 font-medium'>
+          <HorizontalRule className='text-xs'/>충분량
+        </span>
+        <span className='text-xs text-red-400 font-medium'>
+          <HorizontalRule className='text-xs'/>상한량
+        </span>
+      </div>
 
       {/* 그래프 바 들 */}
       <section className='mt-4 space-y-6'>
@@ -58,19 +63,7 @@ function ContentGraph({ mergedNutrientData }: Props) {
           {isOpenGraph ? '닫기' : '전체 변화량 그래프 보기'}
         </button>
       }
-    </>
-    // <div className='flex flex-col border-[#D8D8D8] w-full rounded-xl border p-2 gap-1 items-center space-y-2'>
-    //   <div className='flex w-full items-center justify-between px-2'>
-    //     <p className='text-sm font-bold text-[#525252] text-center'>종류</p>
-    //     <p className='text-sm font-bold text-[#525252] text-center'>함량</p>
-    //     <p className='text-sm font-bold text-[#525252] text-center'>과부족량</p>
-    //   </div>
-    //   <ContentBar content={200} unit='mg' nutrient={예시} />
-    //   <ContentBar content={200} unit='mg' nutrient={예시} />
-    //   <ContentBar content={200} unit='mg' nutrient={예시} />
-    //   <ContentBar content={10} unit='mg' nutrient={예시} />
-    //   <ContentBar content={200} unit='mg' nutrient={예시} />
-    // </div>
+    </div>
   )
 }
 
