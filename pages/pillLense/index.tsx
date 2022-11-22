@@ -131,7 +131,7 @@ const PillLense: NextPage = () => {
   }
 
   return (
-    <div>
+    <div className='w-full h-screen'>
       <BackHeader router={router} name='카메라' />
 
       {image && <img src={image} alt='' />}
