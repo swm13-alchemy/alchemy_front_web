@@ -46,6 +46,13 @@ const PillLense: NextPage = () => {
   const isLandscape = size.height <= size.width
   const ratio = isLandscape ? size.width / (size.height - 88) : (size.height - 88) / size.width
 
+  // 만약 모바일이면 카메라 권한을 받음
+  useEffect(() => {
+    if (isMobile()) {
+      requestCameraPermission()
+    }
+  }, [])
+
   const handleTakePhoto = (e: any) => {
     e.preventDefault()
 
@@ -121,11 +128,6 @@ const PillLense: NextPage = () => {
     }
 
     getBase64(rawImage)
-  }
-
-  // 만약 모바일이면 카메라 권한을 받음
-  if (isMobile()) {
-    requestCameraPermission()
   }
 
   return (
