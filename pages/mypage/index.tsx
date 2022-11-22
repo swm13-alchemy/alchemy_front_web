@@ -16,7 +16,7 @@ import Lock from '@mui/icons-material/Lock'
 import LiveHelpOutlined from '@mui/icons-material/LiveHelpOutlined'
 import { useUserInformationStore } from '../../stores/store'
 import { userApi } from '../../utils/api'
-import { TopicType, UserInformationTypes } from '../../utils/types'
+import { TopicType, UserInformationType } from '../../utils/types'
 import LoadingCircular from '../../components/layout/LoadingCircular'
 import { getAgeRange } from '../../utils/functions/getAgeRange'
 import PersonOutline from '@mui/icons-material/PersonOutline'
@@ -36,7 +36,7 @@ const MyPage = () => {
     if (oauthId) {
       (async () => {
         const { data: response } = await userApi.getUserInformationByOauthId(oauthId)
-        const userInfo: UserInformationTypes = response.data
+        const userInfo: UserInformationType = response.data
         if (userInfo) {
           setNickname(userInfo.nickname)
           setAgeRange(getAgeRange(userInfo.birth))
@@ -143,7 +143,7 @@ const MyPage = () => {
             <PersonOutline className='text-2xl text-gray-400' />
           </ListLinkBtn>
 
-          <p className='mt-4 text-xs text-gray-400'>앱 버전 0.1.0</p>
+          <p className='mt-4 text-xs text-gray-400'>앱 버전 0.3.2</p>
         </section>
       </div>
     </ContainerWithBottomNav>

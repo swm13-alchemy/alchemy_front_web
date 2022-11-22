@@ -1,6 +1,7 @@
 import { Essential14Nutrients, EssentialNutrientsTakeCheckType } from '../../../utils/constant/constants'
 import { useEffect, useState } from 'react'
 import { changeEssentialNutrientName } from '../../../utils/functions/changeEssentialNutrientName'
+import LoadingCircular from '../../layout/LoadingCircular'
 
 interface Props {
   intakeSupplementsCnt: number
@@ -8,7 +9,7 @@ interface Props {
 }
 
 function BalanceSummary({ intakeSupplementsCnt, isTakeEssentialNutrients }: Props) {
-  const [goodTakeEssentialNutrientsCnt, setGoodTakeEssentialNutrientsCnt] = useState<number>(0)
+  const [goodTakeEssentialNutrientsCnt, setGoodTakeEssentialNutrientsCnt] = useState<number | null>(null)
 
   useEffect(() => {
     let cnt = 0
@@ -18,7 +19,9 @@ function BalanceSummary({ intakeSupplementsCnt, isTakeEssentialNutrients }: Prop
       }
     })
     setGoodTakeEssentialNutrientsCnt(cnt)
-  }, [])
+  }, [isTakeEssentialNutrients])
+
+  if (!goodTakeEssentialNutrientsCnt) return <LoadingCircular />
 
   return (
     <section className='w-full h-[12.5rem] px-8 py-6 bg-white'>
@@ -50,7 +53,7 @@ interface PillIconProps {
 }
 
 // 알약 컴포넌트
-function PillIcon({ isFill, nutrientName }: PillIconProps) {
+export function PillIcon({ isFill, nutrientName }: PillIconProps) {
   if (isFill) {
     return (
       <div className='w-5 h-5 shadow rounded-full flex items-center justify-center' style={{ backgroundImage: 'linear-gradient(to right, #1C65D1 50%, #60A5FA 50%)' }}>

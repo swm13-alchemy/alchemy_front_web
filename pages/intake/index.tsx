@@ -41,7 +41,7 @@ const Intake: NextPage = () => {
             className='w-11/12 bg-primary text-gray-50 shadow-md py-3 rounded-[0.625rem]'
             onClick={() => signIn()}
           >
-            로그인 or 회원가입 하기
+            로그인 하기
           </button>
         </div>
       </ContainerWithBottomNav>

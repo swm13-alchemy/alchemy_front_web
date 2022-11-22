@@ -42,12 +42,18 @@ export const intakeApi = {
   putIntakeHistory: (historyArray: PutIntakeHistoryType[]) => nest.put(`/intake-log`, {
     intakeData: historyArray
   }),
-  deleteIntakeHistory: (userId: string, pillId: number) => nest.delete('/user-pill', {
+  deleteIntakeHistory: (userId: string, pillIds: number[]) => nest.delete('/intake-log', {
     data: {
       userId: userId,
-      pillId: pillId
+      pillIds: pillIds
     }
   })
+  // deleteIntakeHistory: (userId: string, pillId: number) => nest.delete('/user-pill', {
+  //   data: {
+  //     userId: userId,
+  //     pillId: pillId
+  //   }
+  // })
 }
 
 export const userApi = {
@@ -75,4 +81,21 @@ export const topicApi = {
     userId: userId,
     topicIds: topicIds
   })
+}
+
+export const postApi = {
+  getAllPost: () => nest.get('/post'),
+  getPostWithTopicIds: (topicIds: number[]) => nest.get(`/post?${topicIds.map((id) => `topicIds=${id}`).join('&')}`),
+  getPostDetails: (postId: number) => nest.get(`/post/${postId}`),
+  searchPostWithContent: (content: string) => nest.get(`/post?content=${content}`),
+  postNewPost: (userId: string, title: string, content: string, tags: string[], topicIds: number[]) => nest.post('/post', {
+    postData: {
+      userId: userId,
+      title: title,
+      content: content,
+      tags: tags,
+      topicIds: topicIds
+    }
+  }),
+  deletePost: (postId: number) => nest.delete(`/post/${postId}`)
 }

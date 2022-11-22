@@ -17,7 +17,7 @@ export const mergeNutrientsData = (intakeNutrients: UserIntakeNutrientType[], ne
         // @ts-ignore
         reqAvg: newNutrient.nutrient.intakes[0].reqAvg,
         // @ts-ignore
-        reqLimit: newNutrient.nutrient.intakes[0].reqLimit,
+        reqMax: newNutrient.nutrient.intakes[0].reqMax,
         unit: newNutrient.unit
       })
     })
@@ -36,7 +36,7 @@ export const mergeNutrientsData = (intakeNutrients: UserIntakeNutrientType[], ne
             newContent: newNutrient.content,
             reqMin: intakeNutrient.reqMin,
             reqAvg: intakeNutrient.reqAvg,
-            reqLimit: intakeNutrient.reqLimit,
+            reqMax: intakeNutrient.reqMax,
             unit: intakeNutrient.unit
           })
           isIntake = true
@@ -55,7 +55,7 @@ export const mergeNutrientsData = (intakeNutrients: UserIntakeNutrientType[], ne
           // @ts-ignore
           reqAvg: newNutrient.nutrient.intakes[0].reqAvg,
           // @ts-ignore
-          reqLimit: newNutrient.nutrient.intakes[0].reqLimit,
+          reqMax: newNutrient.nutrient.intakes[0].reqMax,
           unit: newNutrient.unit
         })
       }

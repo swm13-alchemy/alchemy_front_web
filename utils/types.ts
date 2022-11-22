@@ -38,7 +38,7 @@ export interface UserIntakeNutrientType {
   content: number
   reqMin: number
   reqAvg: number
-  reqLimit: number
+  reqMax: number
   unit: string
   tips: string[]
   efficacy: string[]
@@ -47,13 +47,13 @@ export interface UserIntakeNutrientType {
 export interface IntakeType {
   reqMin: number
   reqAvg: number
-  reqLimit: number
+  reqMax: number
 }
 
 export interface MergedNutrientDataType extends IntakeType {
   // reqMin: number
   // reqAvg: number
-  // reqLimit: number
+  // reqMax: number
   name: string
   intakeContent: number
   newContent: number
@@ -66,7 +66,7 @@ export interface NutrientWithIntakesType extends NutrientType {
   // efficacy: string
   intakes: IntakeType // {reqMin: number
                       //  reqAvg: number
-                      //  reqLimit: number}
+                      //  reqMax: number}
 }
 
 export interface IngredientWithIntakesType extends IngredientType {
@@ -77,7 +77,7 @@ export interface IngredientWithIntakesType extends IngredientType {
                                       // efficacy: string
                                       // intakes: IntakeType // {reqMin: number
                                       //                     //  reqAvg: number
-                                      //                     //  reqLimit: number}
+                                      //                     //  reqMax: number}
 }
 
 export type Days = 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat'
@@ -130,7 +130,7 @@ export interface TopicType {
   id: number
   name: string
 }
-export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 변경
+export interface UserInformationType { // TODO: 추후 수정사항 있으면 변경
   id: string
   oauthId: string
   nickname: string
@@ -140,4 +140,24 @@ export interface UserInformationTypes { // TODO: 추후 수정사항 있으면 �
   // refreshToken: string | null
   oauthRefreshToken: string | null
   topics: TopicType[]
+}
+
+export type TrustedUserType = 'doctor' | 'pharmacist' | 'influencer' | 'normal'
+
+export interface AuthorType {
+  id: string
+  nickname: string
+  birth: string
+  isMale: boolean
+}
+
+export interface PostType {
+  id: number
+  title: string
+  content: string
+  likeCnt: number
+  tags: string[]
+  createdAt: string
+  topics: TopicType[]
+  user: AuthorType
 }

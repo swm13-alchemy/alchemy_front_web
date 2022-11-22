@@ -9,7 +9,7 @@ interface Props {
 function PillView({ pillId, name }: Props) {
   return (
     <div className='flex flex-col items-center justify-center space-y-1'>
-      <div className='relative w-[4.25rem] h-[4.25rem] rounded-full overflow-hidden'>
+      <div className='relative w-[4.25rem] h-[4.25rem] rounded-full border border-gray-200 overflow-hidden'>
         <Image
           src={requestURLs.getSupplementThumbnailURL(pillId.toString())}
           className='object-cover'

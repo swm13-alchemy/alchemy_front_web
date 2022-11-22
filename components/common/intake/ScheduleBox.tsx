@@ -9,6 +9,7 @@ import dayjs from 'dayjs'
 import { intakeApi, PutIntakeHistoryType } from '../../../utils/api'
 import { changeLocalStorageIntakeData } from '../../../utils/functions/changeLocalStorageIntakeData'
 import { useIntakeTimeTableByDate } from '../../../stores/nonLocalStorageStore'
+import TopCenterSnackBar from '../TopCenterSnackBar'
 
 interface Props {
   selectedDate: string
@@ -21,6 +22,7 @@ function ScheduleBox({ selectedDate, intakeTime, timeTableDataList }: Props) {
   const [isAllCheckBtnOn, setIsAllCheckBtnOn] = useState<boolean>(false)
   const [isSwitchOn, setIsSwitchOn] = useState<boolean>(true)
   const { intakeTimeTableByDate, setIntakeTimeTableByDate } = useIntakeTimeTableByDate()
+  const [isErrorSnackBarOpen, setIsErrorSnackBarOpen] = useState<boolean>(false)
 
   // 전체 복용 버튼을 보여줄건지 안보여줄건지 결정하는 부분 (하나라도 체크했으면 안보여줌)
   useEffect(() => {
@@ -34,7 +36,11 @@ function ScheduleBox({ selectedDate, intakeTime, timeTableDataList }: Props) {
 
   /** 전체 복용 기록 남기는 함수 */
   const checkAll = () => {
-    if (userId && intakeTimeTableByDate) {
+    const todayStr = dayjs().format('YYYY-MM-DD')
+    // 오늘 날짜에 해당하는 복용 체크 버튼이 아닌 경우
+    if (selectedDate !== todayStr) {
+      setIsErrorSnackBarOpen(true)  // 체크 불가능하다는 스낵바를 띄움
+    } else if (userId && intakeTimeTableByDate) {
       const todayDateStr = dayjs().format('YYYY-MM-DD')
       const tempPutHistoryJSONList: PutIntakeHistoryType[] = []
       timeTableDataList.forEach((timeTableData) => {
@@ -115,6 +121,13 @@ function ScheduleBox({ selectedDate, intakeTime, timeTableDataList }: Props) {
           )}
         </div>
       }
+
+      <TopCenterSnackBar
+        isSnackBarOpen={isErrorSnackBarOpen}
+        setIsSnackBarOpen={setIsErrorSnackBarOpen}
+        severity='error'
+        content='오늘 날짜에 해당하는 복용 기록만 체크할 수 있습니다!'
+      />
     </div>
   )
 }

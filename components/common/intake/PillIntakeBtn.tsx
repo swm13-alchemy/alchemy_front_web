@@ -104,12 +104,11 @@ function PillIntakeBtn({ pillId, selectedDate, intakeTime, isPillIntake }: Props
             })
         }
       }
-    } else {
+    } else {  // 오늘 날짜에 해당하는 복용 체크 버튼이 아닌 경우
       setIsErrorSnackBarOpen(true)
     }
   }
 
-  // TODO: 서버에 기록이 안남겨짐 이거 오류 해결
   /** 서버에 섭취기록을 넣는 함수 (clickIntakeBtn 함수에서 호출) */
   const putIntakeHistoryFunc = async (intakeHistoryJSONList: PutIntakeHistoryType[]) => {
     await intakeApi.putIntakeHistory(intakeHistoryJSONList)
@@ -121,7 +120,7 @@ function PillIntakeBtn({ pillId, selectedDate, intakeTime, isPillIntake }: Props
         className='w-full flex flex-col items-center space-y-1'
         onClick={clickIntakeBtn}
       >
-        <div className='relative w-16 h-16 rounded-full overflow-hidden'>
+        <div className='relative w-16 h-16 rounded-full border border-gray-200 overflow-hidden'>
           <Image
             src={requestURLs.getSupplementThumbnailURL(pillId.toString())}
             className='object-cover'
