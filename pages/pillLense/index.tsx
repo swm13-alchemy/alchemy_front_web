@@ -138,8 +138,6 @@ const PillLense: NextPage = () => {
 
       <Webcam
         className={'fixed bottom-12 left-0 right-0 top-10' + (image && ' hidden')}
-        height={size.height - 88}
-        width={size.width}
         screenshotFormat='image/jpeg'
         videoConstraints={{ facingMode: 'environment', aspectRatio: ratio }}
         // @ts-ignore
