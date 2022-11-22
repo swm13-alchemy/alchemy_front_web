@@ -1,13 +1,8 @@
-import React, { useEffect } from 'react'
-import { useSession } from 'next-auth/react'
-import { userApi } from '../../utils/api'
-import { UserInformationType } from '../../utils/types'
-import { useUserInformationStore } from '../../stores/store'
-import { useRouter } from 'next/router'
-import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers'
+import React from 'react'
+import { LocalizationProvider, DesktopDatePicker } from '@mui/x-date-pickers'
 import TextField from '@mui/material/TextField'
-import { Dayjs } from 'dayjs'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { Dayjs } from 'dayjs'
 
 interface Props {
   setPageNum: (pageNum: number) => void
@@ -15,39 +10,22 @@ interface Props {
   setNickName: (nickName: string) => void
   birth: Dayjs | null
   setBirth: (birth: Dayjs | null) => void
-  isMale: boolean | undefined
+  isMale: boolean | null
   setIsMale: (isMale: boolean) => void
 }
 
 function First({ setPageNum, nickName, setNickName, birth, setBirth, isMale, setIsMale }: Props) {
-  // const { data: session } = useSession()
-  // const { setUserId, setOauthId } = useUserInformationStore()
-  //
-  // useEffect(() => {
-  //   if (session) {
-  //     ;(async () => {
-  //       const { data: response } = await userApi.getUserInformationByOauthId(session.user.oauthId)
-  //       const userInfo: UserInformationTypes = response.data
-  //       // 만약 이전에 가입한 정보가 있다면 로컬 스토리지에 id들을 저장하고 메인페이지로 Redirect
-  //       if (userInfo) {
-  //         setUserId(userInfo.id)
-  //         setOauthId(session.user.oauthId)
-  //
-  //         window.location.replace('/')
-  //       }
-  //     })()
-  //   }
-  // }, [session])
-
   return (
     <div className='bg-gray-50 h-screen px-8 py-16 text-gray-900 flex flex-col items-center justify-between'>
-      <div className='space-y-2'>
-        <h1 className='text-3xl font-bold text-gray-900'>환영합니다 👋</h1>
-        <h2 className='text-lg text-gray-900'>
-          가입을 위해 간단한 정보가 필요합니다.
-        </h2>
+      <div className='space-y-12'>
+        <main className='space-y-2'>
+          <h1 className='text-3xl font-bold text-gray-900'>환영합니다 👋</h1>
+          <h2 className='text-lg text-gray-900'>
+            가입을 위해 간단한 정보가 필요합니다.
+          </h2>
+        </main>
 
-        <main className='mt-12 space-y-8'>
+        <div className='space-y-8'>
           <section className='space-y-2'>
             <span className='text-sm text-black'>닉네임</span>
             <input
@@ -64,8 +42,8 @@ function First({ setPageNum, nickName, setNickName, birth, setBirth, isMale, set
             <span className='text-sm text-black'>생년월일</span>
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <MobileDatePicker
-                className={'w-full px-4 py-3.5 bg-white rounded-xl shadow text-sm' + (birth ? ' !text-black' : ' !text-gray-400')}
+              <DesktopDatePicker
+                className={'w-full h-[3.75rem] px-4 py-3.5 bg-white rounded-xl shadow text-sm' + (birth ? ' !text-black' : ' !text-gray-400')}
                 inputFormat="YYYY-MM-DD"
                 value={birth}
                 onChange={(birth: Dayjs | null) => setBirth(birth)}
@@ -107,11 +85,11 @@ function First({ setPageNum, nickName, setNickName, birth, setBirth, isMale, set
               </button>
             </div>
           </section>
-        </main>
+        </div>
       </div>
 
       {/* 다음 버튼 */}
-      {nickName && birth && !!isMale &&
+      {nickName && birth && isMale !== null &&
         <button
           className='relative bottom-0 w-full py-3.5 bg-primary rounded-[0.625rem] text-gray-50 shadow-md'
           onClick={() => setPageNum(2)}

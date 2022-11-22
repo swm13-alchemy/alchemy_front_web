@@ -40,6 +40,7 @@ function MuiCarousel({ whereToUse }: Props) {
 function CustomCarousel({ children }: any) {
   return (
     <Carousel
+      sx={{ width: '100%', height: '7.625rem' }}
       autoPlay={true}
       animation='slide'
       duration={1500}

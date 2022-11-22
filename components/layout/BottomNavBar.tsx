@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Home from '@mui/icons-material/Home'
-import React, { useEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import PersonOutline from '@mui/icons-material/PersonOutline'
 import useUserId from '../../hooks/useUserId'
 import InsertChart from '@mui/icons-material/InsertChart'
@@ -23,8 +23,8 @@ type MenuType = {
   id: number
   name: string
   paths: string[]
-  activeIcon: JSX.Element
-  inActiveIcon: JSX.Element
+  activeIcon: React.ReactNode
+  inActiveIcon: React.ReactNode
 }
 const menuList: MenuType[] = [
   {
@@ -69,7 +69,7 @@ function BottomNavBar() {
   const userId = useUserId()
   const [activeMenuId, setActiveMenuId] = useState<number>(1)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     menuList.forEach((menuInfo) => {
       for (const path of menuInfo.paths) {
         if (path === '/' && router.pathname !== '/') continue

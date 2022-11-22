@@ -55,6 +55,10 @@
     grid-auto-rows: minmax(100px, auto);
   }
 
+  .improvingImageQuality {
+    transform: translateZ(0);
+  }
+
   /*.weekCalendar {*/
   /*  @apply w-[12%] h-14 border rounded-xl bg-[#D5E3B1] flex flex-col items-center space-y-1.5;*/
   /*}*/

@@ -38,7 +38,7 @@ export interface UserIntakeNutrientType {
   content: number
   reqMin: number
   reqAvg: number
-  reqLimit: number
+  reqMax: number
   unit: string
   tips: string[]
   efficacy: string[]
@@ -47,13 +47,13 @@ export interface UserIntakeNutrientType {
 export interface IntakeType {
   reqMin: number
   reqAvg: number
-  reqLimit: number
+  reqMax: number
 }
 
 export interface MergedNutrientDataType extends IntakeType {
   // reqMin: number
   // reqAvg: number
-  // reqLimit: number
+  // reqMax: number
   name: string
   intakeContent: number
   newContent: number
@@ -66,7 +66,7 @@ export interface NutrientWithIntakesType extends NutrientType {
   // efficacy: string
   intakes: IntakeType // {reqMin: number
                       //  reqAvg: number
-                      //  reqLimit: number}
+                      //  reqMax: number}
 }
 
 export interface IngredientWithIntakesType extends IngredientType {
@@ -77,7 +77,7 @@ export interface IngredientWithIntakesType extends IngredientType {
                                       // efficacy: string
                                       // intakes: IntakeType // {reqMin: number
                                       //                     //  reqAvg: number
-                                      //                     //  reqLimit: number}
+                                      //                     //  reqMax: number}
 }
 
 export type Days = 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat'

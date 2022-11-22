@@ -4,7 +4,8 @@ import { useUserInformationStore } from '../../stores/store'
 import Image from 'next/image'
 import googleLogo from '../../public/asset/loginBtn/googleLogo.png'
 import kakaoLogo from '../../public/asset/loginBtn/kakaoLogo.png'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import LoadingCircular from '../../components/layout/LoadingCircular'
 
 interface Props {
   providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null
@@ -12,6 +13,7 @@ interface Props {
 
 const RegisterPage = ({ providers }: Props) => {
   const { userId, oauthId } = useUserInformationStore()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   // 이미 로그인을 한 사람의 경우 Redirect
   useEffect(() => {
@@ -19,6 +21,15 @@ const RegisterPage = ({ providers }: Props) => {
       window.location.replace('/')
     }
   }, [userId, oauthId])
+
+  /** 소셜 로그인 함수 */
+  const goToLogin = (providerId: LiteralUnion<BuiltInProviderType, string>) => {
+    setIsLoading(true)
+    signIn(providerId, {callbackUrl: 'https://www.beehealer.com/register/step'})  // TODO: 출시할 때는 링크 변경 (로컬 : http://localhost:1234/register/step / 출시 : https://www.beehealer.com/register/step)
+  }
+
+  // 로그인 누르면 로딩 처리
+  if (isLoading) return <LoadingCircular />
 
   return (
     <div className='bg-gray-50 h-screen px-8 py-28 text-gray-900'>
@@ -35,7 +46,7 @@ const RegisterPage = ({ providers }: Props) => {
                   <button
                     key={provider.name}
                     className='bg-white px-6 h-10 shadow-md rounded-xl flex items-center space-x-[4.5rem]'
-                    onClick={() => signIn(provider.id, {callbackUrl: 'https://www.beehealer.com/register/step'})}  // TODO: 출시할 때는 링크 변경 (로컬 : http://localhost:1234/register/step / 출시 : https://www.beehealer.com/register/step)
+                    onClick={() => goToLogin(provider.id)}
                   >
                     <div className='relative w-[1.125rem] h-[1.125rem]'>
                       <Image
@@ -57,7 +68,7 @@ const RegisterPage = ({ providers }: Props) => {
                   <button
                     key={provider.name}
                     className='bg-[#FEE500] px-6 h-10 shadow-md rounded-xl flex items-center space-x-[4.5rem]'
-                    onClick={() => signIn(provider.id, {callbackUrl: 'https://www.beehealer.com/register/step'})}  // TODO: 출시할 때는 링크 변경
+                    onClick={() => goToLogin(provider.id)}
                   >
                     <div className='relative w-[1.125rem] h-[1.125rem]'>
                       <Image
