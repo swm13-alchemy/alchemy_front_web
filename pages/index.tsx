@@ -189,7 +189,7 @@ const Home: NextPage = () => {
                 </div>
                 <p className='text-sm text-gray-400'>오늘의 영양제는 섭취 하셨나요?</p>
               </div>
-              <CheckBox className='text-5xl text-gray-200' />
+              <CheckBox className={'text-5xl' + (intakeTimeTableByDate[todayStr].remainIntakePillCnt === 0 ? ' text-primary' : ' text-gray-200')} />
             </section>
 
             {/* 오늘의 영양제 부분 */}
