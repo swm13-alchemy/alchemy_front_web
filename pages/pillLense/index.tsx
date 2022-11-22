@@ -37,6 +37,7 @@ const useWindowSize = () => {
 
 const PillLense: NextPage = () => {
   const router = useRouter()
+  const webcamRef = useRef(null)
 
   const [isCaptured, setImageStatus] = useState(false)
   const [image, setImage] = useState('')
@@ -46,14 +47,23 @@ const PillLense: NextPage = () => {
   const isLandscape = size.height <= size.width
   const ratio = isLandscape ? size.width / (size.height - 88) : (size.height - 88) / size.width
 
+  // // 만약 모바일이면 카메라 권한을 받음
+  // useEffect(() => {
+  //   if (isMobile()) {
+  //     requestCameraPermission()
+  //   }
+  // }, [])
+
   const handleTakePhoto = (e: any) => {
     e.preventDefault()
 
-    // @ts-ignore
-    const img = window.camera.getScreenshot()
+    if (webcamRef.current) {
+      // @ts-ignore
+      const img = webcamRef.current.getScreenshot()
 
-    setImage(img)
-    setImageStatus(true)
+      setImage(img)
+      setImageStatus(true)
+    }
   }
 
   const handleReset = (e: any) => {
@@ -88,7 +98,7 @@ const PillLense: NextPage = () => {
         query: { image: image },
       })
     } else {
-      router.push(`/search?name=${predictResult[0].label}`)
+      router.push(`/pill-details/${predictResult[0].id}`)
     }
   }
 
@@ -123,28 +133,21 @@ const PillLense: NextPage = () => {
     getBase64(rawImage)
   }
 
-  // 만약 모바일이면 카메라 권한을 받음
-  if (isMobile()) {
-    requestCameraPermission()
-  }
-
   return (
-    <div>
+    <div className='w-full h-screen'>
       <BackHeader router={router} name='카메라' />
 
       {image && <img src={image} alt='' />}
 
       <Webcam
-        className={image && 'hidden'}
-        height={size.height - 88}
-        width={size.width}
+        className={'fixed bottom-12 left-0 right-0 top-10' + (image && ' hidden')}
+        audio={false}
         screenshotFormat='image/jpeg'
-        videoConstraints={{ facingMode: 'environment', aspectRatio: ratio }}
-        // @ts-ignore
-        ref={(camera) => (window.camera = camera)}
+        videoConstraints={{ facingMode: 'environment' }}
+        ref={webcamRef}
       />
 
-      <div className='fixed bottom-0 w-full max-w-2xl h-12 bg-[#1C65D1] flex items-center justify-center'>
+      <div className='fixed bottom-0 w-full h-12 bg-[#1C65D1] flex items-center justify-center'>
         <div
           className='absolute left-6 w-8 h-8 rounded-full cursor-pointer flex items-center justify-center'
           onClick={handleReset}
