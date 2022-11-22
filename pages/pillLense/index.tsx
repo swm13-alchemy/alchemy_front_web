@@ -98,7 +98,7 @@ const PillLense: NextPage = () => {
         query: { image: image },
       })
     } else {
-      router.push(`/search?name=${predictResult[0].label}`)
+      router.push(`/pill-details/${predictResult[0].id}`)
     }
   }
 
