@@ -25,7 +25,7 @@ const RegisterPage = ({ providers }: Props) => {
   /** 소셜 로그인 함수 */
   const goToLogin = (providerId: LiteralUnion<BuiltInProviderType, string>) => {
     setIsLoading(true)
-    signIn(providerId, {callbackUrl: 'https://www.beehealer.com/register/step'})  // TODO: 출시할 때는 링크 변경 (로컬 : http://localhost:1234/register/step / 출시 : https://www.beehealer.com/register/step)
+    signIn(providerId, {callbackUrl: 'https://alchemy-front-web-demo.vercel.app/register/step'})  // TODO: 출시할 때는 링크 변경 (로컬 : http://localhost:1234/register/step / 출시 : https://www.beehealer.com/register/step)
   }
 
   // 로그인 누르면 로딩 처리
