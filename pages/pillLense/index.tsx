@@ -56,11 +56,11 @@ const PillLense: NextPage = () => {
   const handleTakePhoto = (e: any) => {
     e.preventDefault()
 
-    if (window) {
-      const img = window.camera.getScreenshot()
-      setImage(img)
-      setImageStatus(true)
-    }
+    // @ts-ignore
+    const img = window.camera.getScreenshot()
+
+    setImage(img)
+    setImageStatus(true)
   }
 
   const handleReset = (e: any) => {
