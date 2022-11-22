@@ -37,6 +37,7 @@ const useWindowSize = () => {
 
 const PillLense: NextPage = () => {
   const router = useRouter()
+  const webcamRef = useRef(null)
 
   const [isCaptured, setImageStatus] = useState(false)
   const [image, setImage] = useState('')
@@ -56,11 +57,13 @@ const PillLense: NextPage = () => {
   const handleTakePhoto = (e: any) => {
     e.preventDefault()
 
-    // @ts-ignore
-    const img = window.camera.getScreenshot()
+    if (webcamRef.current) {
+      // @ts-ignore
+      const img = webcamRef.current.getScreenshot()
 
-    setImage(img)
-    setImageStatus(true)
+      setImage(img)
+      setImageStatus(true)
+    }
   }
 
   const handleReset = (e: any) => {
@@ -138,13 +141,13 @@ const PillLense: NextPage = () => {
 
       <Webcam
         className={'fixed bottom-12 left-0 right-0 top-10' + (image && ' hidden')}
+        audio={false}
         screenshotFormat='image/jpeg'
-        videoConstraints={{ facingMode: 'environment', aspectRatio: ratio }}
-        // @ts-ignore
-        ref={(camera) => (window.camera = camera)}
+        videoConstraints={{ facingMode: 'environment' }}
+        ref={webcamRef}
       />
 
-      <div className='fixed bottom-0 w-full max-w-2xl h-12 bg-[#1C65D1] flex items-center justify-center'>
+      <div className='fixed bottom-0 w-full h-12 bg-[#1C65D1] flex items-center justify-center'>
         <div
           className='absolute left-6 w-8 h-8 rounded-full cursor-pointer flex items-center justify-center'
           onClick={handleReset}
