@@ -56,11 +56,11 @@ const PillLense: NextPage = () => {
   const handleTakePhoto = (e: any) => {
     e.preventDefault()
 
-    // @ts-ignore
-    const img = window.camera.getScreenshot()
-
-    setImage(img)
-    setImageStatus(true)
+    if (window) {
+      const img = window.camera.getScreenshot()
+      setImage(img)
+      setImageStatus(true)
+    }
   }
 
   const handleReset = (e: any) => {
@@ -137,7 +137,7 @@ const PillLense: NextPage = () => {
       {image && <img src={image} alt='' />}
 
       <Webcam
-        className={image && 'hidden'}
+        className={'fixed bottom-12 left-0 right-0 top-10' + (image && ' hidden')}
         height={size.height - 88}
         width={size.width}
         screenshotFormat='image/jpeg'
