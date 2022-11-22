@@ -13,7 +13,13 @@ import useUserNutrientsBalanceData from '../hooks/useUserNutrientsBalanceData'
 import useUserIntakeTimeTableByDate from '../hooks/useUserIntakeTimeTableByDate'
 import dayjs, { Dayjs } from 'dayjs'
 import React, { useEffect, useState } from 'react'
-import { IntakeManagementType, SupplementDetailsType, TimeTableByDateType } from '../utils/types'
+import {
+  IntakeManagementType,
+  SearchResultsItemType,
+  SupplementDetailsType,
+  TimeTableByDateType,
+  TimeTableDataType,
+} from '../utils/types'
 import { getWeekNumber } from '../utils/functions/getWeekNumber'
 import homeIntakeIllust from '../public/asset/image/homeIntakeIllust.png'
 import { WeekDateBoxContainer } from '../components/common/intakeCalendar/IntakeCalendar'
@@ -21,6 +27,9 @@ import useUserId from '../hooks/useUserId'
 import useUserIntakePillList from '../hooks/useUserIntakePillList'
 import { arrayIsNotEmpty } from '../utils/functions/arrayIsNotEmpty'
 import useUserPillList from '../hooks/useUserPillList'
+import CheckBox from '@mui/icons-material/CheckBox'
+import PillListItem from '../components/common/PillListItem'
+import { convertEnDayToKoDay } from '../utils/functions/timeFormatFunc/convertEnDayToKoDay'
 
 const Home: NextPage = () => {
   const userId: string | null = useUserId()
@@ -29,6 +38,7 @@ const Home: NextPage = () => {
   const [todayStr, setTodayStr] = useState<string>(dayjs().format('YYYY-MM-DD'))
   const [todayDayjs, setTodayDayjs] = useState<Dayjs>(dayjs())
   const [datesOfThisWeek, setDatesOfThisWeek] = useState<string[]>([])
+  const [todayPills, setTodayPills] = useState<SearchResultsItemType[]>([])
 
   // 섭취중인 영양분 데이터 가져오기 (커스텀 훅)
   const { wellIntakePercent } = useUserNutrientsBalanceData()
@@ -46,6 +56,25 @@ const Home: NextPage = () => {
     }
     setDatesOfThisWeek(tempDates)
   }, [])
+
+  // 오늘의 영양제 확인 부분
+  useEffect(() => {
+    if (userId && intakeTimeTableByDate && Object.prototype.hasOwnProperty.call(intakeTimeTableByDate, todayStr)) {
+      const todayPillListLog: TimeTableDataType[] = Object.values(intakeTimeTableByDate[todayStr].intakeHistory).flat()
+      const tempTodayPills: SearchResultsItemType[] = []
+      userPillList.forEach((pill) => {
+        const matchOne: TimeTableDataType | undefined = todayPillListLog.find(x => x.pillId === pill.id)
+        if (matchOne) {
+          tempTodayPills.push({
+            id: pill.id,
+            name: pill.name,
+            maker: pill.maker
+          })
+        }
+      })
+      setTodayPills(tempTodayPills)
+    }
+  }, [intakeTimeTableByDate])
 
   return (
     <ContainerWithBottomNav>
@@ -148,6 +177,34 @@ const Home: NextPage = () => {
             </div>
           </a>
         </Link>
+
+        {/* 체크리스트 부분 */}
+        {userId && intakeTimeTableByDate ? (
+          <>
+            <section className='pl-6 py-6 pr-8 bg-white flex items-center justify-between'>
+              <div className='flex flex-col'>
+                <div className='flex items-center space-x-3 text-gray-900'>
+                  <p className='text-lg font-bold'>체크리스트</p>
+                  <p className='text-sm'>{dayjs().format('YY.MM.DD')} ({convertEnDayToKoDay(dayjs().format('ddd'))})</p>
+                </div>
+                <p className='text-sm text-gray-400'>오늘의 영양제는 섭취 하셨나요?</p>
+              </div>
+              <CheckBox className={'text-5xl' + (intakeTimeTableByDate[todayStr].remainIntakePillCnt === 0 ? ' text-primary' : ' text-gray-200')} />
+            </section>
+
+            {/* 오늘의 영양제 부분 */}
+            <section className='p-6 bg-white space-y-4'>
+              <p className='text-base text-gray-900'>오늘의 영양제 <strong>{todayPills.length}개</strong></p>
+              <div className='flex flex-col space-y-2'>
+                {todayPills.map((pill) =>
+                  <PillListItem key={pill.id} id={pill.id} name={pill.name} maker={pill.maker} prefixDomain='/pill-details' />
+                )}
+              </div>
+            </section>
+          </>
+        ) : (
+          <div></div>
+        )}
       </div>
 
       {/*<div className='bg-white h-screen flex flex-col'>*/}
