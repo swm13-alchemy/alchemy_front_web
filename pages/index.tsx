@@ -207,16 +207,11 @@ const Home: NextPage = () => {
         )}
       </div>
 
-      {/*<div className='bg-white h-screen flex flex-col'>*/}
-      {/*  <div className='relative w-[15.625rem] h-[3.83254rem] mx-auto mt-32 mb-10'>*/}
-      {/*    <Image src={bigLogo} className='object-cover' layout='fill' />*/}
-      {/*  </div>*/}
-      {/*  <SearchBtn />*/}
-
-      {/*  <div className='mt-28'>*/}
-      {/*    <MyPillList />*/}
-      {/*  </div>*/}
-      {/*</div>*/}
+      <div className='mt-6 px-6 flex flex-col space-y-2 text-xs text-gray-400'>
+        <p>대표 관리자 : 표지원, 고병욱, 김민준</p>
+        <p>전화번호 : 010-2221-7086</p>
+        <p>주소 : 서울시 강남구 테헤란로 311(역삼동) 아남타워빌딩 7층</p>
+      </div>
 
       <PillLenseFNB bottomMargin='bottom-[4.5rem]' />
     </ContainerWithBottomNav>
