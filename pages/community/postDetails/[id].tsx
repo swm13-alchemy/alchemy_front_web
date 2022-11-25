@@ -71,6 +71,7 @@ const PostDetails = ({ postDetails }: Props) => {
   const [isDeleteSuccess, setIsDeleteSuccess] = useState<boolean>(false)
   const [isDeleteError, setIsDeleteError] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLike, setIsLike] = useState<boolean>(false)
 
   /** 글 삭제 함수 (글 작성자인 경우만 호출 가능) */
   const deleteMyPost = () => {
@@ -89,6 +90,10 @@ const PostDetails = ({ postDetails }: Props) => {
           })
       })()
     }
+  }
+
+  const likeThisPost = (isLike: boolean) => {
+    setIsLike(!isLike)
   }
   
   // 로딩 처리
@@ -147,14 +152,24 @@ const PostDetails = ({ postDetails }: Props) => {
         </div>
         {/* 포트폴리오 첨부 위치 */}
         {/* 글 좋아요 버튼 */}
-        <button className='bg-surface px-10 py-4 rounded-[0.625rem] shadow flex items-center space-x-3'>
-          <ThumbUpOutlined className='text-2xl text-gray-400' />
-          <p className='text-base font-bold text-gray-400'>도움이 됐어요 {likeCnt}</p>
-        </button>
-        <button className='bg-primary px-10 py-4 rounded-[0.625rem] shadow flex items-center space-x-3'>
-          <ThumbUpOutlined className='text-2xl text-white' />
-          <p className='text-base font-bold text-white'>도움이 됐어요 {likeCnt}</p>
-        </button>
+        {isLike ? (
+          <button
+            className='bg-primary px-10 py-4 rounded-[0.625rem] shadow flex items-center space-x-3'
+            onClick={() => likeThisPost(isLike)}
+          >
+            <ThumbUpOutlined className='text-2xl text-white' />
+            <p className='text-base font-bold text-white'>도움이 됐어요 {likeCnt}</p>
+          </button>
+        ) : (
+          <button
+            className='bg-surface px-10 py-4 rounded-[0.625rem] shadow flex items-center space-x-3'
+            onClick={() => likeThisPost(isLike)}
+          >
+            <ThumbUpOutlined className='text-2xl text-gray-400' />
+            <p className='text-base font-bold text-gray-400'>도움이 됐어요 {likeCnt}</p>
+          </button>
+        )}
+
         {/* 글이 속한 건강 고민 토픽들 표시 부분 */}
         <div className='w-full flex flex-wrap items-center gap-2'>
           {topics.map((topic) =>
